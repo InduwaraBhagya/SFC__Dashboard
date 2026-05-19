@@ -1,9 +1,11 @@
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../model/WorkGroupModel.dart';
 
 class WorkGroupService {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
   String get baseUrl {
     final url = dotenv.env['API_BASE_URL'];
     if (url == null || url.isEmpty) {
@@ -14,12 +16,18 @@ class WorkGroupService {
 
   Future<List<WorkGroupDetails>> fetchWorkGroups() async {
     try {
-      // TODO: If authentication is required, add headers here
-      final response = await http.get(Uri.parse('$baseUrl/api/WorkGroups'));
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+      
+      final response = await http.get(Uri.parse('$baseUrl/api/somsworkgroups'), headers: headers);
 
-      print('fetchWorkGroups - URL: $baseUrl/api/WorkGroup');
+      print('fetchWorkGroups - URL: $baseUrl/api/somsworkgroups');
       print('fetchWorkGroups - Response status: ${response.statusCode}');
-      print('fetchWorkGroups - Response body: ${response.body}');
+      // print('fetchWorkGroups - Response body: ${response.body}'); // Commented out to prevent massive logs
 
       if (response.statusCode == 200) {
         final dynamic data = json.decode(response.body);
@@ -91,6 +99,77 @@ class WorkGroupService {
     } catch (e) {
       print('Error fetching work group details: $e');
       rethrow;
+    }
+  }
+
+  Future<bool> createWorkGroup(String name) async {
+    try {
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/somsworkgroups'),
+        headers: headers,
+        body: json.encode({'WG_Name': name}),
+      );
+
+      print('createWorkGroup status: ${response.statusCode}');
+      print('createWorkGroup body: ${response.body}');
+
+      return response.statusCode == 201 || response.statusCode == 200;
+    } catch (e) {
+      print('Error creating work group: $e');
+      return false;
+    }
+  }
+
+  Future<bool> updateWorkGroup(int id, String name) async {
+    try {
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+
+      final response = await http.put(
+        Uri.parse('$baseUrl/api/somsworkgroups/$id'),
+        headers: headers,
+        body: json.encode({'id': id, 'WG_Name': name}),
+      );
+
+      print('updateWorkGroup status: ${response.statusCode}');
+      print('updateWorkGroup body: ${response.body}');
+
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      print('Error updating work group: $e');
+      return false;
+    }
+  }
+
+  Future<bool> deleteWorkGroup(int id) async {
+    try {
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+
+      final response = await http.delete(
+        Uri.parse('$baseUrl/api/somsworkgroups/$id'),
+        headers: headers,
+      );
+
+      return response.statusCode == 200 || response.statusCode == 204;
+    } catch (e) {
+      print('Error deleting work group: $e');
+      return false;
     }
   }
 }

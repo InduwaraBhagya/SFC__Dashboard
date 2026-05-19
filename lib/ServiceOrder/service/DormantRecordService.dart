@@ -1,13 +1,13 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../model/OLAViolateRecord.dart';
 
-class HoldRecordService {
+class DormantRecordService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  Future<Map<String, dynamic>> fetchHoldRecords({
+  Future<Map<String, dynamic>> fetchDormantRecords({
     int? page,
     String? searchTerm,
     required int pageSize,
@@ -28,8 +28,8 @@ class HoldRecordService {
         return {'records': [], 'totalCount': 0, 'totalPages': 1, 'currentPage': 1};
       }
 
-      final url = Uri.parse('$baseUrl/api/somsdashboard/records/${Uri.encodeComponent(wgName)}/hold');
-      print('API Request URL (Hold): $url');
+      final url = Uri.parse('$baseUrl/api/somsdashboard/records/${Uri.encodeComponent(wgName)}/dormant');
+      print('API Request URL (Dormant): $url');
       
       final response = await http.get(url, headers: headers);
 
@@ -40,7 +40,7 @@ class HoldRecordService {
           try {
             return OLAViolateRecord.fromJson(r as Map<String, dynamic>);
           } catch (e) {
-            print('Error parsing hold record: $e');
+            print('Error parsing dormant record: $e');
             return null;
           }
         }).where((r) => r != null).cast<OLAViolateRecord>().toList();
@@ -52,10 +52,10 @@ class HoldRecordService {
           'currentPage': 1,
         };
       } else {
-        throw Exception('Failed to load hold records: ${response.statusCode}');
+        throw Exception('Failed to load dormant records: ${response.statusCode}');
       }
     } catch (e) {
-      print('Error fetching hold records: $e');
+      print('Error fetching dormant records: $e');
       return {'records': [], 'totalCount': 0, 'totalPages': 1, 'currentPage': 1};
     }
   }

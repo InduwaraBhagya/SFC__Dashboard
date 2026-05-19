@@ -244,7 +244,7 @@ class _PETaskScreenState extends State<PETaskScreen>
                           ),
                         ),
                         children: [
-                          _buildFieldRow('OLA', task.ola ?? 'N/A'),
+                          _buildFieldRow('OLA', task.ola),
                           _buildFieldRow(
                             'Created Date',
                             task.taskCreatedDate?.toString() ?? 'N/A',

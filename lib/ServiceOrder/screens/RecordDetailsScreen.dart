@@ -164,7 +164,7 @@ class RecordDetailsScreen extends StatelessWidget {
           Center(
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color.fromARGB(255, 7, 28, 136),
+                backgroundColor: const Color.fromARGB(255, 7, 69, 156),
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8)),
@@ -202,12 +202,12 @@ class RecordDetailsScreen extends StatelessWidget {
             color: Color.fromARGB(255, 6, 38, 84),
           ),
         ),
-        children: fields.map((field) => _buildFieldRow(field)).toList(),
+        children: fields.map((field) => _buildFieldRow(context, field)).toList(),
       ),
     );
   }
 
-  Widget _buildFieldRow(_Field field) {
+  Widget _buildFieldRow(BuildContext context, _Field field) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
@@ -217,10 +217,10 @@ class RecordDetailsScreen extends StatelessWidget {
             flex: 2,
             child: Text(
               field.label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
               ),
             ),
           ),
@@ -246,3 +246,4 @@ class _Field {
 
   _Field(this.label, this.value);
 }
+
