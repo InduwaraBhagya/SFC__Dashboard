@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart' as intl;
 import '../service/NoticesService.dart';
@@ -123,10 +123,19 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
         isSuccess = success;
       } else if (success is Map) {
         isSuccess = success['success'] == true;
-        if (!isSuccess && success['message'] != null) {
-          errorMsg = success['message'];
-          if (success['detail'] != null) {
-            errorMsg += ': ' + success['detail'];
+        if (!isSuccess) {
+          if (success['message'] != null) {
+            errorMsg = success['message'];
+            if (success['detail'] != null) {
+              errorMsg += ': ' + success['detail'];
+            }
+          } else if (success['title'] != null) {
+            errorMsg = success['title'];
+            if (success['errors'] != null) {
+              errorMsg += ': ' + success['errors'].toString();
+            }
+          } else {
+            errorMsg = 'Failed to save notice: ' + success.toString();
           }
         }
       }
@@ -247,7 +256,7 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                       ElevatedButton(
                         onPressed: _isSubmitting ? null : _submit,
                         style: ElevatedButton.styleFrom(
-                          
+                          backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
                           padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),

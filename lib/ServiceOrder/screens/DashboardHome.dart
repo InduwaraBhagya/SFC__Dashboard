@@ -4,6 +4,7 @@ import '../service/SomsDashboardService.dart';
 // If these screens don't exist yet, we will just use placeholders for onTap
 import 'SelectWorkgroupScreen.dart';
 import 'NoticeBoardScreen.dart';
+import '../service/NoticesService.dart';
 import '../components/DraggableChatBot.dart';
 
 class DashboardHome extends StatefulWidget {
@@ -17,10 +18,12 @@ class DashboardHome extends StatefulWidget {
 
 class _DashboardHomeState extends State<DashboardHome> {
   final SomsDashboardService _dashboardService = SomsDashboardService();
+  final NoticesService _noticesService = NoticesService();
   
   bool _isLoading = true;
   String? _errorMessage;
   String _workgroupName = 'Loading...';
+  List<dynamic> _notices = [];
   Map<String, dynamic> _metrics = {
     'urgent': 0,
     'inProgress': 0,
@@ -44,11 +47,13 @@ class _DashboardHomeState extends State<DashboardHome> {
     try {
       final wgName = await _dashboardService.getSelectedWorkgroupName();
       final metrics = await _dashboardService.fetchMetrics();
+      final notices = await _noticesService.fetchNotices();
       
       if (mounted) {
         setState(() {
           _workgroupName = wgName ?? 'All Workgroups';
           _metrics = metrics;
+          _notices = notices;
           _isLoading = false;
         });
       }
@@ -108,51 +113,51 @@ class _DashboardHomeState extends State<DashboardHome> {
   }
 
   Widget _buildWorkgroupFilterBanner() {
-    return Container(
-      decoration: BoxDecoration(
-        color: const Color(0xFF6C5CE7), // Purple banner matching screenshot
-        borderRadius: BorderRadius.circular(8),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-      child: Row(
-        children: [
-          IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.white),
-            padding: EdgeInsets.zero,
-            constraints: const BoxConstraints(),
-            onPressed: () {
-              Navigator.pushReplacement(
-                context,
-                MaterialPageRoute(builder: (context) => const SelectWorkgroupScreen()),
-              );
-            },
-          ),
-          const SizedBox(width: 8),
-          const Icon(Icons.filter_alt, color: Colors.white),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('WORKGROUP FILTER', 
-                  style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13)),
-                Text('Filter dashboard records by workgroup', 
-                  style: GoogleFonts.poppins(color: Colors.white70, fontSize: 10)),
-              ],
+    return InkWell(
+      onTap: () {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const SelectWorkgroupScreen()),
+        );
+      },
+      borderRadius: BorderRadius.circular(10),
+      child: Container(
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(colors: [Color(0xFF6C5CE7), Color(0xFF8E44AD)]),
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [BoxShadow(color: const Color(0xFF6C5CE7).withOpacity(0.3), blurRadius: 8, offset: const Offset(0, 4))],
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(8)),
+              child: const Icon(Icons.domain, color: Colors.white, size: 20),
             ),
-          ),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-            decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(6)),
-            child: Row(
-              children: [
-                const Icon(Icons.domain, size: 16, color: Colors.blue),
-                const SizedBox(width: 6),
-                Text(_workgroupName, style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 12)),
-              ],
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('Active Workgroup', style: GoogleFonts.poppins(color: Colors.white70, fontSize: 10, fontWeight: FontWeight.w500)),
+                  Text(_workgroupName, style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 13), overflow: TextOverflow.ellipsis),
+                ],
+              ),
             ),
-          ),
-        ],
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(20)),
+              child: Row(
+                children: [
+                  Text('Change', style: GoogleFonts.poppins(color: const Color(0xFF6C5CE7), fontWeight: FontWeight.bold, fontSize: 11)),
+                  const SizedBox(width: 4),
+                  const Icon(Icons.swap_horiz, size: 14, color: Color(0xFF6C5CE7)),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -221,22 +226,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   Widget _buildActionCardsSection() {
     return Column(
       children: [
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(child: _buildInboxCard()),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                children: [
-                   _buildTeamMembersCard(),
-                   const SizedBox(height: 12),
-                   _buildRecentActivitiesCard(),
-                ],
-              ),
-            )
-          ],
-        ),
+        _buildInboxCard(),
         const SizedBox(height: 12),
         _buildNoticeBoardCard()
       ],
@@ -293,56 +283,6 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
   }
 
-  Widget _buildTeamMembersCard() {
-    return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(color: Color(0xFF6ED3A6), borderRadius: BorderRadius.vertical(top: Radius.circular(12))),
-            child: Row(children: [const Icon(Icons.people_alt, color: Colors.white, size: 16), const SizedBox(width:8), Text('Active Team Members', style: GoogleFonts.poppins(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))]),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(12),
-            child: Row(
-              children: [
-                CircleAvatar(backgroundColor: Colors.orange, radius: 14, child: Icon(Icons.person, size: 16, color: Colors.white)),
-                SizedBox(width: 8),
-                Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [Text('Admin', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12)), Text('induwa', style: TextStyle(fontSize: 10, color: Colors.grey))])),
-                Text('Just now', style: TextStyle(color: Colors.green, fontSize: 10))
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentActivitiesCard() {
-    return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(12)),
-      child: Column(
-        children: [
-          Container(
-            padding: const EdgeInsets.all(10),
-            decoration: const BoxDecoration(color: Color(0xFFC39BD3), borderRadius: BorderRadius.vertical(top: Radius.circular(12))),
-            child: Row(children: [const Icon(Icons.list_alt, color: Colors.white, size: 16), const SizedBox(width:8), Text('Recent Activities', style: GoogleFonts.poppins(color: Colors.white, fontSize: 11, fontWeight: FontWeight.bold))]),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                Column(children: [const Icon(Icons.warning_amber_rounded, color: Colors.orange), Text('OLA (1 day left)', style: TextStyle(fontSize: 10, color: Colors.grey)), Text('0\nRecords', textAlign: TextAlign.center, style: TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]),
-                Column(children: [const Icon(Icons.task, color: Colors.blue), const Text('Total Tasks', style: TextStyle(fontSize: 10, color: Colors.grey)), Text('${_metrics['inProgress'] ?? 0}\nTasks', textAlign: TextAlign.center, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12))]),
-              ],
-            ),
-          )
-        ],
-      ),
-    );
-  }
 
   Widget _buildNoticeBoardCard() {
       return Container(
@@ -376,18 +316,62 @@ class _DashboardHomeState extends State<DashboardHome> {
               ],
             ),
           ),
-          const Expanded(
-            child: Center(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Icon(Icons.assignment, color: Colors.grey, size: 30),
-                  SizedBox(height: 8),
-                  Text('No Active Notices', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
-                  Text('Check back later for updates', style: TextStyle(color: Colors.grey, fontSize: 11)),
-                ],
-              ),
-            ),
+          Expanded(
+            child: _notices.isEmpty
+              ? Center(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.assignment, color: Colors.grey, size: 30),
+                      const SizedBox(height: 8),
+                      const Text('No Active Notices', style: TextStyle(color: Colors.grey, fontWeight: FontWeight.bold)),
+                      const Text('Check back later for updates', style: TextStyle(color: Colors.grey, fontSize: 11)),
+                    ],
+                  ),
+                )
+              : ListView.builder(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                  itemCount: _notices.length > 2 ? 2 : _notices.length,
+                  itemBuilder: (context, index) {
+                    final notice = _notices[index];
+                    return Container(
+                      margin: const EdgeInsets.only(bottom: 8),
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey.shade50,
+                        borderRadius: BorderRadius.circular(8),
+                        border: Border.all(color: Colors.grey.shade200),
+                      ),
+                      child: Row(
+                        children: [
+                          Icon(notice['isPinned'] == true ? Icons.push_pin : Icons.circle, 
+                               size: notice['isPinned'] == true ? 16 : 10, 
+                               color: notice['isPinned'] == true ? Colors.amber : Colors.blue),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  notice['title'] ?? 'Notice',
+                                  style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w600, color: Colors.black87),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                                Text(
+                                  notice['description'] ?? '',
+                                  style: GoogleFonts.poppins(fontSize: 11, color: Colors.grey.shade600),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
           )
         ],
       ),

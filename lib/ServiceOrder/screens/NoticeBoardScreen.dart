@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import '../service/NoticesService.dart';
@@ -63,7 +63,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
               child: ElevatedButton(
                 onPressed: () => _navigateToAddNotice(),
                 style: ElevatedButton.styleFrom(
-                  
+                  backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
                   padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   shape: RoundedRectangleBorder(
@@ -179,7 +179,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
           ElevatedButton(
             onPressed: () => _navigateToAddNotice(),
             style: ElevatedButton.styleFrom(
-              
+              backgroundColor: Colors.blue,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
               shape: RoundedRectangleBorder(
@@ -377,7 +377,7 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
   }
 
   void _navigateToAddNotice({Map<String, dynamic>? notice}) async {
-    final result = await Navigator.push(
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => AddNoticeScreen(
@@ -387,9 +387,8 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
       ),
     );
 
-    if (result == true) {
-      _fetchNotices();
-    }
+    // Refresh unconditionally when returning from the add screen
+    _fetchNotices();
   }
 }
 
