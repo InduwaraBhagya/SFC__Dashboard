@@ -144,11 +144,11 @@ class _ForgotnameScreenState extends State<ForgotnameScreen> {
                         borderRadius: BorderRadius.circular(8.0),
                       ),
                     ),
-                    child: const Text(
+                    child: Text(
                       'Next',
                       style: TextStyle(
                         fontSize: 16,
-                        color: Colors.white,
+                        color: Theme.of(context).cardColor,
                       ),
                     ),
                   ),
@@ -161,3 +161,4 @@ class _ForgotnameScreenState extends State<ForgotnameScreen> {
     );
   }
 }
+

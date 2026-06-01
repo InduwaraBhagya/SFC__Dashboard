@@ -50,15 +50,15 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        iconTheme: const IconThemeData(
-          color: Colors.white, // change the color of the leading icon
+        iconTheme: IconThemeData(
+          color: Theme.of(context).cardColor, // change the color of the leading icon
         ),
         title: Text(
           '${widget.searchCategory}: ${widget.searchValue}',
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
           ),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -152,10 +152,10 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                       const SizedBox(width: 8),
                       Text(
                         'Total Records: ${records.length}',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white,
+                          color: Theme.of(context).cardColor,
                         ),
                       ),
                     ],
@@ -320,10 +320,10 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
             flex: 2,
             child: Text(
               label,
-              style: const TextStyle(
+              style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
-                color: Colors.black87,
+                color: Theme.of(context).textTheme.bodyMedium?.color,
               ),
             ),
           ),
@@ -342,3 +342,4 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     );
   }
 }
+

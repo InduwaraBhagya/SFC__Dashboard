@@ -85,14 +85,19 @@ class AuthService {
         await _storage.write(key: 'userId', value: backendUserId.toString());
       }
 
+      // 🔹 Fetch backend user details if UserId exists
+      SystemUser? fullBackendUser;
+      if (backendUserId != null) {
+        fullBackendUser = await getUserById(backendUserId);
+      }
+
       // 🔹 Save combined user info
       final userInfo = {
-        'Name': graphUser?['Name'],
-        'Email': graphUser?['Email'],
+        'Name': fullBackendUser?.name ?? graphUser?['Name'],
+        'Email': _cleanEmail(graphUser?['Email']),
         'PhotoBase64': graphUser?['PhotoBase64'],
         'UserId': backendUserId,
-        // Include ServiceId in stored user info for CreateUserScreen
-        'ServiceId': graphUser?['ServiceId'],
+        'ServiceId': fullBackendUser?.serviceId ?? graphUser?['ServiceId'],
       };
 
       await _storage.write(key: 'user_info', value: json.encode(userInfo));
@@ -101,6 +106,24 @@ class AuthService {
     } catch (e) {
       throw Exception('Authentication failed: $e');
     }
+  }
+
+  String? _cleanEmail(String? email) {
+    if (email == null) return null;
+    if (email.contains('#EXT#')) {
+      // Azure AD external user format: name_gmail.com#EXT#@domain.onmicrosoft.com
+      try {
+        final parts = email.split('#EXT#');
+        final localPart = parts[0]; // e.g. name_gmail.com
+        final domainParts = localPart.split('_');
+        if (domainParts.length >= 2) {
+          final domain = domainParts.last;
+          final name = domainParts.sublist(0, domainParts.length - 1).join('_');
+          return '$name@$domain';
+        }
+      } catch (_) {}
+    }
+    return email;
   }
 
   /// 🔹 Azure AD Microsoft Graph
@@ -355,6 +378,30 @@ class AuthService {
       }
     } catch (e) {
       throw Exception('Error fetching workgroups: $e');
+    }
+  }
+
+  Future<List<WorkGroup>> getSomsWorkGroups() async {
+    try {
+      final headers = await getAuthenticatedHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/somsworkgroups'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map<WorkGroup>((json) {
+          return WorkGroup(
+            id: json['id'] as int? ?? 0,
+            name: json['wG_Name']?.toString() ?? json['wg_name']?.toString() ?? json['WG_Name']?.toString() ?? 'Unknown',
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to fetch SOMS workgroups: ${response.statusCode} ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching SOMS workgroups: $e');
     }
   }
 

@@ -5,7 +5,9 @@ import 'CreateUserScreen.dart';
 import 'OnboardingScreen.dart';
 
 class SigninScreen extends StatefulWidget {
-  const SigninScreen({super.key});
+  final OnboardingDestination destination;
+
+  const SigninScreen({super.key, this.destination = OnboardingDestination.plannedEvent});
 
   @override
   State<SigninScreen> createState() => _SigninScreenState();
@@ -39,7 +41,9 @@ class _SigninScreenState extends State<SigninScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => const OnboardingScreen(),
+              builder: (context) => CreateUserScreen(
+                destination: widget.destination,
+              ),
             ),
           );
         }
