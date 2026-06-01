@@ -48,7 +48,6 @@ class AppSidebar extends StatelessWidget {
                 _buildChatBotItem(context),
 
                 _buildSectionHeader('OTHER'),
-                _buildThemeToggle(context),
                 _buildUserTile(context),
                 _buildSignOutTile(context),
               ],
@@ -172,19 +171,6 @@ class AppSidebar extends StatelessWidget {
                 )
               ) 
             : null,
-      ),
-    );
-  }
-
-  Widget _buildThemeToggle(BuildContext context) {
-    return ListTile(
-      dense: true,
-      leading: const Icon(Icons.dark_mode_outlined, size: 22, color: Colors.grey),
-      title: Text('Dark Mode', style: GoogleFonts.poppins(fontSize: 13, color: const Color(0xFF444444))),
-      trailing: Switch(
-        value: false,
-        onChanged: (val) {},
-        activeColor: Colors.purple,
       ),
     );
   }

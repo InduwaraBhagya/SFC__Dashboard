@@ -186,7 +186,6 @@ import 'DataManagementScreen.dart';
 import 'WorkgroupReportScreen.dart';
 import 'OPMCReportScreen.dart';
 
-
 class DashboardScreen extends StatefulWidget {
   final Map<String, dynamic>? user;
 
@@ -201,8 +200,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   int myIndex = 0;
   Map<String, dynamic>? _currentUser;
   bool _isLoadingUser = true;
-
-
 
   Future<void> _loadUserInfo() async {
     if (widget.user != null) {
@@ -245,11 +242,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       UrgentRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ),  // index 5
+      ), // index 5
       HoldRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ),    // index 6
+      ), // index 6
       OLAViolateRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
@@ -257,7 +254,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       DormantRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ),  // index 8
+      ), // index 8
       ProjectsScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
@@ -274,26 +271,38 @@ class _DashboardScreenState extends State<DashboardScreen> {
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
       ), // index 12
-
     ];
   }
 
   void _handleNavigation(int sidebarIndex) {
     int pageIndex = 0;
-    if (sidebarIndex == 0) pageIndex = 0;
-    else if (sidebarIndex == 1) pageIndex = 4; // Regular
-    else if (sidebarIndex == 2) pageIndex = 5; // Urgent
-    else if (sidebarIndex == 3) pageIndex = 6; // Hold
-    else if (sidebarIndex == 4) pageIndex = 7; // OLA
-    else if (sidebarIndex == 5) pageIndex = 8; // Dormant
-    else if (sidebarIndex == 6) pageIndex = 9; // Projects
-    else if (sidebarIndex == 7) pageIndex = 10; // Data Management
-    else if (sidebarIndex == 8) pageIndex = 11; // Workgroup Reports
-    else if (sidebarIndex == 9) pageIndex = 12; // OPMC Reports
+    if (sidebarIndex == 0)
+      pageIndex = 0;
+    else if (sidebarIndex == 1)
+      pageIndex = 4; // Regular
+    else if (sidebarIndex == 2)
+      pageIndex = 5; // Urgent
+    else if (sidebarIndex == 3)
+      pageIndex = 6; // Hold
+    else if (sidebarIndex == 4)
+      pageIndex = 7; // OLA
+    else if (sidebarIndex == 5)
+      pageIndex = 8; // Dormant
+    else if (sidebarIndex == 6)
+      pageIndex = 9; // Projects
+    else if (sidebarIndex == 7)
+      pageIndex = 10; // Data Management
+    else if (sidebarIndex == 8)
+      pageIndex = 11; // Workgroup Reports
+    else if (sidebarIndex == 9)
+      pageIndex = 12; // OPMC Reports
 
-    else if (sidebarIndex == 14) pageIndex = 2; // Work Groups
-    else if (sidebarIndex == 15) pageIndex = 3; // Task List
-    else pageIndex = 0;
+    else if (sidebarIndex == 14)
+      pageIndex = 2; // Work Groups
+    else if (sidebarIndex == 15)
+      pageIndex = 3; // Task List
+    else
+      pageIndex = 0;
 
     setState(() {
       myIndex = pageIndex;
@@ -331,81 +340,81 @@ class _DashboardScreenState extends State<DashboardScreen> {
       },
       child: Scaffold(
         key: _scaffoldKey,
-        appBar: (myIndex >= 4 && myIndex <= 8) 
-          ? null 
-          : AppBar(
-          toolbarHeight: 70,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.vertical(
-              bottom: Radius.circular(20),
-            ),
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 5,
-          systemOverlayStyle: const SystemUiOverlayStyle(
-            statusBarColor: Colors.transparent,
-            statusBarIconBrightness: Brightness.light,
-          ),
-          automaticallyImplyLeading: false,
-          leading: Builder(
-            builder: (context) => IconButton(
-              icon: const Icon(Icons.menu, color: Colors.white),
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-            ),
-          ),
-          iconTheme: const IconThemeData(color: Colors.white),
-
-          // Updated title with role
-          title: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                'Service Order',
-                style: TextStyle(
-                  color: Theme.of(context).cardColor,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              Text(
-                user['UserRole'] ?? '',
-                style: const TextStyle(
-                  color: Colors.white70,
-                  fontSize: 13,
-                ),
-              ),
-            ],
-          ),
-
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.arrow_back, color: Colors.white),
-              onPressed: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => const SelectWorkgroupScreen(),
+        appBar: (myIndex >= 4 && myIndex <= 8)
+            ? null
+            : AppBar(
+                toolbarHeight: 70,
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.vertical(
+                    bottom: Radius.circular(20),
                   ),
-                );
-              },
-            ),
-          ],
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(226, 16, 37, 89),
-                  Color.fromARGB(255, 8, 11, 66),
+                ),
+                backgroundColor: Colors.transparent,
+                elevation: 5,
+                systemOverlayStyle: const SystemUiOverlayStyle(
+                  statusBarColor: Colors.transparent,
+                  statusBarIconBrightness: Brightness.light,
+                ),
+                automaticallyImplyLeading: false,
+                leading: Builder(
+                  builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu, color: Colors.white),
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                  ),
+                ),
+                iconTheme: const IconThemeData(color: Colors.white),
+
+                // Updated title with role
+                title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Service Order',
+                      style: TextStyle(
+                        color: Theme.of(context).cardColor,
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      user['UserRole'] ?? '',
+                      style: const TextStyle(
+                        color: Colors.white70,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ],
+                ),
+
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.arrow_back, color: Colors.white),
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const SelectWorkgroupScreen(),
+                        ),
+                      );
+                    },
+                  ),
                 ],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomCenter,
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color.fromARGB(226, 16, 37, 89),
+                        Color.fromARGB(255, 8, 11, 66),
+                      ],
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                ),
               ),
-            ),
-          ),
-        ),
         body: myIndex < _pages.length ? _pages[myIndex] : _pages[0],
         endDrawer: Drawer(
           child: ListView(
@@ -462,11 +471,15 @@ class _DashboardScreenState extends State<DashboardScreen> {
           ),
         ),
         bottomNavigationBar: BottomNavigationBar(
-          currentIndex: myIndex > 2 ? 0 : myIndex,
+          currentIndex: myIndex == 5 ? 1 : (myIndex > 2 ? 0 : myIndex),
           type: BottomNavigationBarType.fixed,
           onTap: (index) {
             setState(() {
-              myIndex = index;
+              if (index == 1) {
+                myIndex = 5;
+              } else {
+                myIndex = index;
+              }
             });
           },
           items: const [
@@ -487,4 +500,3 @@ class _DashboardScreenState extends State<DashboardScreen> {
     );
   }
 }
-

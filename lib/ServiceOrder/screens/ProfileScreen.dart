@@ -25,6 +25,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _loadUserData();
   }
 
+  String _displayValue(dynamic v, {String placeholder = '-'}) {
+    if (v == null) return placeholder;
+    final s = v.toString().trim();
+    return s.isEmpty ? placeholder : s;
+  }
+
+  String _cleanEmail(dynamic raw) {
+    if (raw == null) return '-';
+    String s = raw.toString();
+    // Clean Azure AD style emails like "local#EXT#@domain" -> "local@domain"
+    s = s.replaceAll('#EXT#', '');
+    return s.trim();
+  }
+
   Future<void> _loadUserData() async {
     if (widget.user != null) {
       setState(() {
@@ -136,7 +150,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
           ),
           Text(
-            _userData!['Email'] ?? 'guest@example.com',
+            _cleanEmail(_userData!['Email']),
             style: GoogleFonts.poppins(
               fontSize: 14,
               color: Colors.white.withOpacity(0.8),
@@ -180,9 +194,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Column(
         children: [
-          _buildInfoRow(Icons.badge_outlined, 'Service ID', _userData!['ServiceId'] ?? 'N/A'),
+          _buildInfoRow(Icons.badge_outlined, 'Service ID', _displayValue(_userData!['ServiceId'])),
           const Divider(height: 32),
-          _buildInfoRow(Icons.email_outlined, 'Email Address', _userData!['Email'] ?? 'N/A'),
+          _buildInfoRow(Icons.email_outlined, 'Email Address', _cleanEmail(_userData!['Email'])),
           const Divider(height: 32),
           _buildInfoRow(Icons.phone_android_outlined, 'Account Type', 'Microsoft AD'),
           const Divider(height: 32),
@@ -218,6 +232,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Text(
                 value,
+                softWrap: true,
+                maxLines: 3,
+                overflow: TextOverflow.ellipsis,
                 style: GoogleFonts.poppins(
                   fontSize: 15,
                   color: const Color(0xFF1E293B),
