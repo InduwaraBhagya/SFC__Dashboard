@@ -1645,12 +1645,13 @@ class _DashboardHomeState extends State<DashboardHome> {
   void _checkWorkgroupAndRefresh() async {
     if (widget.selectedWorkGroupIds.isNotEmpty) {
       try {
-        final wgs = await _authService.getWorkGroupsByIds(widget.selectedWorkGroupIds);
+        final wgs =
+            await _authService.getWorkGroupsByIds(widget.selectedWorkGroupIds);
         if (wgs.isNotEmpty) {
           _selectedWorkgroupName = wgs.first.name;
           setState(() {
-            _useRealData = (_selectedWorkgroupName != 'NET-PROJ_CABLE-ACC' && 
-                            _selectedWorkgroupName != 'NET-PROJ-ACC-CABLE');
+            _useRealData = (_selectedWorkgroupName != 'NET-PROJ_CABLE-ACC' &&
+                _selectedWorkgroupName != 'NET-PROJ-ACC-CABLE');
           });
         }
       } catch (e) {
@@ -1787,7 +1788,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         page: 1,
         pageSize: 2000,
         workgroupName: _selectedWorkGroupId?.toString(),
-        fetchMultiWorkgroup: _useRealData,
+        //fetchMultiWorkgroup: _useRealData,
       );
       setState(() {
         _regularRecordCount = result['totalCount'] ?? 0;
@@ -2033,7 +2034,8 @@ class _DashboardHomeState extends State<DashboardHome> {
                                 children: [
                                   Expanded(child: _buildTeamSection()),
                                   const SizedBox(width: 10),
-                                  Expanded(child: _buildRecentActivitiesSection()),
+                                  Expanded(
+                                      child: _buildRecentActivitiesSection()),
                                 ],
                               ),
                             ),

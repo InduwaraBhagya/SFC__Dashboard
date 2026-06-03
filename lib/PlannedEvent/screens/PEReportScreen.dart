@@ -954,6 +954,7 @@ import 'package:excel/excel.dart' hide Border;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'DashboardScreen.dart';
 import 'package:pdf/pdf.dart';
@@ -1242,7 +1243,7 @@ class _PEReportScreenState extends State<PEReportScreen> {
       }
 
       // Save file
-      final dir = await getApplicationDocumentsDirectory();
+      final dir = await getTemporaryDirectory();
       final fileName =
           'PE_Report_${pe.peNumber ?? 'unknown'}_${DateTime.now().millisecondsSinceEpoch}.xlsx';
       final filePath = '${dir.path}/$fileName';
@@ -1250,14 +1251,9 @@ class _PEReportScreenState extends State<PEReportScreen> {
       if (fileBytes != null) {
         final file = File(filePath);
         await file.writeAsBytes(fileBytes);
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Report saved: $filePath'),
-              duration: const Duration(seconds: 5),
-            ),
-          );
-        }
+        
+        // Export file using share dialog
+        await Share.shareXFiles([XFile(filePath)], text: 'PE Report - ${pe.peNumber}');
       }
     } catch (e) {
       if (mounted) {

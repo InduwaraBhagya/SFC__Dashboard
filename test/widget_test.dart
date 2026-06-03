@@ -48,11 +48,7 @@ void main() {
   testWidgets('PlannedEventMain loads successfully',
       (WidgetTester tester) async {
     await tester.pumpWidget(
-<<<<<<< HEAD
       const MaterialApp(
-=======
-      MaterialApp(
->>>>>>> a8ec83341e4f982d2be4d8fed993a7234253dd69
         home: PlannedEventMain(
           userId: 1,
         ),
@@ -64,3 +60,4 @@ void main() {
     expect(find.byType(Scaffold), findsWidgets);
   });
 }
+

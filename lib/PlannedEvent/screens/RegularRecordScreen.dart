@@ -22,7 +22,8 @@ class RegularRecordScreen extends StatefulWidget {
   _RegularRecordScreenState createState() => _RegularRecordScreenState();
 }
 
-class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTickerProviderStateMixin {
+class _RegularRecordScreenState extends State<RegularRecordScreen>
+    with SingleTickerProviderStateMixin {
   final _service = RegularRecordService();
   final _storage = const FlutterSecureStorage();
   List<OLAViolateRecord> _allRecords = [];
@@ -87,15 +88,17 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
         workgroupName: widget.workgroupName,
         page: page,
         pageSize: _pageSize,
-        fetchMultiWorkgroup: widget.useRealData,
+        //fetchMultiWorkgroup: widget.useRealData,
       );
 
-      final List<OLAViolateRecord> newRecords = (result['records'] as List<dynamic>?)?.cast<OLAViolateRecord>() ?? [];
+      final List<OLAViolateRecord> newRecords =
+          (result['records'] as List<dynamic>?)?.cast<OLAViolateRecord>() ?? [];
       final int totalCount = result['totalCount'] as int? ?? 0;
       final int totalPages = result['totalPages'] as int? ?? 1;
 
       if (kDebugMode) {
-        print('Fetched ${newRecords.length} regular records, page: $page, total: $totalCount, totalPages: $totalPages');
+        print(
+            'Fetched ${newRecords.length} regular records, page: $page, total: $totalCount, totalPages: $totalPages');
         print('Records: ${newRecords.map((r) => r.peNumber).toList()}');
       }
 
@@ -131,7 +134,8 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
       appBar: AppBar(
         title: const Text(
           'Regular Records',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -141,7 +145,10 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color.fromARGB(226, 16, 37, 89), Color.fromARGB(255, 8, 11, 66)],
+              colors: [
+                Color.fromARGB(226, 16, 37, 89),
+                Color.fromARGB(255, 8, 11, 66)
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -165,7 +172,8 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                   Expanded(
                     child: Text(
                       _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
@@ -180,11 +188,15 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                         child: FadeTransition(
                           opacity: _fadeAnimation,
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 8.0),
                             padding: const EdgeInsets.all(12.0),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color.fromARGB(225, 82, 126, 238), Color.fromARGB(255, 7, 0, 99)],
+                                colors: [
+                                  Color.fromARGB(225, 82, 126, 238),
+                                  Color.fromARGB(255, 7, 0, 99)
+                                ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -200,7 +212,8 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.list, size: 24, color: Colors.white),
+                                const Icon(Icons.list,
+                                    size: 24, color: Colors.white),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Total Records: $_totalCount',
@@ -222,53 +235,75 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                             return Card(
                               key: ValueKey(record.peNumber),
                               elevation: 4,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
                               child: ExpansionTile(
                                 title: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8.0),
                                   title: Text(
                                     'PE Number: ${record.peNumber ?? 'N/A'}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Task: ${record.taskName ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                       Text(
                                         'Customer: ${record.customer ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                     ],
                                   ),
                                 ),
                                 children: [
-                                  _buildFieldRow('Workgroup', record.taskWg ?? 'N/A'),
-                                  _buildFieldRow('Province', record.province ?? 'N/A'),
-                                  _buildFieldRow('Contractor', record.contractorName ?? 'N/A'),
-                                  _buildFieldRow('PE Title', record.peTitle ?? 'N/A'),
-                                  _buildFieldRow('PE Objective', record.peObjective ?? 'N/A'),
-                                  _buildFieldRow('Service Type', record.serviceType ?? 'N/A'),
-                                  _buildFieldRow('Status', record.peStatus ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Workgroup', record.taskWg ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Province', record.province ?? 'N/A'),
+                                  _buildFieldRow('Contractor',
+                                      record.contractorName ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'PE Title', record.peTitle ?? 'N/A'),
+                                  _buildFieldRow('PE Objective',
+                                      record.peObjective ?? 'N/A'),
+                                  _buildFieldRow('Service Type',
+                                      record.serviceType ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Status', record.peStatus ?? 'N/A'),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.green[600],
                                           foregroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
                                           elevation: 2,
                                         ),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => OLAViolateRecordDetailsScreen(record: record),
+                                              builder: (context) =>
+                                                  OLAViolateRecordDetailsScreen(
+                                                      record: record),
                                             ),
                                           );
                                         },
@@ -292,7 +327,9 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                               children: [
                                 IconButton(
                                   icon: const Icon(Icons.arrow_back),
-                                  color: _currentPage == 1 || _isLoading ? Colors.grey : Colors.green[600],
+                                  color: _currentPage == 1 || _isLoading
+                                      ? Colors.grey
+                                      : Colors.green[600],
                                   onPressed: _currentPage == 1 || _isLoading
                                       ? null
                                       : () => setState(() {
@@ -303,8 +340,12 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                                 Text('Page $_currentPage of $_totalPages'),
                                 IconButton(
                                   icon: const Icon(Icons.arrow_forward),
-                                  color: _currentPage == _totalPages || _isLoading ? Colors.grey : Colors.green[600],
-                                  onPressed: _currentPage == _totalPages || _isLoading
+                                  color:
+                                      _currentPage == _totalPages || _isLoading
+                                          ? Colors.grey
+                                          : Colors.green[600],
+                                  onPressed: _currentPage == _totalPages ||
+                                          _isLoading
                                       ? null
                                       : () => setState(() {
                                             _currentPage++;

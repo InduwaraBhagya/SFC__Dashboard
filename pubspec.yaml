@@ -55,6 +55,7 @@ dependencies:
   google_fonts: ^6.2.1
   shimmer: ^3.0.0
   dropdown_button2: ^2.3.9
+  share_plus: ^10.0.0
  
   
   
