@@ -276,9 +276,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _handleNavigation(int sidebarIndex) {
     int pageIndex = 0;
-    if (sidebarIndex == 0)
+    if (sidebarIndex == 0) {
       pageIndex = 0;
-    else if (sidebarIndex == 1)
+    } else if (sidebarIndex == 1)
       pageIndex = 4; // Regular
     else if (sidebarIndex == 2)
       pageIndex = 5; // Urgent

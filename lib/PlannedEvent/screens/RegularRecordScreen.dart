@@ -9,96 +9,115 @@ import 'package:flutter/foundation.dart';
 class RegularRecordScreen extends StatefulWidget {
   final String? workgroupName;
   final Map<String, dynamic> user;
+<<<<<<< HEAD
+  final bool useRealData;
+
+  const RegularRecordScreen({
+    super.key,
+    this.workgroupName,
+    required this.user,
+    this.useRealData = false,
+  });
+=======
 
   const RegularRecordScreen({super.key, this.workgroupName, required this.user});
+>>>>>>> correct-repo/planned_event
 
   @override
   _RegularRecordScreenState createState() => _RegularRecordScreenState();
 }
 
+<<<<<<< HEAD
+class _RegularRecordScreenState extends State<RegularRecordScreen>
+    with SingleTickerProviderStateMixin {
+=======
 class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTickerProviderStateMixin {
-  final _service = RegularRecordService();
-  final _storage = const FlutterSecureStorage();
-  List<OLAViolateRecord> _allRecords = [];
-  bool _isLoading = false;
-  String? _errorMessage;
-  late AnimationController _animationController;
-  late Animation<double> _fadeAnimation;
-  int _currentPage = 1;
-  int _totalPages = 1;
-  int _totalCount = 0;
-  final int _pageSize = 5;
-  int? _userId;
+>>>>>>> correct-repo/planned_event
+  final service = RegularRecordService();
+  const storage = FlutterSecureStorage();
+  List<OLAViolateRecord> allRecords = [];
+  bool isLoading = false;
+  String? errorMessage;
+  late AnimationController animationController;
+  late Animation<double> fadeAnimation;
+  int currentPage = 1;
+  int totalPages0 = 1;
+  int totalCount0 = 0;
+  const int pageSize = 5;
+  int? userId;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(
+    animationController = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 500),
     );
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
+    fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
+      CurvedAnimation(parent: animationController, curve: Curves.easeIn),
     );
-    _initUserAndFetch();
+    initUserAndFetch();
   }
 
-  Future<void> _initUserAndFetch() async {
+  Future<void> initUserAndFetch() async {
     try {
-      final storedUserId = await _storage.read(key: 'userId');
+      final storedUserId = await storage.read(key: 'userId');
       if (storedUserId == null) throw Exception('UserId not found in storage');
-      _userId = int.tryParse(storedUserId);
-      if (_userId == null) throw Exception('Invalid UserId in storage');
-      await _fetchRecords(page: 1);
+      userId = int.tryParse(storedUserId);
+      if (userId == null) throw Exception('Invalid UserId in storage');
+      await fetchRecords(page: 1);
     } catch (e, stackTrace) {
       if (kDebugMode) {
         print('Error fetching userId: $e');
         print('StackTrace: $stackTrace');
       }
       setState(() {
-        _errorMessage = 'Unable to fetch userId: $e';
-        _isLoading = false;
+        errorMessage = 'Unable to fetch userId: $e';
+        isLoading = false;
       });
     }
   }
 
-  Future<void> _fetchRecords({int page = 1}) async {
-    if (_userId == null) {
+  Future<void> fetchRecords({int page = 1}) async {
+    if (userId == null) {
       setState(() {
-        _allRecords = [];
-        _totalCount = 0;
-        _totalPages = 1;
-        _isLoading = false;
+        allRecords = [];
+        totalCount0 = 0;
+        totalPages0 = 1;
+        isLoading = false;
       });
       return;
     }
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      isLoading = true;
+      errorMessage = null;
     });
     try {
-      final result = await _service.fetchRegularRecords(
+      final result = await service.fetchRegularRecords(
         workgroupName: widget.workgroupName,
         page: page,
-        pageSize: _pageSize,
+        pageSize: pageSize,
+        //fetchMultiWorkgroup: widget.useRealData,
       );
 
-      final List<OLAViolateRecord> newRecords = (result['records'] as List<dynamic>?)?.cast<OLAViolateRecord>() ?? [];
+      final List<OLAViolateRecord> newRecords =
+          (result['records'] as List<dynamic>?)?.cast<OLAViolateRecord>() ?? [];
       final int totalCount = result['totalCount'] as int? ?? 0;
       final int totalPages = result['totalPages'] as int? ?? 1;
 
       if (kDebugMode) {
-        print('Fetched ${newRecords.length} regular records, page: $page, total: $totalCount, totalPages: $totalPages');
+        print(
+            'Fetched ${newRecords.length} regular records, page: $page, total: $totalCount, totalPages: $totalPages');
         print('Records: ${newRecords.map((r) => r.peNumber).toList()}');
       }
 
       setState(() {
-        _allRecords = newRecords;
-        _currentPage = result['currentPage'] as int? ?? page;
-        _totalCount = totalCount;
-        _totalPages = totalPages;
-        _isLoading = false;
-        if (_allRecords.isNotEmpty) _animationController.forward();
+        allRecords = newRecords;
+        currentPage = result['currentPage'] as int? ?? page;
+        totalCount0 = totalCount;
+        totalPages0 = totalPages;
+        isLoading = false;
+        if (allRecords.isNotEmpty) animationController.forward();
       });
     } catch (e, stackTrace) {
       if (kDebugMode) {
@@ -106,15 +125,15 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
         print('StackTrace: $stackTrace');
       }
       setState(() {
-        _isLoading = false;
-        _errorMessage = e.toString();
+        isLoading = false;
+        errorMessage = e.toString();
       });
     }
   }
 
   @override
   void dispose() {
-    _animationController.dispose();
+    animationController.dispose();
     super.dispose();
   }
 
@@ -124,7 +143,8 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
       appBar: AppBar(
         title: const Text(
           'Regular Records',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -134,7 +154,10 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
         flexibleSpace: Container(
           decoration: const BoxDecoration(
             gradient: LinearGradient(
-              colors: [Color.fromARGB(226, 16, 37, 89), Color.fromARGB(255, 8, 11, 66)],
+              colors: [
+                Color.fromARGB(226, 16, 37, 89),
+                Color.fromARGB(255, 8, 11, 66)
+              ],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
             ),
@@ -147,7 +170,7 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
       ),
       body: Column(
         children: [
-          if (_errorMessage != null)
+          if (errorMessage != null)
             Container(
               color: Colors.red[100],
               padding: const EdgeInsets.all(16),
@@ -157,27 +180,32 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                   const SizedBox(width: 8),
                   Expanded(
                     child: Text(
-                      _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+                      errorMessage!,
+                      style: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
               ),
             ),
           Expanded(
-            child: _allRecords.isEmpty && _isLoading
+            child: allRecords.isEmpty && isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : CustomScrollView(
                     slivers: [
                       SliverToBoxAdapter(
                         child: FadeTransition(
-                          opacity: _fadeAnimation,
+                          opacity: fadeAnimation,
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 8.0),
                             padding: const EdgeInsets.all(12.0),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
-                                colors: [Color.fromARGB(225, 82, 126, 238), Color.fromARGB(255, 7, 0, 99)],
+                                colors: [
+                                  Color.fromARGB(225, 82, 126, 238),
+                                  Color.fromARGB(255, 7, 0, 99)
+                                ],
                                 begin: Alignment.topLeft,
                                 end: Alignment.bottomRight,
                               ),
@@ -193,7 +221,8 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.list, size: 24, color: Colors.white),
+                                const Icon(Icons.list,
+                                    size: 24, color: Colors.white),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Total Records: $_totalCount',
@@ -211,57 +240,79 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                       SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
-                            final record = _allRecords[index];
+                            final record = allRecords[index];
                             return Card(
                               key: ValueKey(record.peNumber),
                               elevation: 4,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
                               child: ExpansionTile(
                                 title: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8.0),
                                   title: Text(
                                     'PE Number: ${record.peNumber ?? 'N/A'}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Task: ${record.taskName ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                       Text(
                                         'Customer: ${record.customer ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                     ],
                                   ),
                                 ),
                                 children: [
-                                  _buildFieldRow('Workgroup', record.taskWg ?? 'N/A'),
-                                  _buildFieldRow('Province', record.province ?? 'N/A'),
-                                  _buildFieldRow('Contractor', record.contractorName ?? 'N/A'),
-                                  _buildFieldRow('PE Title', record.peTitle ?? 'N/A'),
-                                  _buildFieldRow('PE Objective', record.peObjective ?? 'N/A'),
-                                  _buildFieldRow('Service Type', record.serviceType ?? 'N/A'),
-                                  _buildFieldRow('Status', record.peStatus ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Workgroup', record.taskWg ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Province', record.province ?? 'N/A'),
+                                  _buildFieldRow('Contractor',
+                                      record.contractorName ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'PE Title', record.peTitle ?? 'N/A'),
+                                  _buildFieldRow('PE Objective',
+                                      record.peObjective ?? 'N/A'),
+                                  _buildFieldRow('Service Type',
+                                      record.serviceType ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Status', record.peStatus ?? 'N/A'),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.green[600],
                                           foregroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
                                           elevation: 2,
                                         ),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => OLAViolateRecordDetailsScreen(record: record),
+                                              builder: (context) =>
+                                                  OLAViolateRecordDetailsScreen(
+                                                      record: record),
                                             ),
                                           );
                                         },
@@ -273,10 +324,10 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                               ),
                             );
                           },
-                          childCount: _allRecords.length,
+                          childCount: allRecords.length,
                         ),
                       ),
-                      if (_totalPages > 1)
+                      if (totalPages0 > 1)
                         SliverToBoxAdapter(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
@@ -285,7 +336,9 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                               children: [
                                 IconButton(
                                   icon: const Icon(Icons.arrow_back),
-                                  color: _currentPage == 1 || _isLoading ? Colors.grey : Colors.green[600],
+                                  color: currentPage == 1 || isLoading
+                                      ? Colors.grey
+                                      : Colors.green[600],
                                   onPressed: _currentPage == 1 || _isLoading
                                       ? null
                                       : () => setState(() {
@@ -293,11 +346,15 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
                                             _fetchRecords(page: _currentPage);
                                           }),
                                 ),
-                                Text('Page $_currentPage of $_totalPages'),
+                                Text('Page $currentPage of $totalPages0'),
                                 IconButton(
                                   icon: const Icon(Icons.arrow_forward),
-                                  color: _currentPage == _totalPages || _isLoading ? Colors.grey : Colors.green[600],
-                                  onPressed: _currentPage == _totalPages || _isLoading
+                                  color:
+                                      currentPage == totalPages0 || isLoading
+                                          ? Colors.grey
+                                          : Colors.green[600],
+                                  onPressed: currentPage == totalPages0 ||
+                                          isLoading
                                       ? null
                                       : () => setState(() {
                                             _currentPage++;
@@ -316,7 +373,7 @@ class _RegularRecordScreenState extends State<RegularRecordScreen> with SingleTi
     );
   }
 
-  Widget _buildFieldRow(String label, String value) {
+  Widget buildFieldRow(String label, String value) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
       child: Row(

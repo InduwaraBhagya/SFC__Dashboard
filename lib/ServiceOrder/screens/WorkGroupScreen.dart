@@ -23,7 +23,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
   final int _recordsPerPage = 10;
   late PageController _pageController;
   int _currentPage = 0;
-  bool _isSearchBarExpanded = false; // Track search bar expansion state
+  final bool _isSearchBarExpanded = false; // Track search bar expansion state
 
   @override
   void initState() {
@@ -114,13 +114,17 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
       if (success) {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Workgroup deleted successfully'), backgroundColor: Colors.green),
+          const SnackBar(
+              content: Text('Workgroup deleted successfully'),
+              backgroundColor: Colors.green),
         );
         _refreshWorkGroups();
       } else {
         if (!mounted) return;
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Failed to delete workgroup'), backgroundColor: Colors.red),
+          const SnackBar(
+              content: Text('Failed to delete workgroup'),
+              backgroundColor: Colors.red),
         );
       }
     }
@@ -171,7 +175,9 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                     onPressed: () async {
                       final result = await Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (context) => const AddEditWorkGroupScreen()),
+                        MaterialPageRoute(
+                            builder: (context) =>
+                                const AddEditWorkGroupScreen()),
                       );
                       if (result == true) {
                         _refreshWorkGroups();
@@ -185,7 +191,8 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 7, 69, 156),
                       foregroundColor: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 8),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8),
                       ),
@@ -194,7 +201,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                 ],
               ),
               const SizedBox(height: 24),
-              
+
               // Search Bar
               TextField(
                 onChanged: _filterWorkGroups,
@@ -203,7 +210,8 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                   hintText: 'Search workgroups...',
                   hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400),
                   prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
                     borderSide: BorderSide(color: Colors.grey.shade300),
@@ -219,10 +227,11 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                 ),
               ),
               const SizedBox(height: 24),
-              
+
               // Table Header
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
                 decoration: BoxDecoration(
                   color: const Color(0xFFF9FAFB),
                   border: Border(
@@ -254,7 +263,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                   ],
                 ),
               ),
-              
+
               // Table Body (List)
               Expanded(
                 child: FutureBuilder<List<WorkGroupDetails>>(
@@ -267,11 +276,13 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                     } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                       return const Center(child: Text('No work groups found'));
                     }
-                    
+
                     final startIndex = _currentPage * _recordsPerPage;
-                    final endIndex = (startIndex + _recordsPerPage).clamp(0, _filteredWorkGroups.length);
-                    final pageRecords = _filteredWorkGroups.sublist(startIndex, endIndex);
-                    
+                    final endIndex = (startIndex + _recordsPerPage)
+                        .clamp(0, _filteredWorkGroups.length);
+                    final pageRecords =
+                        _filteredWorkGroups.sublist(startIndex, endIndex);
+
                     return Column(
                       children: [
                         Expanded(
@@ -284,7 +295,8 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                             itemBuilder: (context, index) {
                               final workGroup = pageRecords[index];
                               return Container(
-                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 12),
                                 child: Row(
                                   children: [
                                     Expanded(
@@ -301,16 +313,24 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                                       children: [
                                         // Edit Button
                                         Container(
-                                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 2),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: Colors.blue.shade200),
-                                            borderRadius: BorderRadius.circular(4),
+                                            border: Border.all(
+                                                color: Colors.blue.shade200),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                           ),
                                           child: InkWell(
                                             onTap: () async {
-                                              final result = await Navigator.push(
+                                              final result =
+                                                  await Navigator.push(
                                                 context,
-                                                MaterialPageRoute(builder: (context) => AddEditWorkGroupScreen(workGroup: workGroup)),
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        AddEditWorkGroupScreen(
+                                                            workGroup:
+                                                                workGroup)),
                                               );
                                               if (result == true) {
                                                 _refreshWorkGroups();
@@ -318,27 +338,35 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                                             },
                                             child: const Padding(
                                               padding: EdgeInsets.all(4),
-                                              child: Icon(Icons.edit, size: 16, color: Colors.blue),
+                                              child: Icon(Icons.edit,
+                                                  size: 16, color: Colors.blue),
                                             ),
                                           ),
                                         ),
 
                                         // Delete Button
                                         Container(
-                                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                                          margin: const EdgeInsets.symmetric(
+                                              horizontal: 2),
                                           decoration: BoxDecoration(
-                                            border: Border.all(color: Colors.red.shade200),
-                                            borderRadius: BorderRadius.circular(4),
+                                            border: Border.all(
+                                                color: Colors.red.shade200),
+                                            borderRadius:
+                                                BorderRadius.circular(4),
                                           ),
                                           child: InkWell(
                                             onTap: () {
-                                              if (workGroup.workGroupId != null && workGroup.workGroupId! > 0) {
-                                                _deleteWorkGroup(workGroup.workGroupId!);
+                                              if (workGroup.workGroupId !=
+                                                      null &&
+                                                  workGroup.workGroupId! > 0) {
+                                                _deleteWorkGroup(
+                                                    workGroup.workGroupId!);
                                               }
                                             },
                                             child: const Padding(
                                               padding: EdgeInsets.all(4),
-                                              child: Icon(Icons.delete_outline, size: 16, color: Colors.red),
+                                              child: Icon(Icons.delete_outline,
+                                                  size: 16, color: Colors.red),
                                             ),
                                           ),
                                         ),
@@ -360,17 +388,20 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: List.generate(totalPages, (index) {
                                   return Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 4.0),
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: _currentPage == index
-                                            ? const Color.fromARGB(255, 7, 69, 156)
+                                            ? const Color.fromARGB(
+                                                255, 7, 69, 156)
                                             : Colors.grey.shade200,
                                         foregroundColor: _currentPage == index
                                             ? Colors.white
                                             : Colors.black87,
                                         shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(8)),
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
                                         minimumSize: const Size(36, 36),
                                         padding: EdgeInsets.zero,
                                       ),
@@ -381,7 +412,8 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                                       },
                                       child: Text(
                                         '${index + 1}',
-                                        style: GoogleFonts.poppins(fontSize: 12),
+                                        style:
+                                            GoogleFonts.poppins(fontSize: 12),
                                       ),
                                     ),
                                   );

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../model/RegularRecord.dart';
 import 'PETaskScreen.dart';
@@ -30,7 +29,6 @@ class RegularRecordDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: SafeArea(
         child: Column(
           children: [
@@ -48,10 +46,12 @@ class RegularRecordDetailsScreen extends StatelessWidget {
                       const [Color(0xFFFFD166), Color(0xFFFF5252)],
                       [
                         _Field('SO_ID', record.soId ?? 'N/A'),
-                        _Field('SERVICE_CATEGORY', record.serviceCategory ?? 'N/A'),
+                        _Field('SERVICE_CATEGORY',
+                            record.serviceCategory ?? 'N/A'),
                         _Field('SERVICE_TYPE', record.serviceType ?? 'N/A'),
                         _Field('ORDER_TYPE', record.orderType ?? 'N/A'),
-                        _Field('SERVICE_REQUIRED_DATE', record.serviceRequiredDate ?? 'N/A'),
+                        _Field('SERVICE_REQUIRED_DATE',
+                            record.serviceRequiredDate ?? 'N/A'),
                         _Field('SO_CREATE_DATE', record.soCreateDate ?? 'N/A'),
                       ],
                       isFullWidth: true,
@@ -64,10 +64,12 @@ class RegularRecordDetailsScreen extends StatelessWidget {
                       [
                         _Field('WO_ID', record.woId ?? 'N/A'),
                         _Field('WO_STATUS', record.woStatus ?? 'N/A'),
-                        _Field('PENDING_TASK_NAME', record.pendingTaskName ?? 'N/A'),
+                        _Field('PENDING_TASK_NAME',
+                            record.pendingTaskName ?? 'N/A'),
                         _Field('PENDING_WG', record.pendingWg ?? 'N/A'),
                         _Field('WO_START_DATE', record.woStartDate ?? 'N/A'),
-                        _Field('WO_ACTUAL_START', record.woActualStartDate ?? 'N/A'),
+                        _Field('WO_ACTUAL_START',
+                            record.woActualStartDate ?? 'N/A'),
                         _Field('WO_COMMENTS', record.woComments ?? 'N/A'),
                       ],
                       isFullWidth: true,
@@ -80,7 +82,8 @@ class RegularRecordDetailsScreen extends StatelessWidget {
                       [
                         _Field('CUSTOMER', record.customer ?? 'N/A'),
                         _Field('CUS_TYPE', record.cusType ?? 'N/A'),
-                        _Field('ACCOUNT_MANAGER', record.accountManager ?? 'N/A'),
+                        _Field(
+                            'ACCOUNT_MANAGER', record.accountManager ?? 'N/A'),
                       ],
                       isFullWidth: true,
                     ),
@@ -93,7 +96,8 @@ class RegularRecordDetailsScreen extends StatelessWidget {
                         _Field('REGION', record.region ?? 'N/A'),
                         _Field('PROVINCE', record.province ?? 'N/A'),
                         _Field('RTOM', record.rtom ?? 'N/A'),
-                        _Field('LOCATION_A_ADDRESS', record.locationAAddress ?? 'N/A'),
+                        _Field('LOCATION_A_ADDRESS',
+                            record.locationAAddress ?? 'N/A'),
                       ],
                       isFullWidth: true,
                     ),
@@ -115,9 +119,11 @@ class RegularRecordDetailsScreen extends StatelessWidget {
                     const SizedBox(height: 12),
                     _buildTaskTableSection(context),
                     const SizedBox(height: 12),
-                    _buildEmptySection(context, 'Previous Report Log', 'No records found'),
+                    _buildEmptySection(
+                        context, 'Previous Report Log', 'No records found'),
                     const SizedBox(height: 12),
-                    _buildEmptySection(context, 'Assignments', 'No assignments found'),
+                    _buildEmptySection(
+                        context, 'Assignments', 'No assignments found'),
                   ],
                 ),
               ),
@@ -143,7 +149,8 @@ class RegularRecordDetailsScreen extends StatelessWidget {
           Image.network(
             'https://www.slt.lk/sites/default/files/logo/slt-logo.png',
             height: 30,
-            errorBuilder: (c, e, s) => const Icon(Icons.business, color: Colors.white),
+            errorBuilder: (c, e, s) =>
+                const Icon(Icons.business, color: Colors.white),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -182,7 +189,8 @@ class RegularRecordDetailsScreen extends StatelessWidget {
             ),
             child: const Row(
               children: [
-                Text('SO ID', style: TextStyle(fontSize: 10, color: Colors.black)),
+                Text('SO ID',
+                    style: TextStyle(fontSize: 10, color: Colors.black)),
                 Icon(Icons.arrow_drop_down, size: 14),
               ],
             ),
@@ -204,10 +212,13 @@ class RegularRecordDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 8),
             decoration: const BoxDecoration(
               color: Color(0xFF4A69BD),
-              borderRadius: BorderRadius.only(topRight: Radius.circular(4), bottomRight: Radius.circular(4)),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(4),
+                  bottomRight: Radius.circular(4)),
             ),
             child: Center(
-              child: Icon(Icons.search, color: Theme.of(context).cardColor, size: 16),
+              child: Icon(Icons.search,
+                  color: Theme.of(context).cardColor, size: 16),
             ),
           ),
         ],
@@ -224,7 +235,10 @@ class RegularRecordDetailsScreen extends StatelessWidget {
       ),
       child: Text(
         'User',
-        style: TextStyle(color: Theme.of(context).cardColor, fontSize: 10, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: Theme.of(context).cardColor,
+            fontSize: 10,
+            fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -260,7 +274,9 @@ class RegularRecordDetailsScreen extends StatelessWidget {
               children: [
                 Icon(Icons.flag, color: Theme.of(context).cardColor, size: 12),
                 const SizedBox(width: 4),
-                Text('Progress: 0%', style: TextStyle(color: Theme.of(context).cardColor, fontSize: 10)),
+                Text('Progress: 0%',
+                    style: TextStyle(
+                        color: Theme.of(context).cardColor, fontSize: 10)),
               ],
             ),
           ),
@@ -277,7 +293,11 @@ class RegularRecordDetailsScreen extends StatelessWidget {
                 children: [
                   Icon(Icons.arrow_back, size: 12, color: Colors.blue),
                   SizedBox(width: 4),
-                  Text('Back', style: TextStyle(color: Colors.blue, fontWeight: FontWeight.bold, fontSize: 12)),
+                  Text('Back',
+                      style: TextStyle(
+                          color: Colors.blue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12)),
                 ],
               ),
             ),
@@ -287,13 +307,18 @@ class RegularRecordDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoSection(BuildContext context, String title, List<Color> headerColors, List<_Field> fields, {bool isFullWidth = false}) {
+  Widget _buildInfoSection(BuildContext context, String title,
+      List<Color> headerColors, List<_Field> fields,
+      {bool isFullWidth = false}) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -303,11 +328,15 @@ class RegularRecordDetailsScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
               gradient: LinearGradient(colors: headerColors),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(8)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(8)),
             ),
             child: Text(
               title,
-              style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.bold, fontSize: 13),
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).cardColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13),
             ),
           ),
           Padding(
@@ -318,18 +347,26 @@ class RegularRecordDetailsScreen extends StatelessWidget {
                 1: FlexColumnWidth(1.2),
               },
               border: TableBorder.all(color: Colors.grey.shade200, width: 0.5),
-              children: fields.map((f) => TableRow(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(6),
-                    child: Text(f.label, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.black54)),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(6),
-                    child: Text(f.value, style: const TextStyle(fontSize: 10, color: Colors.black87)),
-                  ),
-                ],
-              )).toList(),
+              children: fields
+                  .map((f) => TableRow(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(f.label,
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 10,
+                                    color: Colors.black54)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.all(6),
+                            child: Text(f.value,
+                                style: const TextStyle(
+                                    fontSize: 10, color: Colors.black87)),
+                          ),
+                        ],
+                      ))
+                  .toList(),
             ),
           ),
         ],
@@ -343,7 +380,10 @@ class RegularRecordDetailsScreen extends StatelessWidget {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -357,7 +397,10 @@ class RegularRecordDetailsScreen extends StatelessWidget {
             ),
             child: Text(
               'Tasks',
-              style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.bold, fontSize: 13),
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).cardColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13),
             ),
           ),
           SingleChildScrollView(
@@ -366,7 +409,10 @@ class RegularRecordDetailsScreen extends StatelessWidget {
               headingRowHeight: 30,
               dataRowMinHeight: 30,
               dataRowMaxHeight: 40,
-              headingTextStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 10, color: Colors.black54),
+              headingTextStyle: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 10,
+                  color: Colors.black54),
               columns: const [
                 DataColumn(label: Text('TASK')),
                 DataColumn(label: Text('WORKGROUP')),
@@ -379,13 +425,21 @@ class RegularRecordDetailsScreen extends StatelessWidget {
               ],
               rows: [
                 DataRow(cells: [
-                  DataCell(Text(record.taskName ?? 'confirm w/ customer', style: const TextStyle(fontSize: 10))),
+                  DataCell(Text(record.taskName ?? 'confirm w/ customer',
+                      style: const TextStyle(fontSize: 10))),
                   const DataCell(Text('-', style: TextStyle(fontSize: 10))),
                   const DataCell(Text('-', style: TextStyle(fontSize: 10))),
                   DataCell(Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(color: Colors.grey.shade400, borderRadius: BorderRadius.circular(12)),
-                    child: Text('Pending', style: TextStyle(color: Theme.of(context).cardColor, fontSize: 9, fontWeight: FontWeight.bold)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                        color: Colors.grey.shade400,
+                        borderRadius: BorderRadius.circular(12)),
+                    child: Text('Pending',
+                        style: TextStyle(
+                            color: Theme.of(context).cardColor,
+                            fontSize: 9,
+                            fontWeight: FontWeight.bold)),
                   )),
                   const DataCell(Text('-', style: TextStyle(fontSize: 10))),
                   const DataCell(Text('-', style: TextStyle(fontSize: 10))),
@@ -400,13 +454,17 @@ class RegularRecordDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildEmptySection(BuildContext context, String title, String emptyMsg) {
+  Widget _buildEmptySection(
+      BuildContext context, String title, String emptyMsg) {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(8),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 5, offset: const Offset(0, 2)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 5,
+              offset: const Offset(0, 2)),
         ],
       ),
       child: Column(
@@ -423,12 +481,22 @@ class RegularRecordDetailsScreen extends StatelessWidget {
               children: [
                 Text(
                   title,
-                  style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.bold, fontSize: 13),
+                  style: GoogleFonts.poppins(
+                      color: Theme.of(context).cardColor,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 13),
                 ),
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                  decoration: BoxDecoration(color: const Color(0xFFFFC107), borderRadius: BorderRadius.circular(4)),
-                  child: Text(emptyMsg, style: TextStyle(color: Theme.of(context).textTheme.bodyMedium?.color, fontSize: 9, fontWeight: FontWeight.bold)),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                  decoration: BoxDecoration(
+                      color: const Color(0xFFFFC107),
+                      borderRadius: BorderRadius.circular(4)),
+                  child: Text(emptyMsg,
+                      style: TextStyle(
+                          color: Theme.of(context).textTheme.bodyMedium?.color,
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold)),
                 ),
               ],
             ),
@@ -455,12 +523,9 @@ class RegularRecordDetailsScreen extends StatelessWidget {
   }
 }
 
-
-
 class _Field {
   final String label;
   final String value;
 
   _Field(this.label, this.value);
 }
-

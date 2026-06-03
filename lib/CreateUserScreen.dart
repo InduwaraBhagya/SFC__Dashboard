@@ -5,65 +5,67 @@ import 'PlannedEvent/service/AuthService.dart';
 import 'PlannedEvent/model/SystemUser.dart';
 import 'PlannedEvent/model/UserRole.dart';
 import 'PlannedEvent/model/WorkGroup.dart';
-import 'PlannedEvent/PlannedEventMain.dart';
-import 'ServiceOrder/ServiceOrderMain.dart';
 import 'OnboardingScreen.dart';
 
 class CreateUserScreen extends StatefulWidget {
-  final OnboardingDestination destination;
-
-  const CreateUserScreen({
-    super.key,
-    this.destination = OnboardingDestination.plannedEvent,
-  });
+  const CreateUserScreen({super.key});
 
   @override
   State<CreateUserScreen> createState() => _CreateUserScreenState();
 }
 
 class _CreateUserScreenState extends State<CreateUserScreen> {
-  final AuthService _authService = AuthService();
-  final storage = const FlutterSecureStorage();
-  final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
-  final _serviceIdController = TextEditingController();
-  bool _isLoading = false;
-  String? _errorMessage;
-  List<UserRole> _userRoles = [];
-  List<WorkGroup> _workGroups = [];
-  UserRole? _selectedUserRole;
-  final List<WorkGroup> _selectedWorkGroups = [];
+  final AuthService authService = AuthService();
+  const storage = FlutterSecureStorage();
+  final formKey = GlobalKey<FormState>();
+  final nameController = TextEditingController();
+  final serviceIdController = TextEditingController();
+  bool isLoading = false;
+  String? errorMessage;
+  List<UserRole> userRoles = [];
+  List<WorkGroup> workGroups = [];
+  UserRole? selectedUserRole;
+  final List<WorkGroup> selectedWorkGroups = [];
 
   @override
   void initState() {
     super.initState();
-    _checkExistingUser();
+    checkExistingUser();
   }
 
-  Future<void> _checkExistingUser() async {
+  Future<void> checkExistingUser() async {
     setState(() {
-      _isLoading = true;
-      _errorMessage = null;
+      isLoading = true;
+      errorMessage = null;
     });
 
     try {
-      final userInfo = await _authService.getCurrentUser();
+      final userInfo = await authService.getCurrentUser();
       if (userInfo != null) {
         final serviceId = userInfo['ServiceId'] ?? '';
         if (serviceId.isNotEmpty) {
           // Check if user with serviceId already exists
           final existingUser =
-              await _authService.checkUserByServiceId(serviceId);
+              await authService.checkUserByServiceId(serviceId);
           if (existingUser != null && existingUser.id != null) {
-            // User exists; store the id and prefill the form.
+            // User exists, navigate to OnboardingScreen
             await storage.write(
                 key: 'userId', value: existingUser.id.toString());
+            if (mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        const OnboardingScreen()),
+              );
+              return;
+            }
           }
         }
-        // Populate fields from stored Azure AD user info.
+        // If user doesn't exist, populate fields and fetch dropdown data
         setState(() {
-          _nameController.text = userInfo['Name'] ?? '';
-          _serviceIdController.text = serviceId;
+          nameController.text = userInfo['Name'] ?? '';
+          serviceIdController.text = serviceId;
         });
         await _fetchDropdownData();
       }
@@ -133,9 +135,20 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('User created and workgroups assigned successfully'),
-            ),
+<<<<<<< HEAD
+                content:
+                    Text('User created and workgroups assigned successfully')),
           );
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    const OnboardingScreen()),
+          );
+=======
+              content: const Text('User created and workgroups assigned successfully'),
+            ),
+          )
 
           // Redirect according to selected destination
           if (widget.destination == OnboardingDestination.plannedEvent) {
@@ -153,6 +166,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
               ),
             );
           }
+>>>>>>> correct-repo/planned_event
         }
       } catch (e) {
         setState(() {

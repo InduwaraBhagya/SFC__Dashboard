@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'PlannedEvent/service/AuthService.dart' as auth;
+import 'PlannedEvent/screens/WorkgroupSelectionScreen.dart';
 import 'CreateUserScreen.dart';
-import 'OnboardingScreen.dart';
 
 class SigninScreen extends StatefulWidget {
-  final OnboardingDestination destination;
-
-  const SigninScreen({super.key, this.destination = OnboardingDestination.plannedEvent});
+  const SigninScreen({super.key});
 
   @override
   State<SigninScreen> createState() => _SigninScreenState();
@@ -32,20 +30,47 @@ class _SigninScreenState extends State<SigninScreen> {
       print('Login result: $user');
 
       if (user != null && user.isNotEmpty) {
-        print('Login successful! Navigating to onboarding...');
+        print('Login successful! Navigating to dashboard...');
         print('User data: $user');
 
-        final int? userId = user['UserId'] is int ? user['UserId'] as int : null;
-
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateUserScreen(
-                destination: widget.destination,
-              ),
-            ),
-          );
+        final serviceId = user['ServiceId'];
+        if (serviceId != null) {
+          try {
+            final existingUser =
+                await _authService.checkUserByServiceId(serviceId);
+            if (mounted) {
+              if (existingUser != null && existingUser.id != null) {
+                // User exists, go to workgroup selection
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const WorkgroupSelectionScreen(),
+                  ),
+                );
+              } else {
+                // User does not exist, go to create user screen
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const CreateUserScreen(),
+                  ),
+                );
+              }
+            }
+          } catch (e) {
+            // Network error or other API issue - DO NOT go to CreateUserScreen
+            print('Error checking existing user: $e');
+            if (mounted) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: const Text(
+                      "Connection error: Could not verify user status. Please check your internet or tunnel."),
+                  backgroundColor: Colors.orange.shade800,
+                  duration: const Duration(seconds: 5),
+                ),
+              );
+            }
+          }
         }
       } else {
         print('Login failed: user data is null or empty');

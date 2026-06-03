@@ -38,7 +38,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final storage = const FlutterSecureStorage();
+      const storage = FlutterSecureStorage();
       final userInfoStr = await storage.read(key: 'user_info');
       if (userInfoStr != null) {
         final userInfo = json.decode(userInfoStr);
