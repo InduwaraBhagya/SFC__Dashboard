@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io' as io;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -91,6 +92,17 @@ class HoldRecordService {
           'currentPage': page ?? 1,
         };
       } else {
+        if (response.statusCode == 404) {
+          if (kDebugMode) {
+            print('Hold Records API returned 404 — treating as empty result.');
+          }
+          return {
+            'records': [],
+            'totalCount': 0,
+            'totalPages': 1,
+            'currentPage': page ?? 1,
+          };
+        }
         if (kDebugMode) {
           print('Hold Records API Error Response: ${response.body}');
         }
@@ -98,8 +110,11 @@ class HoldRecordService {
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('Error fetching hold records: $e');
-        print('StackTrace: $stackTrace');
+        if (e is io.SocketException) {
+          print('Network error fetching hold records: ${e.message}');
+        } else {
+          print('Error fetching hold records: $e');
+        }
       }
       return {
         'records': _holdRecords,
@@ -108,6 +123,23 @@ class HoldRecordService {
         'currentPage': 1,
       };
     }
+  }
+
+  /// Backwards-compatible alias expected by callers in DashboardHome.
+  Future<Map<String, dynamic>> fetchHoldRecords({
+    int? page,
+    required int pageSize,
+    String? searchTerm,
+    int? workgroupId,
+    bool fetchMultiWorkgroup = false,
+  }) async {
+    // fetchMultiWorkgroup is accepted for compatibility but ignored here
+    return await getHoldRecords(
+      page: page,
+      pageSize: pageSize,
+      searchTerm: searchTerm,
+      workgroupId: workgroupId,
+    );
   }
 
   Future<void> addHoldRecord(OLAViolateRecord record) async {

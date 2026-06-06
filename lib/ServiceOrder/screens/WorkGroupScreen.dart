@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:shimmer/shimmer.dart';
 import '../model/WorkGroupModel.dart';
 import '../service/WorkGroupService.dart';
-import 'WorkGroupDetailsScreen.dart';
 import 'AddEditWorkGroupScreen.dart';
-import 'DashboardHome.dart'; // Adjust this import based on your actual DashboardHome location
+// Adjust this import based on your actual DashboardHome location
 
 class WorkGroupScreen extends StatefulWidget {
   const WorkGroupScreen({super.key});

@@ -111,4 +111,68 @@ class WorkGroupService {
       return null;
     }
   }
+
+  Future<Map<String, dynamic>> createWorkGroup(String name) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/workgroups'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'name': name}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 201) {
+        return {'success': true, 'message': 'Work group created'};
+      }
+      try {
+        final body = json.decode(response.body);
+        return {'success': false, 'message': body['message'] ?? response.body};
+      } catch (_) {
+        return {'success': false, 'message': response.body};
+      }
+    } catch (e) {
+      print('Error creating work group: $e');
+      return {'success': false, 'message': e.toString()};
+    }
+  }
+
+  Future<Map<String, dynamic>> updateWorkGroup(int id, String newName) async {
+    try {
+      final response = await http.put(
+        Uri.parse('$baseUrl/api/workgroups/$id'),
+        headers: {'Content-Type': 'application/json'},
+        body: json.encode({'name': newName}),
+      );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return {'success': true, 'message': 'Work group updated'};
+      }
+      try {
+        final body = json.decode(response.body);
+        return {'success': false, 'message': body['message'] ?? response.body};
+      } catch (_) {
+        return {'success': false, 'message': response.body};
+      }
+    } catch (e) {
+      print('Error updating work group: $e');
+      return {'success': false, 'message': e.toString()};
+    }
+  }
+
+  Future<Map<String, dynamic>> deleteWorkGroup(int id) async {
+    try {
+      final response = await http.delete(
+        Uri.parse('$baseUrl/api/workgroups/$id'),
+      );
+      if (response.statusCode == 200 || response.statusCode == 204) {
+        return {'success': true, 'message': 'Work group deleted'};
+      }
+      try {
+        final body = json.decode(response.body);
+        return {'success': false, 'message': body['message'] ?? response.body};
+      } catch (_) {
+        return {'success': false, 'message': response.body};
+      }
+    } catch (e) {
+      print('Error deleting work group: $e');
+      return {'success': false, 'message': e.toString()};
+    }
+  }
 }

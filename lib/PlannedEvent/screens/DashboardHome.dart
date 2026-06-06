@@ -2264,10 +2264,25 @@ class _DashboardHomeState extends State<DashboardHome> {
         ),
         _buildGridItem(
           context,
-          gradientColors = [
+          title: 'Hold Records',
+          gradientColors: [
             const Color.fromARGB(255, 249, 231, 176),
             const Color.fromARGB(255, 248, 200, 158)
           ],
+          imagePath: 'assets/images/Hold.png',
+          taskColor: const Color(0xFFFFA000),
+          taskCount: _holdRecordCount ?? 0,
+          isLoading: _isLoadingHoldCount,
+          error: _holdCountError,
+          onTap: () => Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => HoldRecordScreen(
+                workgroupId: _selectedWorkGroupId,
+                useRealData: _useRealData,
+              ),
+            ),
+          ),
         ),
       ],
     );

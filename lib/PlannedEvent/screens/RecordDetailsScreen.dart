@@ -197,7 +197,7 @@ class RecordDetailsScreen extends StatelessWidget {
           const SizedBox(height: 20),
         ],
       ),
-    )
+    );
   }
 
   Widget _buildSection(BuildContext context,
