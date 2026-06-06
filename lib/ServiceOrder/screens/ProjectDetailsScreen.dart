@@ -72,7 +72,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   }
 
   Future<void> _addSOToProject(int plannedEventId) async {
-    final success = await _projectService.addSOToProject(widget.projectId, plannedEventId);
+    final success =
+        await _projectService.addSOToProject(widget.projectId, plannedEventId);
     if (success) {
       _searchController.clear();
       setState(() => _searchResults = []);
@@ -90,7 +91,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   Future<void> _loadProjectDetails() async {
     setState(() => _isLoading = true);
     try {
-      final details = await _projectService.fetchProjectDetails(widget.projectId);
+      final details =
+          await _projectService.fetchProjectDetails(widget.projectId);
       setState(() {
         _projectDetails = details;
         _isLoading = false;
@@ -159,12 +161,11 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         elevation: 0,
-        
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1A237E), size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: Color(0xFF1A237E), size: 20),
           onPressed: widget.onBack,
         ),
         title: Text(
@@ -185,7 +186,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
         ],
       ),
       body: _isLoading
-          ? const Center(child: CircularProgressIndicator(color: Color(0xFF1A237E)))
+          ? const Center(
+              child: CircularProgressIndicator(color: Color(0xFF1A237E)))
           : SingleChildScrollView(
               padding: const EdgeInsets.all(20),
               child: Column(
@@ -272,9 +274,14 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                 hintText: 'Search SO by ID or customer...',
                 border: InputBorder.none,
                 icon: const Icon(Icons.search, color: Colors.grey, size: 20),
-                suffixIcon: _isSearching 
-                  ? const SizedBox(width: 20, height: 20, child: Padding(padding: EdgeInsets.all(12), child: CircularProgressIndicator(strokeWidth: 2))) 
-                  : null,
+                suffixIcon: _isSearching
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: Padding(
+                            padding: EdgeInsets.all(12),
+                            child: CircularProgressIndicator(strokeWidth: 2)))
+                    : null,
               ),
             ),
           ),
@@ -291,17 +298,22 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                   return ListTile(
                     dense: true,
                     contentPadding: EdgeInsets.zero,
-                    title: Text(so['soId'] ?? 'N/A', style: const TextStyle(fontWeight: FontWeight.bold)),
-                    subtitle: Text(so['customer'] ?? 'Unknown Customer', maxLines: 1, overflow: TextOverflow.ellipsis),
+                    title: Text(so['soId'] ?? 'N/A',
+                        style: const TextStyle(fontWeight: FontWeight.bold)),
+                    subtitle: Text(so['customer'] ?? 'Unknown Customer',
+                        maxLines: 1, overflow: TextOverflow.ellipsis),
                     trailing: ElevatedButton(
                       onPressed: () => _addSOToProject(so['id']),
                       style: ElevatedButton.styleFrom(
-                        
                         padding: const EdgeInsets.symmetric(horizontal: 12),
                         minimumSize: const Size(60, 30),
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6)),
                       ),
-                      child: Text('Add', style: TextStyle(color: Theme.of(context).cardColor, fontSize: 11)),
+                      child: Text('Add',
+                          style: TextStyle(
+                              color: Theme.of(context).cardColor,
+                              fontSize: 11)),
                     ),
                   );
                 },
@@ -310,7 +322,8 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           ] else if (_searchController.text.isNotEmpty && !_isSearching) ...[
             const Padding(
               padding: EdgeInsets.only(top: 12),
-              child: Text('No matching SOs found', style: TextStyle(color: Colors.grey, fontSize: 12)),
+              child: Text('No matching SOs found',
+                  style: TextStyle(color: Colors.grey, fontSize: 12)),
             ),
           ],
         ],
@@ -337,11 +350,12 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
           Center(
             child: Padding(
               padding: const EdgeInsets.all(40),
-              child: Text('No SOs assigned to this project', style: GoogleFonts.poppins(color: Colors.grey)),
+              child: Text('No SOs assigned to this project',
+                  style: GoogleFonts.poppins(color: Colors.grey)),
             ),
           )
         else
-          ...pes.map((pe) => _buildSOCard(pe)).toList(),
+          ...pes.map((pe) => _buildSOCard(pe)),
       ],
     );
   }
@@ -419,20 +433,23 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ServiceOrderDetailScreen(pe: plannedEvent),
+                        builder: (context) =>
+                            ServiceOrderDetailScreen(pe: plannedEvent),
                       ),
                     );
                   },
                   icon: const Icon(Icons.remove_red_eye_outlined, size: 18),
                   label: const Text('View Details'),
-                  style: TextButton.styleFrom(foregroundColor: const Color(0xFF2196F3)),
+                  style: TextButton.styleFrom(
+                      foregroundColor: const Color(0xFF2196F3)),
                 ),
                 const SizedBox(width: 8),
                 TextButton.icon(
                   onPressed: () {},
                   icon: const Icon(Icons.delete_outline, size: 18),
                   label: const Text('Remove'),
-                  style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
+                  style:
+                      TextButton.styleFrom(foregroundColor: Colors.redAccent),
                 ),
               ],
             ),
@@ -460,13 +477,19 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
             ),
             child: Text(
               value,
-              style: GoogleFonts.poppins(fontSize: 12, fontWeight: FontWeight.w500, color: Colors.grey.shade700),
+              style: GoogleFonts.poppins(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.grey.shade700),
             ),
           )
         else
           Text(
             value,
-            style: GoogleFonts.poppins(fontSize: 13, fontWeight: FontWeight.w500, color: const Color(0xFF2C3E50)),
+            style: GoogleFonts.poppins(
+                fontSize: 13,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF2C3E50)),
           ),
       ],
     );
@@ -482,9 +505,9 @@ class _ProjectDetailsScreenState extends State<ProjectDetailsScreen> {
       ),
       child: Text(
         text,
-        style: GoogleFonts.poppins(fontSize: 11, fontWeight: FontWeight.w600, color: color),
+        style: GoogleFonts.poppins(
+            fontSize: 11, fontWeight: FontWeight.w600, color: color),
       ),
     );
   }
 }
-

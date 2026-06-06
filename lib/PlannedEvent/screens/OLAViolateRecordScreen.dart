@@ -8,14 +8,22 @@ import 'package:flutter/foundation.dart';
 
 class OLAViolateRecordScreen extends StatefulWidget {
   final Map<String, dynamic>? user;
+  final int? workgroupId;
+  final bool useRealData;
 
-  const OLAViolateRecordScreen({super.key, this.user});
+  const OLAViolateRecordScreen({
+    super.key,
+    this.user,
+    this.workgroupId,
+    this.useRealData = false,
+  });
 
   @override
   _OLAViolateRecordScreenState createState() => _OLAViolateRecordScreenState();
 }
 
-class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with SingleTickerProviderStateMixin {
+class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen>
+    with SingleTickerProviderStateMixin {
   final _service = OLAViolateRecordService();
   final _storage = const FlutterSecureStorage();
   List<OLAViolateRecord> _allRecords = [];
@@ -82,14 +90,18 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
         page: page,
         pageSize: _pageSize,
         searchTerm: _searchTerm,
+        workgroupId: widget.workgroupId,
+        fetchMultiWorkgroup: widget.useRealData,
       );
 
-      final List<OLAViolateRecord> newRecords = (result['records'] as List<dynamic>?)?.cast<OLAViolateRecord>() ?? [];
+      final List<OLAViolateRecord> newRecords =
+          (result['records'] as List<dynamic>?)?.cast<OLAViolateRecord>() ?? [];
       final int totalCount = result['totalCount'] as int? ?? 0;
       final int totalPages = result['totalPages'] as int? ?? 1;
 
       if (kDebugMode) {
-        print('Fetched ${newRecords.length} OLA violation records, page: $page, total: $totalCount, totalPages: $totalPages');
+        print(
+            'Fetched ${newRecords.length} OLA violation records, page: $page, total: $totalCount, totalPages: $totalPages');
         print('Records: ${newRecords.map((r) => r.peNumber).toList()}');
       }
 
@@ -196,7 +208,8 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
       appBar: AppBar(
         title: const Text(
           'OLA Violation Records',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -242,7 +255,8 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                   Expanded(
                     child: Text(
                       _successMessage!,
-                      style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          color: Colors.white, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
@@ -259,7 +273,8 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                   Expanded(
                     child: Text(
                       _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
@@ -274,7 +289,8 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                         child: FadeTransition(
                           opacity: _fadeAnimation,
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 8.0),
                             padding: const EdgeInsets.all(12.0),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -297,7 +313,8 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.list, size: 24, color: Colors.white),
+                                const Icon(Icons.list,
+                                    size: 24, color: Colors.white),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Total Records: $_totalCount',
@@ -319,39 +336,57 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                             return Card(
                               key: ValueKey(record.peNumber),
                               elevation: 4,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
                               child: ExpansionTile(
                                 title: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8.0),
                                   title: Text(
                                     'PE Number: ${record.peNumber ?? 'N/A'}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Task: ${record.taskName ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                       Text(
                                         'Customer: ${record.customer ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                     ],
                                   ),
                                 ),
                                 children: [
-                                  _buildFieldRow('Workgroup', record.taskWg ?? 'N/A'),
-                                  _buildFieldRow('Province', record.province ?? 'N/A'),
-                                  _buildFieldRow('Contractor', record.contractorName ?? 'N/A'),
-                                  _buildFieldRow('PE Title', record.peTitle ?? 'N/A'),
-                                  _buildFieldRow('PE Objective', record.peObjective ?? 'N/A'),
-                                  _buildFieldRow('Service Type', record.serviceType ?? 'N/A'),
-                                  _buildFieldRow('Status', record.peStatus ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Workgroup', record.taskWg ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Province', record.province ?? 'N/A'),
+                                  _buildFieldRow('Contractor',
+                                      record.contractorName ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'PE Title', record.peTitle ?? 'N/A'),
+                                  _buildFieldRow('PE Objective',
+                                      record.peObjective ?? 'N/A'),
+                                  _buildFieldRow('Service Type',
+                                      record.serviceType ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Status', record.peStatus ?? 'N/A'),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
@@ -359,21 +394,27 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                                           style: ElevatedButton.styleFrom(
                                             backgroundColor: Colors.green[600],
                                             foregroundColor: Colors.white,
-                                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                            shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(8)),
                                             elevation: 2,
                                           ),
                                           onPressed: () {
                                             if (kDebugMode) {
-                                              print('Navigating to OLAViolateRecordDetailsScreen for PE: ${record.peNumber}');
+                                              print(
+                                                  'Navigating to OLAViolateRecordDetailsScreen for PE: ${record.peNumber}');
                                             }
                                             Navigator.push(
                                               context,
                                               MaterialPageRoute(
-                                                builder: (context) => OLAViolateRecordDetailsScreen(record: record),
+                                                builder: (context) =>
+                                                    OLAViolateRecordDetailsScreen(
+                                                        record: record),
                                               ),
                                             );
                                           },
-                                          child: const Text('View Full Details'),
+                                          child:
+                                              const Text('View Full Details'),
                                         ),
                                         const SizedBox(width: 8),
                                         // ElevatedButton(
@@ -405,7 +446,9 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                               children: [
                                 IconButton(
                                   icon: const Icon(Icons.arrow_back),
-                                  color: _currentPage == 1 || _isLoading ? Colors.grey : Colors.green[600],
+                                  color: _currentPage == 1 || _isLoading
+                                      ? Colors.grey
+                                      : Colors.green[600],
                                   onPressed: _currentPage == 1 || _isLoading
                                       ? null
                                       : () => setState(() {
@@ -415,12 +458,18 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen> with Si
                                 ),
                                 Text(
                                   'Page $_currentPage of $_totalPages',
-                                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w500),
                                 ),
                                 IconButton(
                                   icon: const Icon(Icons.arrow_forward),
-                                  color: _currentPage == _totalPages || _isLoading ? Colors.grey : Colors.green[600],
-                                  onPressed: _currentPage == _totalPages || _isLoading
+                                  color:
+                                      _currentPage == _totalPages || _isLoading
+                                          ? Colors.grey
+                                          : Colors.green[600],
+                                  onPressed: _currentPage == _totalPages ||
+                                          _isLoading
                                       ? null
                                       : () => setState(() {
                                             _currentPage++;

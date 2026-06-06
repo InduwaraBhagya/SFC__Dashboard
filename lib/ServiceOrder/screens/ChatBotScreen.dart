@@ -25,10 +25,12 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   void initState() {
     super.initState();
     // Welcome message
-    _addMessage("Hello! I'm your SOMS AI Assistant. How can I help you today?", false);
+    _addMessage(
+        "Hello! I'm your SOMS AI Assistant. How can I help you today?", false);
   }
 
-  void _addMessage(String text, bool isUser, {List<OLAViolateRecord>? records}) {
+  void _addMessage(String text, bool isUser,
+      {List<OLAViolateRecord>? records}) {
     setState(() {
       _messages.add({
         'text': text,
@@ -71,29 +73,35 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     });
   }
 
-  Future<List<OLAViolateRecord>> _performCustomerSearch(String searchTerm) async {
+  Future<List<OLAViolateRecord>> _performCustomerSearch(
+      String searchTerm) async {
     setState(() => _isTyping = true);
     try {
-      final categories = ["urgent", "inprogress", "olaviolated", "hold", "dormant"];
-      final results = await Future.wait(categories.map((cat) => _dashboardService.fetchRecords(cat)));
-      
+      final categories = [
+        "urgent",
+        "inprogress",
+        "olaviolated",
+        "hold",
+        "dormant"
+      ];
+      final results = await Future.wait(
+          categories.map((cat) => _dashboardService.fetchRecords(cat)));
+
       final List<OLAViolateRecord> allRecords = [];
       final Set<String> seenIds = {};
 
       for (var result in results) {
-        if (result is List) {
-          for (var item in result) {
-            if (item is Map<String, dynamic>) {
-              try {
-                final record = OLAViolateRecord.fromJson(item);
-                final id = record.soId ?? record.peNumber ?? '';
-                if (id.isNotEmpty && !seenIds.contains(id)) {
-                  seenIds.add(id);
-                  allRecords.add(record);
-                }
-              } catch (e) {
-                print('Error parsing record in chatbot search: $e');
+        for (var item in result) {
+          if (item is Map<String, dynamic>) {
+            try {
+              final record = OLAViolateRecord.fromJson(item);
+              final id = record.soId ?? record.peNumber ?? '';
+              if (id.isNotEmpty && !seenIds.contains(id)) {
+                seenIds.add(id);
+                allRecords.add(record);
               }
+            } catch (e) {
+              print('Error parsing record in chatbot search: $e');
             }
           }
         }
@@ -123,25 +131,35 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     try {
       if (query.contains("urgent") || query.contains("show record")) {
         setState(() => _isTyping = true);
-        final result = await _urgentRecordService.fetchUrgentRecords(pageSize: 5);
+        final result =
+            await _urgentRecordService.fetchUrgentRecords(pageSize: 5);
         records = result['records'] as List<OLAViolateRecord>?;
-        
+
         if (records != null && records.isNotEmpty) {
-          response = "I found ${records.length} urgent records in your selected workgroup. Here are the top ones:";
+          response =
+              "I found ${records.length} urgent records in your selected workgroup. Here are the top ones:";
         } else {
-          response = "There are currently no urgent records in your selected workgroup.";
+          response =
+              "There are currently no urgent records in your selected workgroup.";
         }
-      } else if (query.contains("metric") || query.contains("stat") || query.contains("total")) {
+      } else if (query.contains("metric") ||
+          query.contains("stat") ||
+          query.contains("total")) {
         final metrics = await _dashboardService.fetchMetrics();
-        final total = (metrics['urgent'] ?? 0) + (metrics['inProgress'] ?? 0) + (metrics['hold'] ?? 0);
-        response = "Your current dashboard metrics show $total total active tasks, with ${metrics['urgent']} urgent and ${metrics['olaViolated']} OLA violated records.";
+        final total = (metrics['urgent'] ?? 0) +
+            (metrics['inProgress'] ?? 0) +
+            (metrics['hold'] ?? 0);
+        response =
+            "Your current dashboard metrics show $total total active tasks, with ${metrics['urgent']} urgent and ${metrics['olaViolated']} OLA violated records.";
       } else if (query.contains("team") || query.contains("member")) {
         final metrics = await _dashboardService.fetchMetrics();
         final members = metrics['activeTeamMembers'] ?? 0;
-        response = "There are currently $members active team members working in your assigned workgroup.";
+        response =
+            "There are currently $members active team members working in your assigned workgroup.";
       } else if (query.contains("workgroup")) {
         final wg = await _dashboardService.getSelectedWorkgroupName();
-        response = "You are currently viewing data for the '$wg' workgroup. You can switch workgroups from the home screen filter.";
+        response =
+            "You are currently viewing data for the '$wg' workgroup. You can switch workgroups from the home screen filter.";
       } else if (query.contains("search") || query.contains("customer")) {
         // Extract search term
         String searchTerm = "";
@@ -153,39 +171,49 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           searchTerm = userText.substring("search ".length).trim();
         } else {
           final index = query.indexOf("search customer");
-          if (index != -1 && userText.length > index + "search customer".length + 1) {
-            searchTerm = userText.substring(index + "search customer".length).trim();
+          if (index != -1 &&
+              userText.length > index + "search customer".length + 1) {
+            searchTerm =
+                userText.substring(index + "search customer".length).trim();
           } else {
             final custIndex = query.indexOf("customer");
-            if (custIndex != -1 && userText.length > custIndex + "customer".length + 1) {
-              searchTerm = userText.substring(custIndex + "customer".length).trim();
+            if (custIndex != -1 &&
+                userText.length > custIndex + "customer".length + 1) {
+              searchTerm =
+                  userText.substring(custIndex + "customer".length).trim();
             }
           }
         }
 
         if (searchTerm.isEmpty) {
-          response = "Which customer would you like to search for? Please type: **search customer <name>** (e.g., *search customer Peoples Bank*).";
+          response =
+              "Which customer would you like to search for? Please type: **search customer <name>** (e.g., *search customer Peoples Bank*).";
         } else {
           final filtered = await _performCustomerSearch(searchTerm);
           if (filtered.isNotEmpty) {
             records = filtered;
-            response = "I searched for customer **'$searchTerm'** and found ${filtered.length} matching record(s) in your active workgroup:";
+            response =
+                "I searched for customer **'$searchTerm'** and found ${filtered.length} matching record(s) in your active workgroup:";
           } else {
-            response = "I couldn't find any records matching the customer **'$searchTerm'** in your active workgroup. Please double check the name and try again.";
+            response =
+                "I couldn't find any records matching the customer **'$searchTerm'** in your active workgroup. Please double check the name and try again.";
           }
         }
       } else if (query.contains("hello") || query.contains("hi")) {
-        response = "Hi there! I'm your real-time SOMS assistant. Ask me about your urgent tasks, team stats, or metrics!";
+        response =
+            "Hi there! I'm your real-time SOMS assistant. Ask me about your urgent tasks, team stats, or metrics!";
       } else {
         // Fallback search term check
         final filtered = await _performCustomerSearch(userText.trim());
         if (filtered.isNotEmpty) {
           records = filtered;
-          response = "I found ${filtered.length} matching record(s) for the customer **'${userText.trim()}'** in your active workgroup:";
+          response =
+              "I found ${filtered.length} matching record(s) for the customer **'${userText.trim()}'** in your active workgroup:";
         }
       }
     } catch (e) {
-      response = "I'm having trouble connecting to the live server right now, but I can still help you with navigation! Try asking about how to search or where to find reports.";
+      response =
+          "I'm having trouble connecting to the live server right now, but I can still help you with navigation! Try asking about how to search or where to find reports.";
     }
 
     // Creative default responses if none of the keywords match
@@ -216,10 +244,12 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Column(
-        crossAxisAlignment: isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+        crossAxisAlignment:
+            isUser ? CrossAxisAlignment.end : CrossAxisAlignment.start,
         children: [
           Row(
-            mainAxisAlignment: isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
+            mainAxisAlignment:
+                isUser ? MainAxisAlignment.end : MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               if (!isUser) ...[
@@ -240,16 +270,18 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                   child: const CircleAvatar(
                     backgroundColor: Colors.transparent,
                     radius: 18,
-                    child: Icon(Icons.smart_toy_rounded, color: Colors.white, size: 20),
+                    child: Icon(Icons.smart_toy_rounded,
+                        color: Colors.white, size: 20),
                   ),
                 ),
                 const SizedBox(width: 10),
               ],
               Flexible(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 18, vertical: 14),
                   decoration: BoxDecoration(
-                    gradient: isUser 
+                    gradient: isUser
                         ? const LinearGradient(
                             colors: [Color(0xFF07459C), Color(0xFF1D4ED8)],
                             begin: Alignment.topLeft,
@@ -265,7 +297,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: isUser 
+                        color: isUser
                             ? const Color(0xFF07459C).withOpacity(0.2)
                             : Colors.black.withOpacity(0.05),
                         blurRadius: 10,
@@ -300,7 +332,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             Padding(
               padding: const EdgeInsets.only(left: 46),
               child: Column(
-                children: records.map((record) => _buildRecordCard(record)).toList(),
+                children:
+                    records.map((record) => _buildRecordCard(record)).toList(),
               ),
             ),
           ],
@@ -329,7 +362,9 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         onTap: () {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => OLAViolateRecordDetailsScreen(record: record)),
+            MaterialPageRoute(
+                builder: (context) =>
+                    OLAViolateRecordDetailsScreen(record: record)),
           );
         },
         borderRadius: BorderRadius.circular(16),
@@ -342,7 +377,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFFEEF2FF),
                       borderRadius: BorderRadius.circular(8),
@@ -357,14 +393,16 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     ),
                   ),
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                     decoration: BoxDecoration(
                       color: const Color(0xFFFEF2F2),
                       borderRadius: BorderRadius.circular(8),
                     ),
                     child: Row(
                       children: [
-                        const Icon(Icons.priority_high_rounded, size: 12, color: Color(0xFFEF4444)),
+                        const Icon(Icons.priority_high_rounded,
+                            size: 12, color: Color(0xFFEF4444)),
                         const SizedBox(width: 4),
                         Text(
                           'URGENT',
@@ -393,7 +431,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               const SizedBox(height: 4),
               Row(
                 children: [
-                  const Icon(Icons.category_outlined, size: 14, color: Colors.grey),
+                  const Icon(Icons.category_outlined,
+                      size: 14, color: Colors.grey),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
@@ -419,7 +458,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                     children: [
                       Text(
                         'Pending Task',
-                        style: GoogleFonts.poppins(fontSize: 10, color: Colors.grey.shade500),
+                        style: GoogleFonts.poppins(
+                            fontSize: 10, color: Colors.grey.shade500),
                       ),
                       Text(
                         record.plannedEvent?.pendingTaskName ?? 'N/A',
@@ -431,7 +471,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                       ),
                     ],
                   ),
-                  const Icon(Icons.chevron_right_rounded, color: Color(0xFFCBD5E1)),
+                  const Icon(Icons.chevron_right_rounded,
+                      color: Color(0xFFCBD5E1)),
                 ],
               ),
             ],
@@ -462,10 +503,11 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
             child: InkWell(
               onTap: () => _handleQuickAction(actions[index]['query']!),
               child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
-                    colors: index % 2 == 0 
+                    colors: index % 2 == 0
                         ? [const Color(0xFFF1F5F9), Colors.white]
                         : [const Color(0xFFEEF2FF), Colors.white],
                   ),
@@ -523,23 +565,29 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               ),
               child: Row(
                 children: [
-                  Icon(Icons.auto_awesome_rounded, size: 18, color: const Color(0xFF6366F1).withOpacity(0.6)),
+                  Icon(Icons.auto_awesome_rounded,
+                      size: 18,
+                      color: const Color(0xFF6366F1).withOpacity(0.6)),
                   const SizedBox(width: 12),
                   Expanded(
                     child: TextField(
                       controller: _messageController,
-                      style: GoogleFonts.poppins(fontSize: 14, color: const Color(0xFF1E293B)),
+                      style: GoogleFonts.poppins(
+                          fontSize: 14, color: const Color(0xFF1E293B)),
                       decoration: InputDecoration(
                         hintText: 'Ask SOMS AI anything...',
-                        hintStyle: GoogleFonts.poppins(color: const Color(0xFF94A3B8), fontSize: 14),
+                        hintStyle: GoogleFonts.poppins(
+                            color: const Color(0xFF94A3B8), fontSize: 14),
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                        contentPadding:
+                            const EdgeInsets.symmetric(vertical: 14),
                       ),
                       onSubmitted: (_) => _handleSend(),
                     ),
                   ),
                   IconButton(
-                    icon: const Icon(Icons.mic_none_rounded, size: 20, color: Color(0xFF64748B)),
+                    icon: const Icon(Icons.mic_none_rounded,
+                        size: 20, color: Color(0xFF64748B)),
                     onPressed: () {}, // Placeholder for future feature
                     padding: EdgeInsets.zero,
                     constraints: const BoxConstraints(),
@@ -572,7 +620,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                 borderRadius: BorderRadius.circular(30),
                 child: const Padding(
                   padding: EdgeInsets.all(12),
-                  child: Icon(Icons.send_rounded, color: Colors.white, size: 22),
+                  child:
+                      Icon(Icons.send_rounded, color: Colors.white, size: 22),
                 ),
               ),
             ),
@@ -613,7 +662,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                   child: const CircleAvatar(
                     backgroundColor: Colors.white,
                     radius: 18,
-                    child: Icon(Icons.smart_toy_rounded, color: Color(0xFF07459C), size: 22),
+                    child: Icon(Icons.smart_toy_rounded,
+                        color: Color(0xFF07459C), size: 22),
                   ),
                 ),
                 const SizedBox(width: 12),
@@ -658,7 +708,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           leading: Padding(
             padding: const EdgeInsets.only(top: 8),
             child: IconButton(
-              icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+              icon: const Icon(Icons.arrow_back_ios_new,
+                  color: Colors.white, size: 20),
               onPressed: () => Navigator.pop(context),
             ),
           ),
@@ -672,7 +723,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               child: Image.asset(
                 'assets/pattern.png',
                 repeat: ImageRepeat.repeat,
-                errorBuilder: (context, error, stackTrace) => const Icon(Icons.grid_4x4, size: 100),
+                errorBuilder: (context, error, stackTrace) =>
+                    const Icon(Icons.grid_4x4, size: 100),
               ),
             ),
           ),
@@ -681,7 +733,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
               Expanded(
                 child: ListView.builder(
                   controller: _scrollController,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 24),
                   itemCount: _messages.length,
                   itemBuilder: (context, index) {
                     return _buildMessageBubble(_messages[index]);
@@ -694,7 +747,8 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                   child: Row(
                     children: [
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(12),
@@ -704,7 +758,10 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
                             const SizedBox(
                               width: 12,
                               height: 12,
-                              child: CircularProgressIndicator(strokeWidth: 2, valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF6366F1))),
+                              child: CircularProgressIndicator(
+                                  strokeWidth: 2,
+                                  valueColor: AlwaysStoppedAnimation<Color>(
+                                      Color(0xFF6366F1))),
                             ),
                             const SizedBox(width: 8),
                             Text(

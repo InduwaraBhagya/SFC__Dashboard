@@ -20,4 +20,4 @@ class WorkGroup {
       'name': name,
     };
   }
-} 
+}

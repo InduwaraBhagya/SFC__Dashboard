@@ -9,7 +9,8 @@ class ServiceOrderDetailScreen extends StatefulWidget {
   const ServiceOrderDetailScreen({super.key, required this.pe});
 
   @override
-  State<ServiceOrderDetailScreen> createState() => _ServiceOrderDetailScreenState();
+  State<ServiceOrderDetailScreen> createState() =>
+      _ServiceOrderDetailScreenState();
 }
 
 class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
@@ -45,10 +46,8 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         elevation: 0,
-        
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
@@ -69,9 +68,12 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color.fromARGB(255, 7, 69, 156),
                 elevation: 0,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8)),
               ),
-              child: Text('Back', style: TextStyle(color: Theme.of(context).cardColor, fontSize: 12)),
+              child: Text('Back',
+                  style: TextStyle(
+                      color: Theme.of(context).cardColor, fontSize: 12)),
             ),
           ),
         ],
@@ -111,10 +113,10 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
       ),
       child: Column(
         children: [
-          LinearProgressIndicator(
+          const LinearProgressIndicator(
             value: 0.0,
             minHeight: 10,
-            valueColor: const AlwaysStoppedAnimation<Color>(Colors.white),
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
           ),
           const SizedBox(height: 8),
           Row(
@@ -124,7 +126,10 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
               const SizedBox(width: 4),
               Text(
                 'Progress: 0%',
-                style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontSize: 12, fontWeight: FontWeight.bold),
+                style: GoogleFonts.poppins(
+                    color: Theme.of(context).cardColor,
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold),
               ),
             ],
           ),
@@ -138,34 +143,46 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
       children: [
         _buildDetailCard('Service', const Color(0xFFFF8A65), [
           _buildRow('SO_ID', widget.pe['soId'] ?? '-', isEven: false),
-          _buildRow('SERVICE_CATEGORY', widget.pe['serviceCategory'] ?? '-', isEven: true),
-          _buildRow('SERVICE_TYPE', widget.pe['serviceType'] ?? '-', isEven: false),
+          _buildRow('SERVICE_CATEGORY', widget.pe['serviceCategory'] ?? '-',
+              isEven: true),
+          _buildRow('SERVICE_TYPE', widget.pe['serviceType'] ?? '-',
+              isEven: false),
           _buildRow('ORDER_TYPE', widget.pe['orderType'] ?? '-', isEven: true),
-          _buildRow('SERVICE_REQUIRED_DATE', _formatDate(widget.pe['serviceRequiredDate']), isEven: false),
-          _buildRow('SO_CREATE_DATE', _formatDate(widget.pe['soCreateDate']), isEven: true),
+          _buildRow('SERVICE_REQUIRED_DATE',
+              _formatDate(widget.pe['serviceRequiredDate']),
+              isEven: false),
+          _buildRow('SO_CREATE_DATE', _formatDate(widget.pe['soCreateDate']),
+              isEven: true),
         ]),
         const SizedBox(height: 16),
         _buildDetailCard('Work', const Color(0xFF81C784), [
           _buildRow('WO_ID', widget.pe['woId'] ?? '-', isEven: false),
           _buildRow('WO_STATUS', widget.pe['woStatus'] ?? '-', isEven: true),
-          _buildRow('PENDING_TASK_NAME', widget.pe['pendingTaskName'] ?? '-', isEven: false),
+          _buildRow('PENDING_TASK_NAME', widget.pe['pendingTaskName'] ?? '-',
+              isEven: false),
           _buildRow('PENDING_WG', widget.pe['pendingWg'] ?? '-', isEven: true),
-          _buildRow('WO_START_DATE', _formatDate(widget.pe['woStartDate']), isEven: false),
-          _buildRow('WO_COMMENTS', widget.pe['woComments'] ?? '-', isEven: true),
+          _buildRow('WO_START_DATE', _formatDate(widget.pe['woStartDate']),
+              isEven: false),
+          _buildRow('WO_COMMENTS', widget.pe['woComments'] ?? '-',
+              isEven: true),
         ]),
         const SizedBox(height: 16),
         _buildDetailCard('Customer', const Color(0xFF90A4AE), [
           _buildRow('CUSTOMER', widget.pe['customer'] ?? '-', isEven: false),
           _buildRow('CUS_TYPE', widget.pe['cusType'] ?? '-', isEven: true),
-          _buildRow('ACCOUNT_MANAGER', widget.pe['accountManager'] ?? '-', isEven: false),
-          _buildRow('SECTION_HANDLED_BY', widget.pe['sectionHandledBy'] ?? '-', isEven: true),
+          _buildRow('ACCOUNT_MANAGER', widget.pe['accountManager'] ?? '-',
+              isEven: false),
+          _buildRow('SECTION_HANDLED_BY', widget.pe['sectionHandledBy'] ?? '-',
+              isEven: true),
         ]),
         const SizedBox(height: 16),
         _buildDetailCard('Location', const Color(0xFFCE93D8), [
           _buildRow('REGION', widget.pe['region'] ?? '-', isEven: false),
           _buildRow('PROVINCE', widget.pe['province'] ?? '-', isEven: true),
-          _buildRow('LOCATION_A_ADDRESS', widget.pe['locationAAddress'] ?? '-', isEven: false),
-          _buildRow('LOCATION_B_ADDRESS', widget.pe['locationBAddress'] ?? '-', isEven: true),
+          _buildRow('LOCATION_A_ADDRESS', widget.pe['locationAAddress'] ?? '-',
+              isEven: false),
+          _buildRow('LOCATION_B_ADDRESS', widget.pe['locationBAddress'] ?? '-',
+              isEven: true),
         ]),
       ],
     );
@@ -177,7 +194,10 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -188,11 +208,15 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             decoration: BoxDecoration(
               color: color,
-              borderRadius: const BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             ),
             child: Text(
               title,
-              style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.bold, fontSize: 14),
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).cardColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14),
             ),
           ),
           Padding(
@@ -209,7 +233,8 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: isEven ? Colors.grey.shade50 : Colors.white,
-        border: Border(bottom: BorderSide(color: Colors.grey.shade200, width: 0.5)),
+        border:
+            Border(bottom: BorderSide(color: Colors.grey.shade200, width: 0.5)),
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -259,7 +284,10 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -270,11 +298,15 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: const BoxDecoration(
               color: Color(0xFF00BCD4),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             ),
             child: Text(
               'Tasks',
-              style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.bold, fontSize: 14),
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).cardColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14),
             ),
           ),
           if (_isLoadingTasks)
@@ -285,7 +317,10 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
           else if (_tasks.isEmpty)
             Padding(
               padding: const EdgeInsets.all(20),
-              child: Center(child: Text('No tasks found', style: GoogleFonts.poppins(fontSize: 12, color: Colors.grey))),
+              child: Center(
+                  child: Text('No tasks found',
+                      style: GoogleFonts.poppins(
+                          fontSize: 12, color: Colors.grey))),
             )
           else
             SingleChildScrollView(
@@ -295,16 +330,31 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
                 dataRowMinHeight: 40,
                 dataRowMaxHeight: 50,
                 columns: const [
-                  DataColumn(label: Text('TASK', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text('WORKGROUP', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text('OLA', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
-                  DataColumn(label: Text('STATUS', style: TextStyle(fontSize: 11, fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text('TASK',
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text('WORKGROUP',
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text('OLA',
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
+                  DataColumn(
+                      label: Text('STATUS',
+                          style: TextStyle(
+                              fontSize: 11, fontWeight: FontWeight.bold))),
                 ],
                 rows: _tasks.map((task) {
                   return DataRow(cells: [
-                    DataCell(Text(task['task'] ?? '-', style: const TextStyle(fontSize: 10))),
-                    DataCell(Text(task['taskWorkGroup'] ?? '-', style: const TextStyle(fontSize: 10))),
-                    DataCell(Text(task['ola']?.toString() ?? '-', style: const TextStyle(fontSize: 10))),
+                    DataCell(Text(task['task'] ?? '-',
+                        style: const TextStyle(fontSize: 10))),
+                    DataCell(Text(task['taskWorkGroup'] ?? '-',
+                        style: const TextStyle(fontSize: 10))),
+                    DataCell(Text(task['ola']?.toString() ?? '-',
+                        style: const TextStyle(fontSize: 10))),
                     DataCell(_buildStatusBadge(task['taskStatus'] ?? 'Assign')),
                   ]);
                 }).toList(),
@@ -338,7 +388,10 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
       ),
       child: Text(
         displayStatus,
-        style: TextStyle(color: Theme.of(context).cardColor, fontSize: 9, fontWeight: FontWeight.bold),
+        style: TextStyle(
+            color: Theme.of(context).cardColor,
+            fontSize: 9,
+            fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -349,7 +402,10 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 10,
+              offset: const Offset(0, 4)),
         ],
       ),
       child: Column(
@@ -359,11 +415,15 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: const BoxDecoration(
               color: Color(0xFF00BCD4),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(12), topRight: Radius.circular(12)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(12), topRight: Radius.circular(12)),
             ),
             child: Text(
               title,
-              style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.bold, fontSize: 14),
+              style: GoogleFonts.poppins(
+                  color: Theme.of(context).cardColor,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14),
             ),
           ),
           Padding(
@@ -373,9 +433,14 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
                 Align(
                   alignment: Alignment.topRight,
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                    decoration: BoxDecoration(color: Colors.amber, borderRadius: BorderRadius.circular(4)),
-                    child: const Text('No records found', style: TextStyle(fontSize: 9, fontWeight: FontWeight.bold)),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                    decoration: BoxDecoration(
+                        color: Colors.amber,
+                        borderRadius: BorderRadius.circular(4)),
+                    child: const Text('No records found',
+                        style: TextStyle(
+                            fontSize: 9, fontWeight: FontWeight.bold)),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -389,12 +454,14 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
                   ),
                   child: Row(
                     children: [
-                      Icon(Icons.info_outline, size: 16, color: Colors.cyan.shade700),
+                      Icon(Icons.info_outline,
+                          size: 16, color: Colors.cyan.shade700),
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
                           'No records have been logged for this Service Order.',
-                          style: TextStyle(fontSize: 11, color: Colors.cyan.shade800),
+                          style: TextStyle(
+                              fontSize: 11, color: Colors.cyan.shade800),
                         ),
                       ),
                     ],
@@ -408,8 +475,6 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
     );
   }
 
-
-
   String _formatDate(dynamic date) {
     if (date == null) return '-';
     try {
@@ -420,4 +485,3 @@ class _ServiceOrderDetailScreenState extends State<ServiceOrderDetailScreen> {
     }
   }
 }
-
