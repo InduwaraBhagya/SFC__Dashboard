@@ -1211,13 +1211,13 @@ class _AreaNetworkEngineerScreenState extends State<AreaNetworkEngineerScreen> {
   String? _errorMessage;
   final int _recordsPerPage = 10;
   late PageController _pageController;
-  final int _currentPage = 0;
+  int _currentPage = 0;
   bool _isAddingMapping = false;
   final TextEditingController _areaCodeController = TextEditingController();
   final TextEditingController _engineerNameFormController =
       TextEditingController();
   bool _isCreating = false;
-  final bool _isSearchBarExpanded = false;
+  bool _isSearchBarExpanded = false;
   final TextEditingController _areaController = TextEditingController();
   String? _engineerName;
   final bool _isLoading = false;
@@ -1283,8 +1283,8 @@ class _AreaNetworkEngineerScreenState extends State<AreaNetworkEngineerScreen> {
 
     setState(() => _isCreating = true);
     final success = await _service.createMapping(
-      _areaCodeController.text,
-      _engineerNameFormController.text,
+      area: _areaCodeController.text,
+      engineerName: _engineerNameFormController.text,
     );
 
     if (success) {

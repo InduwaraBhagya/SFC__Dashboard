@@ -261,7 +261,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
                                       ),
                                     ],
                                   ),
-                                )
+                                );
                               },
                               childCount: pageRecords.length,
                             ),

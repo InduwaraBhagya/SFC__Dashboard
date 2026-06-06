@@ -1,14 +1,11 @@
 // REDESIGNED DORMANT RECORD SCREEN - SFC DASHBOARD
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 import '../model/OLAViolateRecord.dart';
 import '../service/DormantRecordService.dart';
 import 'OLAViolateRecordDetailsScreen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../PlannedEvent/service/AuthService.dart' as auth;
 import '../../PlannedEvent/model/WorkGroup.dart';
 
 class DormantRecordScreen extends StatefulWidget {

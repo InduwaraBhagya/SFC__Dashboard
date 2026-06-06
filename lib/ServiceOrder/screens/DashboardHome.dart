@@ -15,7 +15,10 @@ import 'HoldRecordScreen.dart';
 import '../model/Notice.dart';
 
 class DashboardHome extends StatefulWidget {
-  const DashboardHome({super.key});
+  final Map<String, dynamic>? user;
+  final void Function(int)? onNavigate;
+
+  const DashboardHome({super.key, this.user, this.onNavigate});
 
   @override
   State<DashboardHome> createState() => _DashboardHomeState();
@@ -476,7 +479,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                   onTap: () => Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const HoldRecordScreen()),
+                        builder: (context) => const HoldRecordScreen(user: {})),
                   ).catchError((e) =>
                       debugPrint('Navigation error to HoldRecordScreen: $e')),
                 ),
@@ -606,7 +609,7 @@ class _DashboardHomeState extends State<DashboardHome> {
           ],
         ),
       ),
-    )
+    );
   }
 
   Widget _buildGridItem(

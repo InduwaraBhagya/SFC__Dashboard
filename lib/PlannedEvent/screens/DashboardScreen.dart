@@ -582,7 +582,7 @@ import 'ProjectScreen.dart';
 import 'WorkGroupScreen.dart';
 import 'AreaNetworkEngineerScreen.dart';
 import 'PEIssueScreen.dart';
-import 'CreatePEScreen.dart';
+
 import 'PEDetailsSearchScreen.dart';
 import 'TaskQueueScreen.dart';
 import 'PEReportScreen.dart';
@@ -598,6 +598,7 @@ import '../service/UrgentRecordService.dart';
 import '../service/NoticeService.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'WorkgroupSelectionScreen.dart';
 import '../../SigninScreen.dart';
 
 class DashboardScreen extends StatefulWidget {
@@ -641,6 +642,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // Loading/Error states
   bool isLoading = true;
   String? errorMessage;
+  final TextEditingController _searchController = TextEditingController();
 
   List<Widget> _pages = [];
 
@@ -649,6 +651,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
       DashboardHome(
         userId: widget.userId,
         selectedWorkGroupIds: workGroupIds ?? [],
+        userName: name,
+        userRole: userRoleName,
       ),
       PEIssuesScreen(
           userId: widget.userId,
@@ -673,6 +677,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   void dispose() {
+    _searchController.dispose();
     _notificationTimer?.cancel();
     super.dispose();
   }
@@ -697,19 +702,21 @@ class _DashboardScreenState extends State<DashboardScreen> {
       final seenNotices = prefs.getStringList('seen_notices') ?? [];
       final seenUrgent = prefs.getStringList('seen_urgent') ?? [];
 
-      // 1. Fetch unread issues
+      // 1. Fetch urgent records count
       try {
-        final issues = await _peIssueService.getInboxIssues(bUserId, 50);
-        counts += issues.where((i) => !(i.isRead ?? true)).length;
-      } catch (e) {
-        debugPrint('Error fetching unread issues for badge: $e');
-      }
+        bool useRealData = false;
+        if (_currentSelectedWorkGroupId != null &&
+            _currentSelectedWorkGroupName != null) {
+          useRealData =
+              (_currentSelectedWorkGroupName != 'NET-PROJ_CABLE-ACC' &&
+                  _currentSelectedWorkGroupName != 'NET-PROJ-ACC-CABLE');
+        }
 
-      // 2. Fetch urgent records count
-      try {
         final urgentResult = await _urgentRecordService.fetchUrgentRecords(
           page: 1,
-          pageSize: 20,
+          pageSize: 2000,
+          workgroupId: _currentSelectedWorkGroupId,
+          fetchMultiWorkgroup: useRealData,
         );
         final List records = urgentResult['records'] ?? [];
         counts += records.where((r) => !seenUrgent.contains(r.peNumber)).length;
@@ -717,7 +724,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         debugPrint('Error fetching urgent records for badge: $e');
       }
 
-      // 3. Fetch active notices count
+      // 2. Fetch active notices count
       try {
         final notices = await _noticeService.getActiveNotices();
         counts +=
@@ -860,6 +867,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       _pages = _buildPages(filteredWorkgroup);
     });
+
+    // Refresh the badge counts based on the new workgroup
+    _fetchNotificationCounts();
   }
 
   @override
@@ -869,7 +879,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => const OnboardingScreen(),
+            builder: (context) => WorkgroupSelectionScreen(),
           ),
         );
         return false;
@@ -894,7 +904,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const OnboardingScreen(),
+                  builder: (context) => WorkgroupSelectionScreen(),
                 ),
               );
             },
@@ -913,9 +923,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
               ),
               Text(
-                (workGroupNames != null && workGroupNames!.isNotEmpty)
-                    ? workGroupNames!.join(', ')
-                    : 'No Workgroup',
+                _currentSelectedWorkGroupName ??
+                    ((workGroupNames != null && workGroupNames!.isNotEmpty)
+                        ? workGroupNames!.join(', ')
+                        : 'All Workgroups'),
                 style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 14,
@@ -930,63 +941,130 @@ class _DashboardScreenState extends State<DashboardScreen> {
             // Workgroup Filter Dropdown
             if (workGroupIds != null && workGroupIds!.isNotEmpty)
               DropdownButtonHideUnderline(
-                child: DropdownButton2<int>(
-                  value: _currentSelectedWorkGroupId,
-                  items: [
-                    const DropdownMenuItem<int>(
+                child: Builder(builder: (context) {
+                  // Build a deduplicated list of workgroup items and support a nullable selected value
+                  final List<DropdownMenuItem<int?>> items = [
+                    DropdownMenuItem<int?>(
                       value: null,
                       child: Row(
                         children: [
-                          Icon(Icons.close, size: 16, color: Colors.grey),
-                          SizedBox(width: 8),
-                          Text('All Workgroups'),
+                          const Icon(Icons.close, size: 16, color: Colors.grey),
+                          const SizedBox(width: 8),
+                          const Text('All Workgroups'),
                         ],
                       ),
                     ),
-                    ..._allWorkGroups
-                        .where((wg) => workGroupIds!.contains(wg.id))
-                        .map((workgroup) => DropdownMenuItem<int>(
-                              value: workgroup.id,
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.group_work, size: 16),
-                                  const SizedBox(width: 8),
-                                  Text(workgroup.name),
-                                ],
-                              ),
-                            )),
-                  ],
-                  onChanged: _onWorkGroupSelected,
-                  buttonStyleData: const ButtonStyleData(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    height: 40,
-                    width: 40,
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                    height: 40,
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                  dropdownStyleData: DropdownStyleData(
-                    maxHeight: 200,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
+                  ];
+
+                  final seenIds = <int>{};
+                  for (final workgroup in _allWorkGroups) {
+                    if ((workGroupIds?.contains(workgroup.id) ?? false) ||
+                        workgroup.id == _currentSelectedWorkGroupId) {
+                      if (!seenIds.contains(workgroup.id)) {
+                        seenIds.add(workgroup.id);
+                        items.add(DropdownMenuItem<int?>(
+                          value: workgroup.id,
+                          child: Row(
+                            children: [
+                              const Icon(Icons.group_work, size: 16),
+                              const SizedBox(width: 8),
+                              Text(workgroup.name),
+                            ],
+                          ),
+                        ));
+                      }
+                    }
+                  }
+
+                  final int? safeValue = items
+                              .where((it) =>
+                                  it.value == _currentSelectedWorkGroupId)
+                              .length ==
+                          1
+                      ? _currentSelectedWorkGroupId
+                      : null;
+
+                  return DropdownButton2<int?>(
+                    value: safeValue,
+                    items: items,
+                    onChanged: _onWorkGroupSelected,
+                    buttonStyleData: const ButtonStyleData(
+                      padding: EdgeInsets.symmetric(horizontal: 8),
+                      height: 40,
+                      width: 40,
                     ),
-                  ),
-                  customButton: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Tooltip(
-                      message: _currentSelectedWorkGroupId != null
-                          ? 'Filtering: $_currentSelectedWorkGroupName'
-                          : 'Select Workgroup Filter',
-                      child: Icon(
-                        Icons.filter_list,
-                        color: _currentSelectedWorkGroupId != null
-                            ? Colors.yellow
-                            : Colors.white,
+                    menuItemStyleData: const MenuItemStyleData(
+                      height: 40,
+                      padding: EdgeInsets.symmetric(horizontal: 12),
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 250,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                  ),
-                ),
+                    dropdownSearchData: DropdownSearchData(
+                      searchController: _searchController,
+                      searchInnerWidgetHeight: 50,
+                      searchInnerWidget: Container(
+                        height: 50,
+                        padding: const EdgeInsets.only(
+                          top: 8,
+                          bottom: 4,
+                          right: 8,
+                          left: 8,
+                        ),
+                        child: TextFormField(
+                          expands: true,
+                          maxLines: null,
+                          controller: _searchController,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            contentPadding: const EdgeInsets.symmetric(
+                              horizontal: 10,
+                              vertical: 8,
+                            ),
+                            hintText: 'Search for a workgroup...',
+                            hintStyle: const TextStyle(fontSize: 12),
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                        ),
+                      ),
+                      searchMatchFn: (item, searchValue) {
+                        if (item.value == null) {
+                          return 'all workgroups'
+                              .contains(searchValue.toLowerCase());
+                        }
+                        final workgroup = _allWorkGroups
+                            .firstWhere((wg) => wg.id == item.value);
+                        return workgroup.name
+                            .toLowerCase()
+                            .contains(searchValue.toLowerCase());
+                      },
+                    ),
+                    onMenuStateChange: (isOpen) {
+                      if (!isOpen) {
+                        _searchController.clear();
+                      }
+                    },
+                    customButton: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: Tooltip(
+                        message: _currentSelectedWorkGroupId != null
+                            ? 'Filtering: $_currentSelectedWorkGroupName'
+                            : 'Select Workgroup Filter',
+                        child: Icon(
+                          Icons.filter_list,
+                          color: _currentSelectedWorkGroupId != null
+                              ? Colors.yellow
+                              : Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
+                }),
               ),
             IconButton(
               icon: const Icon(Icons.menu, color: Colors.white),
@@ -1094,25 +1172,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 children: [
-                  ListTile(
-                    contentPadding:
-                        const EdgeInsets.only(left: 56.0, right: 16.0),
-                    leading: const Icon(
-                      Icons.add_circle_outline,
-                      color: Colors.green,
-                      size: 20,
-                    ),
-                    title: const Text('Create PE'),
-                    onTap: () {
-                      Navigator.pop(context);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (_) => const CreatePEScreen(),
-                        ),
-                      );
-                    },
-                  ),
                   ListTile(
                     contentPadding:
                         const EdgeInsets.only(left: 56.0, right: 16.0),

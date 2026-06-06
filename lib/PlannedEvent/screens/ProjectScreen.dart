@@ -1289,33 +1289,29 @@ class ProjectScreen extends StatefulWidget {
 class _ProjectScreenState extends State<ProjectScreen> {
   final ProjectService _service = ProjectService();
   late Future<List<Project>> _projectsFuture;
-  final List<Project> _projects = [];
-  final List<Project> _filteredProjects = [];
+  List<Project> _projects = [];
+  List<Project> _filteredProjects = [];
   ProjectUserPermissionsDto? _permissions;
   String? _errorMessage;
   final int _recordsPerPage = 10;
   late PageController _pageController;
-  final int _currentPage = 0;
+  int _currentPage = 0;
   final bool _isSearchBarExpanded = false;
 
   @override
   void initState() {
-      print('Error in initState: $e');
-      setState(() {
-        _errorMessage = 'Failed to load projects: $e';
-      });
-      return <Project>[];
-    });
+    super.initState();
+    _pageController = PageController();
+    _projectsFuture = _service.fetchProjects();
     _projectsFuture.then((data) {
       _service.fetchUserPermissions().then((permissions) {
         setState(() {
-          _projects = data;
-          _filteredProjects = data;
+          _projects = List<Project>.from(data);
+          _filteredProjects = List<Project>.from(data);
           _permissions = permissions;
           _errorMessage = null;
         });
       }).catchError((e) {
-        print('Permissions fetch failed: $e');
         setState(() {
           _permissions = ProjectUserPermissionsDto(canManageProjects: false);
           _errorMessage = 'Failed to load permissions: $e';
@@ -1323,7 +1319,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
       });
     }).catchError((e) {
       setState(() {
-        _errorMessage = 'Failed to process projects: $e';
+        _errorMessage = 'Failed to load projects: $e';
       });
     });
   }
@@ -1851,7 +1847,7 @@ class _ProjectScreenState extends State<ProjectScreen> {
                                     ),
                                   ),
                                 ),
-                              )
+                              );
                             },
                           );
                         },
@@ -1859,8 +1855,8 @@ class _ProjectScreenState extends State<ProjectScreen> {
                     ),
                     if (totalPages > 1)
                       Container(
-                        padding = const EdgeInsets.symmetric(vertical: 8.0),
-                        child = SingleChildScrollView(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SingleChildScrollView(
                           scrollDirection: Axis.horizontal,
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,

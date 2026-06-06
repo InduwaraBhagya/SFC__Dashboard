@@ -6,6 +6,7 @@ import '../model/OLAViolateRecord.dart';
 
 class HoldRecordService {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  List<OLAViolateRecord> _lastRecords = [];
 
   Future<Map<String, dynamic>> fetchHoldRecords({
     int? page,
@@ -57,6 +58,8 @@ class HoldRecordService {
             .cast<OLAViolateRecord>()
             .toList();
 
+        _lastRecords = records;
+
         return {
           'records': records,
           'totalCount': records.length,
@@ -76,6 +79,14 @@ class HoldRecordService {
       };
     }
   }
+
+  /// Backwards-compatible alias used by some callers.
+  Future<Map<String, dynamic>> getHoldRecords() async {
+    return await fetchHoldRecords(pageSize: 10);
+  }
+
+  /// Synchronous total count accessor used by some dashboards.
+  int getTotalCount() => _lastRecords.length;
 
   dynamic dereferenceJson(dynamic data) {
     final refs = <String, dynamic>{};

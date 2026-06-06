@@ -811,6 +811,11 @@ class AuthService {
     }
   }
 
+  /// Backwards-compatible alias used by some screens
+  Future<List<WorkGroup>> getSomsWorkGroups() async {
+    return await getWorkGroups();
+  }
+
   Future<List<WorkGroup>> getWorkGroupsByIds(List<int> ids) async {
     if (ids.isEmpty) return [];
     try {
