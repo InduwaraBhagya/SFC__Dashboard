@@ -251,6 +251,7 @@ class _ChatSheetState extends State<_ChatSheet> {
       case 'ola':
       case 'hold':
         final text = _infoText(value, _lang!);
+
         const backLabel = '⬅ Back to Menu';
         _addBotMessage(text, [_o(backLabel, 'back_main')]);
         break;

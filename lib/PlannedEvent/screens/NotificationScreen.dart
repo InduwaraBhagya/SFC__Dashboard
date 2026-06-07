@@ -11,7 +11,8 @@ class NotificationScreen extends StatefulWidget {
   _NotificationScreenState createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> with SingleTickerProviderStateMixin {
+class _NotificationScreenState extends State<NotificationScreen>
+    with SingleTickerProviderStateMixin {
   final NotificationService _notificationService = NotificationService();
   List<Map<String, dynamic>> _tasks = [];
   bool _isLoading = false;
@@ -184,7 +185,8 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                     Expanded(
                       child: Text(
                         _successMessage!,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -201,7 +203,8 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                     Expanded(
                       child: Text(
                         _errorMessage!,
-                        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+                        style: const TextStyle(
+                            color: Colors.red, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],
@@ -218,8 +221,10 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                             child: Center(
                               child: Card(
                                 elevation: 4,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 4.0),
                                 child: Padding(
                                   padding: const EdgeInsets.all(16.0),
                                   child: Column(
@@ -228,7 +233,9 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                                     children: [
                                       Text(
                                         _errorMessage ?? 'No Messages found',
-                                        style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                        style: const TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.black87),
                                         textAlign: TextAlign.center,
                                       ),
                                     ],
@@ -247,18 +254,25 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                               return Card(
                                 key: ValueKey(task['Id']),
                                 elevation: 4,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                                margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(12)),
+                                margin: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 4.0),
                                 child: ListTile(
                                   title: Text(
                                     'ID: ${task['Id'] ?? 'N/A'}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
-                                      Text('PE Number: ${task['PENumber'] ?? 'N/A'}'),
-                                      Text('Task Seq: ${task['TaskSeq'] ?? 'N/A'}'),
+                                      Text(
+                                          'PE Number: ${task['PENumber'] ?? 'N/A'}'),
+                                      Text(
+                                          'Task Seq: ${task['TaskSeq'] ?? 'N/A'}'),
                                       Text('Task: ${task['Task'] ?? 'N/A'}'),
                                     ],
                                   ),
@@ -266,12 +280,16 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                                     mainAxisSize: MainAxisSize.min,
                                     children: [
                                       IconButton(
-                                        icon: const Icon(Icons.check, color: Colors.green),
-                                        onPressed: () => _showConfirmDialog(int.parse(task['Id']), 'accept'),
+                                        icon: const Icon(Icons.check,
+                                            color: Colors.green),
+                                        onPressed: () => _showConfirmDialog(
+                                            int.parse(task['Id']), 'accept'),
                                       ),
                                       IconButton(
-                                        icon: const Icon(Icons.close, color: Colors.red),
-                                        onPressed: () => _showConfirmDialog(int.parse(task['Id']), 'reject'),
+                                        icon: const Icon(Icons.close,
+                                            color: Colors.red),
+                                        onPressed: () => _showConfirmDialog(
+                                            int.parse(task['Id']), 'reject'),
                                       ),
                                     ],
                                   ),
