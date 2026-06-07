@@ -1,10 +1,14 @@
 class RegularRecord {
   final int? id;
+  final String? customer;
+  final String? cusType;
+  final String? accountManager;
   final String? peNumber;
   final String? province;
   final String? region;
   final String? rtom;
   final String? rtomDescription;
+  final String? locationAAddress;
   final String? jobReference;
   final String? contractorName;
   final String? peActivity;
@@ -21,6 +25,7 @@ class RegularRecord {
   final String? woStartDate;
   final String? woStatus;
   final String? woId;
+  final String? woComments;
   final String? requestReferenceNo;
   final String? serviceCategory;
   final String? serviceType;
@@ -44,11 +49,15 @@ class RegularRecord {
 
   RegularRecord({
     this.id,
+    this.customer,
+    this.cusType,
+    this.accountManager,
     this.peNumber,
     this.province,
     this.region,
     this.rtom,
     this.rtomDescription,
+    this.locationAAddress,
     this.jobReference,
     this.contractorName,
     this.peActivity,
@@ -65,6 +74,7 @@ class RegularRecord {
     this.woStartDate,
     this.woStatus,
     this.woId,
+    this.woComments,
     this.requestReferenceNo,
     this.serviceCategory,
     this.serviceType,
@@ -90,11 +100,15 @@ class RegularRecord {
   factory RegularRecord.fromJson(Map<String, dynamic> json) {
     return RegularRecord(
       id: json['id'] as int?,
+      customer: json['customer'] as String?,
+      cusType: json['cusType'] as String?,
+      accountManager: json['accountManager'] as String?,
       peNumber: json['peNumber'] as String?,
       province: json['province'] as String?,
       region: json['region'] as String?,
       rtom: json['rtom'] as String?,
       rtomDescription: json['rtomDescription'] as String?,
+      locationAAddress: json['locationAAddress'] as String?,
       jobReference: json['jobReference'] as String?,
       contractorName: json['contractorName'] as String?,
       peActivity: json['peActivity'] as String?,
@@ -111,6 +125,7 @@ class RegularRecord {
       woStartDate: json['woStartDate'] as String?,
       woStatus: json['woStatus'] as String?,
       woId: json['woId'] as String?,
+      woComments: json['woComments'] as String?,
       requestReferenceNo: json['requestReferenceNo'] as String?,
       serviceCategory: json['serviceCategory'] as String?,
       serviceType: json['serviceType'] as String?,
@@ -137,11 +152,15 @@ class RegularRecord {
   Map<String, dynamic> toJson() {
     return {
       'id': id,
+      'customer': customer,
+      'cusType': cusType,
+      'accountManager': accountManager,
       'peNumber': peNumber,
       'province': province,
       'region': region,
       'rtom': rtom,
       'rtomDescription': rtomDescription,
+      'locationAAddress': locationAAddress,
       'jobReference': jobReference,
       'contractorName': contractorName,
       'peActivity': peActivity,
@@ -158,6 +177,7 @@ class RegularRecord {
       'woStartDate': woStartDate,
       'woStatus': woStatus,
       'woId': woId,
+      'woComments': woComments,
       'requestReferenceNo': requestReferenceNo,
       'serviceCategory': serviceCategory,
       'serviceType': serviceType,

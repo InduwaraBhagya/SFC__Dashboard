@@ -5,10 +5,10 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 
 class AuthService {
-  static const String clientId = 'b0320ea2-0e34-4900-9839-8fca9beb051b';
-  static const String tenantId = '5320c60a-f5d9-43ad-b69b-645375b6a694';
+  static const String clientId = '3e7e7865-a8b1-4406-b144-f2fbf821f31f';
+  static const String tenantId = '2edfec93-4fa8-411f-b480-7a816d4ae02d';
   static const String redirectUri = 'com.example.sfcdashboard://auth';
-  static const String authority = 'https://login.microsoftonline.com/5320c60a-f5d9-43ad-b69b-645375b6a694';
+  static const String authority = 'https://login.microsoftonline.com/2edfec93-4fa8-411f-b480-7a816d4ae02d';
   static const List<String> _scopes = [
     'openid',
     'profile',
@@ -100,6 +100,7 @@ class AuthService {
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         return {
+          'UserId': data['id'] ?? '0',
           'Name': data['displayName'] ?? 'Unknown User',
           'Email': data['mail'] ?? data['userPrincipalName'] ?? 'unknown@email.com',
           'PhotoUrl': 'https://ui-avatars.com/api/?name=${(data['displayName'] ?? 'User').toString().replaceAll(' ', '+')}',

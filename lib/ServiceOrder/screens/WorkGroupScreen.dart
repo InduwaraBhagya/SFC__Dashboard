@@ -4,6 +4,7 @@ import 'package:shimmer/shimmer.dart';
 import '../model/WorkGroupModel.dart';
 import '../service/WorkGroupService.dart';
 import 'WorkGroupDetailsScreen.dart';
+import 'AddEditWorkGroupScreen.dart';
 import 'DashboardHome.dart'; // Adjust this import based on your actual DashboardHome location
 
 class WorkGroupScreen extends StatefulWidget {
@@ -70,384 +71,332 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
     });
   }
 
+  void _refreshWorkGroups() {
+    setState(() {
+      _workGroupsFuture = _service.fetchWorkGroups().catchError((e) {
+        setState(() {
+          _errorMessage = 'Failed to load work groups: $e';
+        });
+        return <WorkGroupDetails>[];
+      });
+      _workGroupsFuture.then((data) {
+        setState(() {
+          _workGroups = data;
+          _filteredWorkGroups = data;
+          _errorMessage = null;
+        });
+      });
+    });
+  }
+
+  Future<void> _deleteWorkGroup(int id) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: const Text('Are you sure you want to delete this workgroup?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed == true) {
+      final success = await _service.deleteWorkGroup(id);
+      if (success) {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Workgroup deleted successfully'), backgroundColor: Colors.green),
+        );
+        _refreshWorkGroups();
+      } else {
+        if (!mounted) return;
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Failed to delete workgroup'), backgroundColor: Colors.red),
+        );
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final int totalPages =
         (_filteredWorkGroups.length / _recordsPerPage).ceil();
 
     return Scaffold(
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              mainAxisAlignment: _isSearchBarExpanded
-                  ? MainAxisAlignment.start
-                  : MainAxisAlignment.spaceBetween,
-              children: [
-                // Search Icon and Expandable Search Bar
-                _isSearchBarExpanded
-                    ? Expanded(
-                        child: TextField(
-                          onChanged: _filterWorkGroups,
-                          style: GoogleFonts.poppins(fontSize: 16),
-                          decoration: InputDecoration(
-                            hintText: 'Search by Name or ID',
-                            hintStyle: GoogleFonts.poppins(
-                                color: Colors.grey.shade600),
-                            prefixIcon:
-                                Icon(Icons.search, color: Colors.blue.shade700),
-                            filled: true,
-                            fillColor: Colors.grey.shade100,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12),
-                              borderSide: BorderSide.none,
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(
-                                vertical: 16, horizontal: 20),
-                            suffixIcon: IconButton(
-                              icon: Icon(Icons.close,
-                                  color: Colors.blue.shade700),
-                              onPressed: () {
-                                setState(() {
-                                  _isSearchBarExpanded = false;
-                                  _filterWorkGroups(''); // Clear search
-                                });
-                              },
-                            ),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Header
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Workgroup Management',
+                          style: GoogleFonts.poppins(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: const Color(0xFF1F2937),
                           ),
                         ),
-                      )
-                    : IconButton(
-                        icon: Icon(Icons.search,
-                            color: Colors.blue.shade700, size: 28),
-                        tooltip: 'Search Work Groups',
-                        onPressed: () {
-                          setState(() {
-                            _isSearchBarExpanded = true;
-                          });
-                        },
-                      ),
-                // Total Records
-                Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: _isSearchBarExpanded ? 8 : 12,
-                    vertical: _isSearchBarExpanded ? 6 : 8,
-                  ),
-                  decoration: BoxDecoration(
-                    gradient: const LinearGradient(
-                      colors: [
-                        Color.fromARGB(225, 82, 126, 238),
-                        Color.fromARGB(255, 7, 0, 99),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Manage workgroups',
+                          style: GoogleFonts.poppins(
+                            fontSize: 14,
+                            color: const Color(0xFF6B7280),
+                          ),
+                        ),
                       ],
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
                     ),
-                    borderRadius: BorderRadius.circular(12),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.2),
-                        blurRadius: 4,
-                        offset: const Offset(0, 2),
-                      ),
-                    ],
                   ),
-                  child: Row(
-                    children: [
-                      if (!_isSearchBarExpanded) ...[
-                        Icon(
-                          Icons.list,
-                          size: _isSearchBarExpanded ? 16 : 20,
-                          color: Colors.white,
-                        ),
-                        const SizedBox(width: 8),
-                      ],
-                      Text(
-                        _isSearchBarExpanded
-                            ? '${_filteredWorkGroups.length}'
-                            : 'Total Records: ${_filteredWorkGroups.length}',
-                        style: GoogleFonts.poppins(
-                          fontSize: _isSearchBarExpanded ? 20 : 20,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
+                  ElevatedButton.icon(
+                    onPressed: () async {
+                      final result = await Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const AddEditWorkGroupScreen()),
+                      );
+                      if (result == true) {
+                        _refreshWorkGroups();
+                      }
+                    },
+                    icon: const Icon(Icons.add, size: 16),
+                    label: Text(
+                      'Create New Workgroup',
+                      style: GoogleFonts.poppins(fontSize: 12),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color.fromARGB(255, 7, 69, 156),
+                      foregroundColor: Colors.white,
+                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                    ],
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 24),
+              
+              // Search Bar
+              TextField(
+                onChanged: _filterWorkGroups,
+                style: GoogleFonts.poppins(fontSize: 14),
+                decoration: InputDecoration(
+                  hintText: 'Search workgroups...',
+                  hintStyle: GoogleFonts.poppins(color: Colors.grey.shade400),
+                  prefixIcon: Icon(Icons.search, color: Colors.grey.shade400),
+                  contentPadding: const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: BorderSide(color: Colors.grey.shade300),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(8),
+                    borderSide: const BorderSide(color: Color(0xFF1D4ED8)),
                   ),
                 ),
-              ],
-            ),
-          ),
-          Expanded(
-            child: FutureBuilder<List<WorkGroupDetails>>(
-              future: _workGroupsFuture,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return ListView.builder(
-                    itemCount: 5,
-                    itemBuilder: (context, index) => Shimmer.fromColors(
-                      baseColor: Colors.grey.shade300,
-                      highlightColor: Colors.grey.shade100,
-                      child: Card(
-                        margin: const EdgeInsets.symmetric(
-                            vertical: 8, horizontal: 8),
-                        child: Container(
-                          height: 120,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  );
-                } else if (_errorMessage != null) {
-                  return Center(
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              _errorMessage!,
-                              style: GoogleFonts.poppins(
-                                  fontSize: 16, color: Colors.black87),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 4, 24, 96),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                              ),
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DashboardHome()),
-                                );
-                              },
-                              child: Text(
-                                'Back to Dashboard',
-                                style: GoogleFonts.poppins(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Card(
-                      elevation: 4,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12)),
-                      margin: const EdgeInsets.symmetric(
-                          horizontal: 8.0, vertical: 4.0),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              'No work groups found',
-                              style: GoogleFonts.poppins(
-                                  fontSize: 16, color: Colors.black87),
-                              textAlign: TextAlign.center,
-                            ),
-                            const SizedBox(height: 16),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor:
-                                    const Color.fromARGB(255, 4, 24, 96),
-                                foregroundColor: Colors.white,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8)),
-                              ),
-                              onPressed: () {
-                                Navigator.pushReplacement(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const DashboardHome()),
-                                );
-                              },
-                              child: Text(
-                                'Back to Dashboard',
-                                style: GoogleFonts.poppins(),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  );
-                }
-                return Column(
+              ),
+              const SizedBox(height: 24),
+              
+              // Table Header
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFF9FAFB),
+                  border: Border(
+                    bottom: BorderSide(color: Colors.grey.shade200),
+                  ),
+                ),
+                child: Row(
                   children: [
+                    const Icon(Icons.group, size: 16, color: Color(0xFF4B5563)),
+                    const SizedBox(width: 8),
                     Expanded(
-                      child: PageView.builder(
-                        controller: _pageController,
-                        onPageChanged: (int page) {
-                          setState(() {
-                            _currentPage = page;
-                          });
-                        },
-                        itemCount: totalPages,
-                        itemBuilder: (context, pageIndex) {
-                          final startIndex = pageIndex * _recordsPerPage;
-                          final endIndex = (startIndex + _recordsPerPage)
-                              .clamp(0, _filteredWorkGroups.length);
-                          final pageRecords =
-                              _filteredWorkGroups.sublist(startIndex, endIndex);
-
-                          return ListView.builder(
+                      child: Text(
+                        'WG_Name',
+                        style: GoogleFonts.poppins(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w600,
+                          color: const Color(0xFF374151),
+                        ),
+                      ),
+                    ),
+                    Text(
+                      'Actions',
+                      style: GoogleFonts.poppins(
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        color: const Color(0xFF374151),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              
+              // Table Body (List)
+              Expanded(
+                child: FutureBuilder<List<WorkGroupDetails>>(
+                  future: _workGroupsFuture,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (_errorMessage != null) {
+                      return Center(child: Text(_errorMessage!));
+                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No work groups found'));
+                    }
+                    
+                    final startIndex = _currentPage * _recordsPerPage;
+                    final endIndex = (startIndex + _recordsPerPage).clamp(0, _filteredWorkGroups.length);
+                    final pageRecords = _filteredWorkGroups.sublist(startIndex, endIndex);
+                    
+                    return Column(
+                      children: [
+                        Expanded(
+                          child: ListView.separated(
                             itemCount: pageRecords.length,
+                            separatorBuilder: (context, index) => Divider(
+                              color: Colors.grey.shade200,
+                              height: 1,
+                            ),
                             itemBuilder: (context, index) {
                               final workGroup = pageRecords[index];
-                              return InkWell(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          WorkGroupDetailsScreen(
-                                        workGroupName:
-                                            workGroup.workGroupName ??
-                                                'Unknown',
+                              return Container(
+                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        '${workGroup.workGroupName}',
+                                        style: GoogleFonts.poppins(
+                                          fontSize: 14,
+                                          color: const Color(0xFF111827),
+                                        ),
                                       ),
                                     ),
-                                  );
-                                },
-                                child: Card(
-                                  key: ValueKey(workGroup.workGroupId),
-                                  elevation: 4,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(12)),
-                                  margin: const EdgeInsets.symmetric(
-                                      vertical: 8, horizontal: 8),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(16),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    Row(
+                                      mainAxisSize: MainAxisSize.min,
                                       children: [
-                                        Row(
-                                          children: [
-                                            const SizedBox(width: 8),
-                                            Expanded(
-                                              child: Text(
-                                                '${workGroup.workGroupName}',
-                                                style: GoogleFonts.poppins(
-                                                  fontSize: 16,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.black87,
-                                                ),
-                                              ),
+                                        // Edit Button
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.blue.shade200),
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          child: InkWell(
+                                            onTap: () async {
+                                              final result = await Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context) => AddEditWorkGroupScreen(workGroup: workGroup)),
+                                              );
+                                              if (result == true) {
+                                                _refreshWorkGroups();
+                                              }
+                                            },
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(4),
+                                              child: Icon(Icons.edit, size: 16, color: Colors.blue),
                                             ),
-                                          ],
+                                          ),
                                         ),
-                                        const SizedBox(height: 8),
-                                        _buildFieldRow('ID',
-                                            workGroup.workGroupId.toString()),
+
+                                        // Delete Button
+                                        Container(
+                                          margin: const EdgeInsets.symmetric(horizontal: 2),
+                                          decoration: BoxDecoration(
+                                            border: Border.all(color: Colors.red.shade200),
+                                            borderRadius: BorderRadius.circular(4),
+                                          ),
+                                          child: InkWell(
+                                            onTap: () {
+                                              if (workGroup.workGroupId != null && workGroup.workGroupId! > 0) {
+                                                _deleteWorkGroup(workGroup.workGroupId!);
+                                              }
+                                            },
+                                            child: const Padding(
+                                              padding: EdgeInsets.all(4),
+                                              child: Icon(Icons.delete_outline, size: 16, color: Colors.red),
+                                            ),
+                                          ),
+                                        ),
                                       ],
                                     ),
-                                  ),
+                                  ],
                                 ),
                               );
                             },
-                          );
-                        },
-                      ),
-                    ),
-                    if (totalPages > 1)
-                      Container(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: List.generate(totalPages, (index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 4.0),
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: _currentPage == index
-                                        ? const Color.fromARGB(255, 4, 24, 96)
-                                        : Colors.grey.shade300,
-                                    foregroundColor: _currentPage == index
-                                        ? Colors.white
-                                        : Colors.black,
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(8)),
-                                    minimumSize: const Size(40, 40),
-                                  ),
-                                  onPressed: () {
-                                    _pageController.animateToPage(
-                                      index,
-                                      duration:
-                                          const Duration(milliseconds: 300),
-                                      curve: Curves.easeInOut,
-                                    );
-                                  },
-                                  child: Text(
-                                    '${index + 1}',
-                                    style: GoogleFonts.poppins(),
-                                  ),
-                                ),
-                              );
-                            }),
                           ),
                         ),
-                      ),
-                  ],
-                );
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildFieldRow(String label, String value) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            flex: 2,
-            child: Text(
-              label,
-              style: GoogleFonts.poppins(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: Colors.black87,
+                        // Pagination
+                        if (totalPages > 1)
+                          Container(
+                            padding: const EdgeInsets.symmetric(vertical: 8.0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: List.generate(totalPages, (index) {
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 4.0),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: _currentPage == index
+                                            ? const Color.fromARGB(255, 7, 69, 156)
+                                            : Colors.grey.shade200,
+                                        foregroundColor: _currentPage == index
+                                            ? Colors.white
+                                            : Colors.black87,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(8)),
+                                        minimumSize: const Size(36, 36),
+                                        padding: EdgeInsets.zero,
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          _currentPage = index;
+                                        });
+                                      },
+                                      child: Text(
+                                        '${index + 1}',
+                                        style: GoogleFonts.poppins(fontSize: 12),
+                                      ),
+                                    ),
+                                  );
+                                }),
+                              ),
+                            ),
+                          ),
+                      ],
+                    );
+                  },
+                ),
               ),
-            ),
+            ],
           ),
-          Expanded(
-            flex: 3,
-            child: Text(
-              value,
-              textAlign: TextAlign.start,
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: value == 'N/A' ? Colors.grey : Colors.black87,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

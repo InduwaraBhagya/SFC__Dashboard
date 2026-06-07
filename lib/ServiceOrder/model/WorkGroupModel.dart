@@ -25,8 +25,11 @@ class WorkGroupDetails {
 
   factory WorkGroupDetails.fromJson(Map<String, dynamic> json) {
     return WorkGroupDetails(
-      workGroupId: json['workGroupId'] as int? ?? 0,
-      workGroupName: json['workGroupName'] as String? ?? 'N/A',
+      workGroupId: json['workGroupId'] as int? ?? json['id'] as int? ?? 0,
+      workGroupName: json['workGroupName'] as String? ?? 
+                     json['name'] as String? ?? 
+                     json['WG_Name'] as String? ?? 
+                     json['wG_Name'] as String? ?? 'N/A',
       pE_NUMBER: json['pE_NUMBER'] as String? ?? 'N/A',
       customer: json['customer'] as String? ?? 'N/A',
       peRecordId: json['peRecordId'] as int?,
