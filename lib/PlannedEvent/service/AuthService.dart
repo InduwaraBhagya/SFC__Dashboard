@@ -807,6 +807,30 @@ class AuthService {
     }
   }
 
+  Future<List<WorkGroup>> getSomsWorkGroups() async {
+    try {
+      final headers = await getAuthenticatedHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/somsworkgroups'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map<WorkGroup>((json) {
+          return WorkGroup(
+            id: json['id'] as int? ?? 0,
+            name: json['wG_Name']?.toString() ?? json['wg_name']?.toString() ?? json['WG_Name']?.toString() ?? 'Unknown',
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to fetch SOMS workgroups: ${response.statusCode} ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching SOMS workgroups: $e');
+    }
+  }
+
   Future<List<WorkGroup>> getWorkGroupsByIds(List<int> ids) async {
     if (ids.isEmpty) return [];
     try {
