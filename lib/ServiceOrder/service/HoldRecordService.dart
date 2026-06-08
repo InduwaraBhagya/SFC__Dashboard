@@ -1,60 +1,146 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../model/OLAViolateRecord.dart';
 
 class HoldRecordService {
-  final List<OLAViolateRecord> _holdRecords = [];
-  final String _baseUrl = dotenv.env['API_BASE_URL'] ?? (throw Exception('API_BASE_URL not found in .env file'));
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+  List<OLAViolateRecord> _lastRecords = [];
 
-  Future<List<OLAViolateRecord>> getHoldRecords() async {
+  Future<Map<String, dynamic>> fetchHoldRecords({
+    int? page,
+    String? searchTerm,
+    required int pageSize,
+    String? workgroupId,
+  }) async {
     try {
-      final uri = Uri.parse('$_baseUrl/api/PlannedEvents/hold'); // Placeholder; replace with actual endpoint
-      final response = await http.get(uri, headers: {'Content-Type': 'application/json'});
-      print('Hold Records API Request URL: $uri');
-      print('Hold Records API Response Status: ${response.statusCode}');
-      print('Hold Records API Response Body: ${response.body}');
+      final baseUrl = dotenv.env['API_BASE_URL'] ??
+          (throw Exception('API_BASE_URL not found in .env file'));
+
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+
+      final wgName = workgroupId ??
+          await _storage.read(key: 'soms_selected_workgroup_name');
+      if (wgName == null) {
+        return {
+          'records': [],
+          'totalCount': 0,
+          'totalPages': 1,
+          'currentPage': 1
+        };
+      }
+
+      final url = Uri.parse(
+          '$baseUrl/api/somsdashboard/records/${Uri.encodeComponent(wgName)}/hold');
+      print('API Request URL (Hold): $url');
+
+      final response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
-        final data = jsonDecode(response.body) as Map<String, dynamic>;
-        final List<dynamic> rawRecords = data['items']?['\$values'] ?? data['items'] ?? [];
-        print('Hold Records Raw count: ${rawRecords.length}');
-        final records = rawRecords.asMap().entries.map((entry) {
-          final index = entry.key;
-          final item = entry.value as Map<String, dynamic>;
-          try {
-            return OLAViolateRecord.fromJson(item);
-          } catch (e, stackTrace) {
-            print('Error parsing hold record at index $index: $e');
-            print('Record data: $item');
-            print('StackTrace: $stackTrace');
-            return null;
-          }
-        }).where((r) => r != null).cast<OLAViolateRecord>().toList();
-        print('Hold Records Parsed count: ${records.length}');
-        _holdRecords.clear();
-        _holdRecords.addAll(records);
-        return _holdRecords;
+        final List<dynamic> rawRecords = jsonDecode(response.body);
+
+        final List<OLAViolateRecord> records = rawRecords
+            .map((r) {
+              try {
+                return OLAViolateRecord.fromJson(r as Map<String, dynamic>);
+              } catch (e) {
+                print('Error parsing hold record: $e');
+                return null;
+              }
+            })
+            .where((r) => r != null)
+            .cast<OLAViolateRecord>()
+            .toList();
+
+        _lastRecords = records;
+
+        return {
+          'records': records,
+          'totalCount': records.length,
+          'totalPages': 1,
+          'currentPage': 1,
+        };
       } else {
-        print('Hold Records API Error Response: ${response.body}');
         throw Exception('Failed to load hold records: ${response.statusCode}');
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       print('Error fetching hold records: $e');
-      print('StackTrace: $stackTrace');
-      return _holdRecords; // Fallback to in-memory list
+      return {
+        'records': [],
+        'totalCount': 0,
+        'totalPages': 1,
+        'currentPage': 1
+      };
     }
   }
 
-  Future<void> addHoldRecord(OLAViolateRecord record) async {
-    if (!_holdRecords.any((r) => r.peNumber == record.peNumber)) {
-      _holdRecords.add(record);
-      print('Added hold record: ${record.peNumber}');
-    } else {
-      print('Hold record ${record.peNumber} already exists');
-      throw Exception('Record already in hold records');
-    }
+  /// Backwards-compatible alias used by some callers.
+  Future<Map<String, dynamic>> getHoldRecords() async {
+    return await fetchHoldRecords(pageSize: 10);
   }
 
-  int getTotalCount() => _holdRecords.length;
+  /// Synchronous total count accessor used by some dashboards.
+  int getTotalCount() => _lastRecords.length;
+
+  dynamic dereferenceJson(dynamic data) {
+    final refs = <String, dynamic>{};
+    final resolvedRefs = <String, bool>{};
+
+    void collectRefs(dynamic item) {
+      if (item is Map<String, dynamic> && item.containsKey('\$id')) {
+        refs[item['\$id']] = item;
+      }
+      if (item is Map) {
+        for (var value in item.values) {
+          collectRefs(value);
+        }
+      } else if (item is List) {
+        for (var subItem in item) {
+          collectRefs(subItem);
+        }
+      }
+    }
+
+    dynamic resolve(dynamic item, {int depth = 0, Set<String>? seenRefs}) {
+      const maxDepth = 100;
+      seenRefs ??= {};
+      if (depth > maxDepth) return item;
+      if (item is Map<String, dynamic> && item.containsKey('\$ref')) {
+        final refId = item['\$ref'];
+        if (seenRefs.contains(refId)) return refs[refId] ?? item;
+        if (refs.containsKey(refId) && !resolvedRefs.containsKey(refId)) {
+          resolvedRefs[refId] = true;
+          seenRefs.add(refId);
+          final resolved =
+              resolve(refs[refId], depth: depth + 1, seenRefs: seenRefs);
+          seenRefs.remove(refId);
+          return resolved;
+        }
+        return item;
+      }
+      if (item is Map<String, dynamic>) {
+        final resolvedMap = <String, dynamic>{};
+        for (var entry in item.entries) {
+          resolvedMap[entry.key] =
+              resolve(entry.value, depth: depth + 1, seenRefs: seenRefs);
+        }
+        return resolvedMap;
+      } else if (item is List) {
+        return item
+            .map((subItem) =>
+                resolve(subItem, depth: depth + 1, seenRefs: seenRefs))
+            .toList();
+      }
+      return item;
+    }
+
+    collectRefs(data);
+    return resolve(data);
+  }
 }

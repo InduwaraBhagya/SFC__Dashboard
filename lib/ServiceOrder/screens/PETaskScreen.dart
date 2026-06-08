@@ -73,8 +73,8 @@ class _PETaskScreenState extends State<PETaskScreen>
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        iconTheme: const IconThemeData(
-          color: Colors.white, // Change back button color to white
+        iconTheme: IconThemeData(
+          color: Theme.of(context).cardColor, // Change back button color to white
         ),
         title: Text(
           widget.peNumber,
@@ -153,10 +153,10 @@ class _PETaskScreenState extends State<PETaskScreen>
                         const SizedBox(width: 8),
                         Text(
                           'Total Tasks: ${_allTasks.length}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            color: Colors.white,
+                            color: Theme.of(context).cardColor,
                           ),
                         ),
                       ],
@@ -217,3 +217,4 @@ class _PETaskScreenState extends State<PETaskScreen>
     );
   }
 }
+

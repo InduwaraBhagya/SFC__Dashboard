@@ -1,20 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:sfc_dashboard/ServiceOrder/ServiceOrderMain.dart';
 
-import 'CreateUserScreen.dart';
+import 'package:sfc_dashboard/SigninScreen.dart';
 
-enum OnboardingDestination { plannedEvent, serviceOrder }
-
-class OnboardingScreen extends StatefulWidget {
-  final int? userId;
-
-  const OnboardingScreen({super.key, this.userId});
-
-  @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+enum OnboardingDestination {
+  plannedEvent,
+  serviceOrder,
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class OnboardingScreen extends StatelessWidget {
+  const OnboardingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -80,12 +76,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   style: TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const CreateUserScreen(
-                        destination: OnboardingDestination.plannedEvent,
-                      ),
+                      builder: (_) => const SigninScreen(),
                     ),
                   );
                 },
@@ -103,20 +97,13 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   style: TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  Navigator.pushReplacement(
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const CreateUserScreen(
-                        destination: OnboardingDestination.serviceOrder,
-                      ),
+                      builder: (_) => const ServiceOrderMain(),
                     ),
                   );
                 },
-              ),
-              const SizedBox(height: 16),
-              Text(
-                'Logged in user id: ${widget.userId ?? 'not created'}',
-                style: const TextStyle(color: Colors.white70),
               ),
             ],
           ),
@@ -175,6 +162,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 //           ),
 //           flexibleSpace: Container(
 //             decoration: const BoxDecoration(
+
 //               gradient: LinearGradient(
 //                 colors: [
 //                   Color.fromARGB(226, 16, 37, 89),

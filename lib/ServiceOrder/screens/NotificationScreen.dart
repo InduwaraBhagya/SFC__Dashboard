@@ -183,7 +183,7 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
                     Expanded(
                       child: Text(
                         _successMessage!,
-                        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+                        style: TextStyle(color: Theme.of(context).cardColor, fontWeight: FontWeight.w500),
                       ),
                     ),
                   ],

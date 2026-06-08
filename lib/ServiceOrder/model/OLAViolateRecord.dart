@@ -31,6 +31,7 @@ class OLAViolateRecord {
   final String? woStatus;
   final String? taskName; // Added from HoldRecordScreen
   final String? peStatus; // Added from UrgentRecordScreen
+  final String? woStartDate;
   final PlannedEvent? plannedEvent;
   final PETask? peTask;
   final Map<String, dynamic>? additionalData;
@@ -68,6 +69,7 @@ class OLAViolateRecord {
     this.woStatus,
     this.taskName,
     this.peStatus,
+    this.woStartDate,
     this.plannedEvent,
     this.peTask,
     this.additionalData,
@@ -107,6 +109,7 @@ class OLAViolateRecord {
       woStatus: json['woStatus'] as String?,
       taskName: json['taskName'] as String?,
       peStatus: json['peStatus'] as String?,
+      woStartDate: json['woStartDate'] as String?,
       plannedEvent: json['plannedEvent'] != null
           ? PlannedEvent.fromJson(json['plannedEvent'] as Map<String, dynamic>)
           : null,
@@ -153,6 +156,7 @@ class OLAViolateRecord {
       'woStatus': woStatus,
       'taskName': taskName,
       'peStatus': peStatus,
+      'woStartDate': woStartDate,
       'plannedEvent': plannedEvent?.toJson(),
       'peTask': peTask?.toJson(),
       'additionalData': additionalData,

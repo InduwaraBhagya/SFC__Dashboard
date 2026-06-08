@@ -5,17 +5,10 @@ import 'PlannedEvent/service/AuthService.dart';
 import 'PlannedEvent/model/SystemUser.dart';
 import 'PlannedEvent/model/UserRole.dart';
 import 'PlannedEvent/model/WorkGroup.dart';
-import 'PlannedEvent/PlannedEventMain.dart';
-import 'ServiceOrder/ServiceOrderMain.dart';
 import 'OnboardingScreen.dart';
 
 class CreateUserScreen extends StatefulWidget {
-  final OnboardingDestination destination;
-
-  const CreateUserScreen({
-    super.key,
-    this.destination = OnboardingDestination.plannedEvent,
-  });
+  const CreateUserScreen({super.key});
 
   @override
   State<CreateUserScreen> createState() => _CreateUserScreenState();
@@ -55,12 +48,20 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
           final existingUser =
               await _authService.checkUserByServiceId(serviceId);
           if (existingUser != null && existingUser.id != null) {
-            // User exists; store the id and prefill the form.
+            // User exists, navigate to OnboardingScreen
             await storage.write(
                 key: 'userId', value: existingUser.id.toString());
+            if (mounted) {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => const OnboardingScreen()),
+              );
+              return;
+            }
           }
         }
-        // Populate fields from stored Azure AD user info.
+        // If user doesn't exist, populate fields and fetch dropdown data
         setState(() {
           _nameController.text = userInfo['Name'] ?? '';
           _serviceIdController.text = serviceId;
@@ -133,26 +134,13 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
-              content: Text('User created and workgroups assigned successfully'),
-            ),
+                content:
+                    Text('User created and workgroups assigned successfully')),
           );
-
-          // Redirect according to selected destination
-          if (widget.destination == OnboardingDestination.plannedEvent) {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => PlannedEventMain(userId: createdUser.id!),
-              ),
-            );
-          } else {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(
-                builder: (context) => const ServiceOrderMain(),
-              ),
-            );
-          }
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+          );
         }
       } catch (e) {
         setState(() {

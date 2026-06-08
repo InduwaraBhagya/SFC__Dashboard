@@ -1,5 +1,6 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'dart:io' as io;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter/foundation.dart';
@@ -20,6 +21,8 @@ class OLAViolateRecordService {
     int? page,
     String? searchTerm,
     required int pageSize,
+    int? workgroupId,
+    bool fetchMultiWorkgroup = false,
   }) async {
     try {
       final userId = await _getUserId();
@@ -31,6 +34,7 @@ class OLAViolateRecordService {
         'pageSize': pageSize.toString(),
         if (searchTerm != null && searchTerm.isNotEmpty)
           'searchTerm': searchTerm,
+        if (workgroupId != null) 'workgroupId': workgroupId.toString(),
       };
 
       final url =
@@ -90,6 +94,17 @@ class OLAViolateRecordService {
           'currentPage': page ?? 1,
         };
       } else {
+        if (response.statusCode == 404) {
+          if (kDebugMode) {
+            print('OLA Violation API returned 404 — treating as empty result.');
+          }
+          return {
+            'records': [],
+            'totalCount': 0,
+            'totalPages': 1,
+            'currentPage': page ?? 1,
+          };
+        }
         if (kDebugMode) {
           print('OLA Violation Records API Error Response: ${response.body}');
         }
@@ -98,8 +113,11 @@ class OLAViolateRecordService {
       }
     } catch (e, stackTrace) {
       if (kDebugMode) {
-        print('Error fetching OLA violation records: $e');
-        print('StackTrace: $stackTrace');
+        if (e is io.SocketException) {
+          print('Network error fetching OLA violation records: ${e.message}');
+        } else {
+          print('Error fetching OLA violation records: $e');
+        }
       }
       return {
         'records': [],

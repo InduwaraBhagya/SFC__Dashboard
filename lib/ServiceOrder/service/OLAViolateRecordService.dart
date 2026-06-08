@@ -1,76 +1,78 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../model/OLAViolateRecord.dart';
 
 class OLAViolateRecordService {
+  final FlutterSecureStorage _storage = const FlutterSecureStorage();
+
   Future<Map<String, dynamic>> fetchOLAViolateRecords({
     int? page,
     String? searchTerm,
     required int pageSize,
+    String? workgroupId,
   }) async {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ??
           (throw Exception('API_BASE_URL not found in .env file'));
+
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+
+      final wgName = workgroupId ??
+          await _storage.read(key: 'soms_selected_workgroup_name');
+      if (wgName == null) {
+        return {
+          'records': [],
+          'totalCount': 0,
+          'totalPages': 1,
+          'currentPage': 1
+        };
+      }
+
       final url = Uri.parse(
-          '$baseUrl/PETasks/ola-violations?page=$page${searchTerm != null ? "&searchTerm=$searchTerm" : ""}');
-      print('API Request URL: $url');
-      final response = await http.get(url);
+          '$baseUrl/api/somsdashboard/records/${Uri.encodeComponent(wgName)}/olaViolated');
+      print('API Request URL (OLA): $url');
+
+      final response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> result = jsonDecode(response.body);
-        print('API Response Body: ${response.body}');
-
-        // Dereference JSON to handle $id/$ref
-        result = dereferenceJson(result);
-
-        // Try different possible JSON structures for records
-        final List<dynamic> rawRecords = result['items']?['\$values'] ??
-            result['records']?['\$values'] ??
-            result['data'] ??
-            result['\$values'] ??
-            (result is List ? result : []);
-        print('Raw records count: ${rawRecords.length}');
+        final List<dynamic> rawRecords = jsonDecode(response.body);
 
         final List<OLAViolateRecord> records = rawRecords
-            .asMap()
-            .entries
-            .map((entry) {
-              final index = entry.key;
-              final r = entry.value;
+            .map((r) {
               try {
-                print('Parsing record $index: $r');
-                return OLAViolateRecord.fromJson(r);
-              } catch (e, stackTrace) {
-                print('Error parsing record at index $index: $e');
-                print('Record data: $r');
-                print('StackTrace: $stackTrace');
+                return OLAViolateRecord.fromJson(r as Map<String, dynamic>);
+              } catch (e) {
+                print('Error parsing OLA record: $e');
                 return null;
               }
             })
             .where((r) => r != null)
             .cast<OLAViolateRecord>()
             .toList();
-        print('Parsed records count: ${records.length}');
 
         return {
           'records': records,
-          'totalCount': result['totalItems'] ?? 0,
-          'totalPages': result['totalPages'] ?? 1,
-          'currentPage': result['currentPage'] ?? 1,
+          'totalCount': records.length,
+          'totalPages': 1,
+          'currentPage': 1,
         };
       } else {
-        print('API Error Response: ${response.body}');
-        throw Exception('Failed to load records: ${response.statusCode}');
+        throw Exception('Failed to load OLA records: ${response.statusCode}');
       }
-    } catch (e, stackTrace) {
-      print('Error fetching OLA violation records: $e');
-      print('StackTrace: $stackTrace');
+    } catch (e) {
+      print('Error fetching OLA records: $e');
       return {
         'records': [],
         'totalCount': 0,
         'totalPages': 1,
-        'currentPage': 1,
+        'currentPage': 1
       };
     }
   }
@@ -79,53 +81,35 @@ class OLAViolateRecordService {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ??
           (throw Exception('API_BASE_URL not found in .env file'));
-      final url = Uri.parse('$baseUrl/PETasks/$recordId');
-      print('API Request URL for details: $url');
-      final response = await http.get(url);
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+
+      final url = Uri.parse('$baseUrl/api/PETasks/$recordId');
+      final response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
-        Map<String, dynamic> result = jsonDecode(response.body);
-        print('API Response Body for details: ${response.body}');
-
-        // Dereference JSON to handle $id/$ref
+        dynamic result = jsonDecode(response.body);
         result = dereferenceJson(result);
-        print('Dereferenced JSON: $result');
 
-        // Handle different possible JSON structures
         Map<String, dynamic> recordData;
         if (result['records']?['\$values'] != null &&
             result['records']['\$values'].isNotEmpty) {
           recordData = result['records']['\$values'][0];
         } else if (result['data'] != null) {
           recordData = result['data'];
-        } else if (result['\$values'] != null &&
-            result['\$values'].isNotEmpty) {
-          recordData = result['\$values'][0];
-        } else
+        } else {
           recordData = result;
-
-        print('Extracted record data: $recordData');
-        try {
-          final record = OLAViolateRecord.fromJson(recordData);
-          print('Parsed OLAViolateRecord: ${record.toJson()}');
-          print('peTask: ${record.peTask?.toJson()}');
-          print('plannedEvent: ${record.plannedEvent?.toJson()}');
-          print('additionalData: ${record.additionalData}');
-          return record;
-        } catch (e, stackTrace) {
-          print('Error parsing record details: $e');
-          print('Record data: $recordData');
-          print('StackTrace: $stackTrace');
-          return null;
         }
-      } else {
-        print('API Error Response for details: ${response.body}');
-        throw Exception(
-            'Failed to load record details: ${response.statusCode}');
+
+        return OLAViolateRecord.fromJson(recordData);
       }
-    } catch (e, stackTrace) {
+      return null;
+    } catch (e) {
       print('Error fetching record details: $e');
-      print('StackTrace: $stackTrace');
       return null;
     }
   }
@@ -134,31 +118,24 @@ class OLAViolateRecordService {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ??
           (throw Exception('API_BASE_URL not found in .env file'));
-      final url = Uri.parse('$baseUrl/PETasks/$recordId/requesturgent');
-      print('API Request URL for mark urgent: $url');
-      final response = await http.post(url);
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
 
-      if (response.statusCode == 200) {
-        return true;
-      } else {
-        print('API Error Response for mark urgent: ${response.body}');
-        throw Exception(
-            'Failed to mark record as urgent: ${response.statusCode}');
-      }
-    } catch (e, stackTrace) {
-      print('Error marking record as urgent: $e');
-      print('StackTrace: $stackTrace');
+      final url = Uri.parse('$baseUrl/api/PETasks/$recordId/requesturgent');
+      final response = await http.post(url, headers: headers);
+      return response.statusCode == 200;
+    } catch (e) {
       return false;
     }
   }
 
-  // Enhanced function to resolve $id and $ref references
   dynamic dereferenceJson(dynamic data) {
     final refs = <String, dynamic>{};
-    final resolvedRefs =
-        <String, bool>{}; // Track resolved refs to avoid infinite loops
+    final resolvedRefs = <String, bool>{};
 
-    // First pass: collect all objects with $id
     void collectRefs(dynamic item) {
       if (item is Map<String, dynamic> && item.containsKey('\$id')) {
         refs[item['\$id']] = item;
@@ -174,22 +151,13 @@ class OLAViolateRecordService {
       }
     }
 
-    // Second pass: replace $ref with referenced object
     dynamic resolve(dynamic item, {int depth = 0, Set<String>? seenRefs}) {
-      const maxDepth = 100; // Prevent stack overflow
+      const maxDepth = 100;
       seenRefs ??= {};
-
-      if (depth > maxDepth) {
-        print('Warning: Maximum recursion depth reached in JSON dereferencing');
-        return item;
-      }
-
+      if (depth > maxDepth) return item;
       if (item is Map<String, dynamic> && item.containsKey('\$ref')) {
         final refId = item['\$ref'];
-        if (seenRefs.contains(refId)) {
-          print('Warning: Circular reference detected for \$ref: $refId');
-          return refs[refId] ?? item; // Return the ref object or original item
-        }
+        if (seenRefs.contains(refId)) return refs[refId] ?? item;
         if (refs.containsKey(refId) && !resolvedRefs.containsKey(refId)) {
           resolvedRefs[refId] = true;
           seenRefs.add(refId);
@@ -198,9 +166,8 @@ class OLAViolateRecordService {
           seenRefs.remove(refId);
           return resolved;
         }
-        return item; // Return original if ref not found
+        return item;
       }
-
       if (item is Map<String, dynamic>) {
         final resolvedMap = <String, dynamic>{};
         for (var entry in item.entries) {
@@ -218,9 +185,6 @@ class OLAViolateRecordService {
     }
 
     collectRefs(data);
-    print('Collected references: $refs');
-    final resolvedData = resolve(data);
-    print('Dereferenced JSON: $resolvedData');
-    return resolvedData;
+    return resolve(data);
   }
 }
