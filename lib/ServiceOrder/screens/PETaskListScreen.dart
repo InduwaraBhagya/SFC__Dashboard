@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import '../model/PETaskList.dart';
 import '../service/PETaskListService.dart';
 
@@ -48,7 +48,7 @@ class _PETaskListScreenState extends State<PETaskListScreen> {
             color: Color.fromARGB(255, 10, 37, 82),
           ),
         ),
-        backgroundColor: Colors.white,
+        
         centerTitle: true,
         elevation: 2,
       ),

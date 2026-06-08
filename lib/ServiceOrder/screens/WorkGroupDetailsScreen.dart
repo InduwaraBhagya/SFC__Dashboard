@@ -349,3 +349,4 @@ class _WorkGroupDetailsScreenState extends State<WorkGroupDetailsScreen> {
     );
   }
 }
+

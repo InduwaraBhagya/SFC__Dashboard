@@ -1,0 +1,10 @@
+﻿Analyzing signinscreen.dart...                                  
+
+   info - Don't invoke 'print' in production code - lib\signinscreen.dart:30:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\signinscreen.dart:32:7 - avoid_print
+   info - Don't invoke 'print' in production code - lib\signinscreen.dart:35:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\signinscreen.dart:36:9 - avoid_print
+warning - The value of the local variable 'userId' isn't used - lib\signinscreen.dart:38:20 - unused_local_variable
+   info - Don't invoke 'print' in production code - lib\signinscreen.dart:51:9 - avoid_print
+   info - Don't invoke 'print' in production code - lib\signinscreen.dart:62:7 - avoid_print
+

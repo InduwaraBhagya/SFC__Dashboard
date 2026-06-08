@@ -1,9 +1,9 @@
-// REDESIGNED HOLD RECORD SCREEN - SFC DASHBOARD
+// REDESIGNED DORMANT RECORD SCREEN - SFC DASHBOARD
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 import '../model/OLAViolateRecord.dart';
-import '../service/HoldRecordService.dart';
+import '../service/DormantRecordService.dart';
 import 'OLAViolateRecordDetailsScreen.dart';
 import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,18 +11,18 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../PlannedEvent/service/AuthService.dart' as auth;
 import '../../PlannedEvent/model/WorkGroup.dart';
 
-class HoldRecordScreen extends StatefulWidget {
+class DormantRecordScreen extends StatefulWidget {
   final Map<String, dynamic> user;
   final VoidCallback? onBack;
 
-  const HoldRecordScreen({super.key, required this.user, this.onBack});
+  const DormantRecordScreen({super.key, required this.user, this.onBack});
 
   @override
-  _HoldRecordScreenState createState() => _HoldRecordScreenState();
+  _DormantRecordScreenState createState() => _DormantRecordScreenState();
 }
 
-class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerProviderStateMixin {
-  final _service = HoldRecordService();
+class _DormantRecordScreenState extends State<DormantRecordScreen> with SingleTickerProviderStateMixin {
+  final _service = DormantRecordService();
   late Future<Map<String, dynamic>> _futureRecords;
   int _page = 1;
   final int _pageSize = 1000;
@@ -78,9 +78,10 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
       _errorMessage = null;
     });
     try {
-      final result = await _service.fetchHoldRecords(
+      final result = await _service.fetchDormantRecords(
         page: page,
         pageSize: _pageSize,
+        searchTerm: _soSearchController.text.isNotEmpty ? _soSearchController.text : null,
         workgroupId: _selectedWorkGroup?.name,
       );
       final List<OLAViolateRecord> newRecords = (result['records'] as List<dynamic>?)?.cast<OLAViolateRecord>() ?? [];
@@ -128,7 +129,7 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
         child: Column(
           children: [
             _buildTopGradientHeader(),
-            _buildGoldFilterBar(),
+            _buildGreyFilterBar(),
             Expanded(
               child: _isLoading && _allRecords.isEmpty
                   ? const Center(child: CircularProgressIndicator())
@@ -251,9 +252,9 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
     );
   }
 
-  Widget _buildGoldFilterBar() {
+  Widget _buildGreyFilterBar() {
     return Container(
-      color: const Color(0xFFFBC02D), // Gold for Hold records
+      color: const Color(0xFF616161), // Grey for Dormant records
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -262,7 +263,7 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
             children: [
               Expanded(
                 child: Text(
-                  'Hold Records (${_getFilteredRecords().length} of $_totalCount Records)',
+                  'Dormant Records (${_getFilteredRecords().length} of $_totalCount Records)',
                   style: GoogleFonts.outfit(color: Theme.of(context).cardColor, fontWeight: FontWeight.bold, fontSize: 13),
                 ),
               ),
@@ -384,7 +385,7 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        width: 1250,
+        width: 1200,
         child: Column(
           children: [
             _buildTableHeaderRow(),
@@ -438,13 +439,6 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
       filtered = filtered.where((r) => 
         (r.customer?.toLowerCase().contains(query) ?? false) ||
         (r.soId?.toLowerCase().contains(query) ?? false)
-      ).toList();
-    }
-
-    if (_soSearchController.text.isNotEmpty) {
-      final query = _soSearchController.text.toLowerCase();
-      filtered = filtered.where((r) => 
-        r.soId?.toLowerCase().contains(query) ?? false
       ).toList();
     }
 
@@ -524,9 +518,10 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
                   style: ElevatedButton.styleFrom(
                     
                     foregroundColor: Colors.white,
+                    minimumSize: const Size(60, 24),
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    minimumSize: const Size(0, 26),
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(4)),
+                    elevation: 0,
                   ),
                   child: const Text('Resume', style: TextStyle(fontSize: 10, fontWeight: FontWeight.bold)),
                 ),
@@ -562,11 +557,11 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
         children: [
           Icon(Icons.search_off_rounded, size: 70, color: Colors.grey.shade300),
           const SizedBox(height: 16),
-          Text('No hold records found.', style: GoogleFonts.outfit(fontSize: 14, color: Colors.grey.shade500)),
+          Text('No dormant records found.', style: GoogleFonts.outfit(fontSize: 14, color: Colors.grey.shade500)),
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: () => _fetchRecords(page: 1),
-            style: ElevatedButton.styleFrom( foregroundColor: Colors.black),
+            style: ElevatedButton.styleFrom( foregroundColor: Colors.white),
             child: const Text('Retry Search'),
           ),
         ],
