@@ -47,20 +47,20 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
             );
           }
-        print('Login successful! Navigating to onboarding...');
-        print('User data: $user');
+        } else {
+          print('Login successful! Navigating to onboarding...');
+          print('User data: $user');
 
-        final int? userId = user['UserId'] is int ? user['UserId'] as int : null;
+          final int? userId = user['UserId'] is int ? user['UserId'] as int : null;
 
-        if (mounted) {
-          Navigator.pushReplacement(
-            context,
-            MaterialPageRoute(
-              builder: (context) => CreateUserScreen(
-                destination: widget.destination,
+          if (mounted) {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const CreateUserScreen(),
               ),
-            ),
-          );
+            );
+          }
         }
       } else {
         print('Login failed: user data is null or empty');

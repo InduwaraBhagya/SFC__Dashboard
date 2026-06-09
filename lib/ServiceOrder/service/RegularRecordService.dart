@@ -17,6 +17,13 @@ class RegularRecordService {
       final baseUrl = dotenv.env['API_BASE_URL'] ??
           (throw Exception('API_BASE_URL not found in .env file'));
 
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
+
       final queryParameters = {
         'page': page.toString(),
         'pageSize': pageSize.toString(),

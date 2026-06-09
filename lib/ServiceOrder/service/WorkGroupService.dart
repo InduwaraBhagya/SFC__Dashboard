@@ -16,11 +16,12 @@ class WorkGroupService {
 
   Future<List<WorkGroupDetails>> fetchWorkGroups() async {
     try {
-      // TODO: If authentication is required, add headers here
-      final response = await http.get(Uri.parse('$baseUrl/api/WorkGroups'));
-
-      print('fetchWorkGroups - URL: $baseUrl/api/WorkGroup');
-      print('fetchWorkGroups - Response status: ${response.statusCode}');
+      final token = await _storage.read(key: 'access_token');
+      final headers = {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        if (token != null) 'Authorization': 'Bearer $token',
+      };
 
       final response = await http.get(Uri.parse('$baseUrl/api/somsworkgroups'),
           headers: headers);
@@ -33,6 +34,7 @@ class WorkGroupService {
         final dynamic data = json.decode(response.body);
         List<dynamic> workGroups;
         if (data is List) {
+          workGroups = data;
         } else if (data is Map<String, dynamic>) {
           workGroups = data[r'$values'] ?? [];
         } else {

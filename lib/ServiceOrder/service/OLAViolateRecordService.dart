@@ -11,12 +11,12 @@ class OLAViolateRecordService {
     int? page,
     String? searchTerm,
     required int pageSize,
-
+    String? workgroupId,
   }) async {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ??
           (throw Exception('API_BASE_URL not found in .env file'));
-      final url = Uri.parse(
+      final token = await _storage.read(key: 'access_token');
       final headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

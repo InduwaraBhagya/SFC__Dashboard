@@ -233,7 +233,6 @@ class PEService {
     throw Exception(
         'Failed to load issues by planned event IDs: ${response.statusCode}');
   }
-
   Future<List<PEIssue>> getPEIssuesByPlannedEvent(int plannedEventId) async {
     final response = await http.get(
       Uri.parse('$baseUrl/api/peissues/plannedevent/$plannedEventId'),
@@ -243,8 +242,7 @@ class PEService {
       final List<dynamic> data = jsonDecode(response.body);
       return data.map((json) => PEIssue.fromJson(json)).toList();
     }
-    throw Exception(
-        'Failed to load PE issues by planned event: ${response.statusCode}');
+    throw Exception('Failed to load PE issues by planned event: ${response.statusCode}');
   }
 
   // PE Issue Resolutions GET Endpoints
@@ -285,8 +283,7 @@ class PEService {
     } else if (response.statusCode == 404) {
       return null;
     }
-    throw Exception(
-        'Failed to load pending resolution: ${response.statusCode}');
+    throw Exception('Failed to load pending resolution: ${response.statusCode}');
   }
 
   Future<Map<int, PEIssueResolution?>> getResolutionsByIssueIds(

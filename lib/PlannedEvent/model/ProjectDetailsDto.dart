@@ -155,9 +155,14 @@ class ProjectPEViewModelDto {
     this.peNumber,
     this.customer,
     this.jobReference,
+    this.serviceRequiredDate,
     this.currentTask,
     this.currentWg,
   });
+
+  factory ProjectPEViewModelDto.fromJson(Map<String, dynamic> json) {
+    return ProjectPEViewModelDto(
+      id: json['id'],
       plannedEventId: json['plannedEventId'],
       plannedEvent: json['plannedEvent'] != null
           ? PlannedEvent.fromJson(json['plannedEvent'])

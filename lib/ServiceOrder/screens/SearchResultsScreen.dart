@@ -51,7 +51,8 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(
-          color: Theme.of(context).cardColor, // change the color of the leading icon
+          color: Theme.of(context)
+              .cardColor, // change the color of the leading icon
         ),
         title: Text(
           '${widget.searchCategory}: ${widget.searchValue}',
@@ -342,4 +343,3 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
     );
   }
 }
-
