@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:sfc_dashboard/ServiceOrder/ServiceOrderMain.dart';
 
-import 'package:sfc_dashboard/SigninScreen.dart';
+import 'SigninScreen.dart';
+import 'ServiceOrder/screens/SigninScreen.dart';
 
-enum OnboardingDestination {
-  plannedEvent,
-  serviceOrder,
+enum OnboardingDestination { plannedEvent, serviceOrder }
+
+class OnboardingScreen extends StatefulWidget {
+  final int? userId;
+
+  const OnboardingScreen({super.key, this.userId});
+
+  @override
+  State<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class OnboardingScreen extends StatelessWidget {
-  const OnboardingScreen({super.key});
-
+class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,13 +101,20 @@ class OnboardingScreen extends StatelessWidget {
                   style: TextStyle(fontSize: 20),
                 ),
                 onPressed: () {
-                  Navigator.push(
+                  Navigator.pushReplacement(
                     context,
                     MaterialPageRoute(
-                      builder: (_) => const ServiceOrderMain(),
+                      builder: (_) => const ServiceOrderSigninScreen(
+                        destination: OnboardingDestination.serviceOrder,
+                      ),
                     ),
                   );
                 },
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Logged in user id: ${widget.userId ?? 'not created'}',
+                style: const TextStyle(color: Colors.white70),
               ),
             ],
           ),

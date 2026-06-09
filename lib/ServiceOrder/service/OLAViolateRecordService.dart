@@ -11,12 +11,12 @@ class OLAViolateRecordService {
     int? page,
     String? searchTerm,
     required int pageSize,
-    String? workgroupId,
+
   }) async {
     try {
-      final baseUrl = dotenv.env['API_BASE_URL'] ?? (throw Exception('API_BASE_URL not found in .env file'));
-      
-      final token = await _storage.read(key: 'access_token');
+      final baseUrl = dotenv.env['API_BASE_URL'] ??
+          (throw Exception('API_BASE_URL not found in .env file'));
+      final url = Uri.parse(
       final headers = {
         'Content-Type': 'application/json',
         'Accept': 'application/json',
@@ -57,11 +57,62 @@ class OLAViolateRecordService {
     } catch (e) {
       print('Error fetching OLA records: $e');
       return {'records': [], 'totalCount': 0, 'totalPages': 1, 'currentPage': 1};
+
     }
   }
 
   Future<OLAViolateRecord?> fetchPlannedEventDetails(int recordId) async {
     try {
+      final baseUrl = dotenv.env['API_BASE_URL'] ??
+          (throw Exception('API_BASE_URL not found in .env file'));
+      final url = Uri.parse('$baseUrl/PETasks/$recordId');
+      print('API Request URL for details: $url');
+      final response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> result = jsonDecode(response.body);
+        print('API Response Body for details: ${response.body}');
+
+        // Dereference JSON to handle $id/$ref
+        result = dereferenceJson(result);
+        print('Dereferenced JSON: $result');
+
+        // Handle different possible JSON structures
+        Map<String, dynamic> recordData;
+        if (result['records']?['\$values'] != null &&
+            result['records']['\$values'].isNotEmpty) {
+          recordData = result['records']['\$values'][0];
+        } else if (result['data'] != null) {
+          recordData = result['data'];
+        } else if (result['\$values'] != null &&
+            result['\$values'].isNotEmpty) {
+          recordData = result['\$values'][0];
+        } else
+          recordData = result;
+
+        print('Extracted record data: $recordData');
+        try {
+          final record = OLAViolateRecord.fromJson(recordData);
+          print('Parsed OLAViolateRecord: ${record.toJson()}');
+          print('peTask: ${record.peTask?.toJson()}');
+          print('plannedEvent: ${record.plannedEvent?.toJson()}');
+          print('additionalData: ${record.additionalData}');
+          return record;
+        } catch (e, stackTrace) {
+          print('Error parsing record details: $e');
+          print('Record data: $recordData');
+          print('StackTrace: $stackTrace');
+          return null;
+        }
+      } else {
+        print('API Error Response for details: ${response.body}');
+        throw Exception(
+            'Failed to load record details: ${response.statusCode}');
+      }
+    } catch (e, stackTrace) {
+      print('Error fetching record details: $e');
+      print('StackTrace: $stackTrace');
+
       final baseUrl = dotenv.env['API_BASE_URL'] ?? (throw Exception('API_BASE_URL not found in .env file'));
       final token = await _storage.read(key: 'access_token');
       final headers = {
@@ -91,6 +142,7 @@ class OLAViolateRecordService {
       return null;
     } catch (e) {
       print('Error fetching record details: $e');
+
       return null;
     }
   }

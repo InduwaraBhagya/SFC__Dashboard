@@ -19,7 +19,8 @@ class HoldRecordScreen extends StatefulWidget {
   _HoldRecordScreenState createState() => _HoldRecordScreenState();
 }
 
-class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerProviderStateMixin {
+class _HoldRecordScreenState extends State<HoldRecordScreen>
+    with SingleTickerProviderStateMixin {
   final _service = HoldRecordService();
   List<OLAViolateRecord> _allRecords = [];
   bool _isLoading = false;
@@ -55,7 +56,8 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
         workgroupId: widget.workgroupId,
         fetchMultiWorkgroup: widget.useRealData,
       );
-      final records = (result['records'] as List?)?.cast<OLAViolateRecord>() ?? [];
+      final records =
+          (result['records'] as List?)?.cast<OLAViolateRecord>() ?? [];
       setState(() {
         _allRecords = records;
         _currentPage = result['currentPage'] as int? ?? 1;
@@ -66,7 +68,8 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
         }
       });
       if (kDebugMode) {
-        print('Fetched ${_allRecords.length} hold records for page $_currentPage');
+        print(
+            'Fetched ${_allRecords.length} hold records for page $_currentPage');
         print('Records: ${_allRecords.map((r) => r.peNumber).toList()}');
       }
     } catch (e, stackTrace) {
@@ -93,7 +96,8 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
       appBar: AppBar(
         title: const Text(
           'Hold Records',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
+          style: TextStyle(
+              fontSize: 20, fontWeight: FontWeight.bold, color: Colors.white),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
           statusBarColor: Colors.transparent,
@@ -131,7 +135,8 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
                   Expanded(
                     child: Text(
                       _errorMessage!,
-                      style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+                      style: const TextStyle(
+                          color: Colors.red, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],
@@ -146,7 +151,8 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
                         child: FadeTransition(
                           opacity: _fadeAnimation,
                           child: Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 8.0),
+                            margin: const EdgeInsets.symmetric(
+                                horizontal: 8.0, vertical: 8.0),
                             padding: const EdgeInsets.all(12.0),
                             decoration: BoxDecoration(
                               gradient: const LinearGradient(
@@ -169,7 +175,8 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.list, size: 24, color: Colors.white),
+                                const Icon(Icons.list,
+                                    size: 24, color: Colors.white),
                                 const SizedBox(width: 8),
                                 Text(
                                   'Total Records: ${_allRecords.length}',
@@ -191,53 +198,75 @@ class _HoldRecordScreenState extends State<HoldRecordScreen> with SingleTickerPr
                             return Card(
                               key: ValueKey(record.peNumber),
                               elevation: 4,
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                              margin: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
+                              margin: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
                               child: ExpansionTile(
                                 title: ListTile(
-                                  contentPadding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                  contentPadding: const EdgeInsets.symmetric(
+                                      horizontal: 16.0, vertical: 8.0),
                                   title: Text(
                                     'PE Number: ${record.peNumber ?? 'N/A'}',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 16),
                                   ),
                                   subtitle: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Task: ${record.taskName ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                       Text(
                                         'Customer: ${record.customer ?? 'N/A'}',
-                                        style: const TextStyle(fontSize: 14, color: Colors.black54),
+                                        style: const TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black54),
                                       ),
                                     ],
                                   ),
                                 ),
                                 children: [
-                                  _buildFieldRow('Workgroup', record.taskWg ?? 'N/A'),
-                                  _buildFieldRow('Province', record.province ?? 'N/A'),
-                                  _buildFieldRow('Contractor', record.contractorName ?? 'N/A'),
-                                  _buildFieldRow('PE Title', record.peTitle ?? 'N/A'),
-                                  _buildFieldRow('PE Objective', record.peObjective ?? 'N/A'),
-                                  _buildFieldRow('Service Type', record.serviceType ?? 'N/A'),
-                                  _buildFieldRow('Status', record.peStatus ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Workgroup', record.taskWg ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Province', record.province ?? 'N/A'),
+                                  _buildFieldRow('Contractor',
+                                      record.contractorName ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'PE Title', record.peTitle ?? 'N/A'),
+                                  _buildFieldRow('PE Objective',
+                                      record.peObjective ?? 'N/A'),
+                                  _buildFieldRow('Service Type',
+                                      record.serviceType ?? 'N/A'),
+                                  _buildFieldRow(
+                                      'Status', record.peStatus ?? 'N/A'),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 16.0, vertical: 8.0),
                                     child: Align(
                                       alignment: Alignment.centerRight,
                                       child: ElevatedButton(
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.green[600],
                                           foregroundColor: Colors.white,
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
                                           elevation: 2,
                                         ),
                                         onPressed: () {
                                           Navigator.push(
                                             context,
                                             MaterialPageRoute(
-                                              builder: (context) => OLAViolateRecordDetailsScreen(record: record),
+                                              builder: (context) =>
+                                                  OLAViolateRecordDetailsScreen(
+                                                      record: record),
                                             ),
                                           );
                                         },

@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'PlannedEvent/service/AuthService.dart' as auth;
+import 'CreateUserScreen.dart';
+import 'OnboardingScreen.dart';
 import 'PlannedEvent/screens/RoleSelectionScreen.dart';
-
 class SigninScreen extends StatefulWidget {
-  const SigninScreen({super.key});
+  final OnboardingDestination destination;
+
+  const SigninScreen({super.key, this.destination = OnboardingDestination.plannedEvent});
 
   @override
   State<SigninScreen> createState() => _SigninScreenState();
@@ -44,6 +47,20 @@ class _SigninScreenState extends State<SigninScreen> {
               ),
             );
           }
+        print('Login successful! Navigating to onboarding...');
+        print('User data: $user');
+
+        final int? userId = user['UserId'] is int ? user['UserId'] as int : null;
+
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreateUserScreen(
+                destination: widget.destination,
+              ),
+            ),
+          );
         }
       } else {
         print('Login failed: user data is null or empty');

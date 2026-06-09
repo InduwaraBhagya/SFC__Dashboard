@@ -20,7 +20,9 @@ class UserRole {
           ? (json['rolePermissions'] as List)
               .map((rp) => rp['permissionId'] as int)
               .toList()
-          : (json['permissionIds'] != null ? List<int>.from(json['permissionIds']) : null),
+          : (json['permissionIds'] != null
+              ? List<int>.from(json['permissionIds'])
+              : null),
     );
   }
 
