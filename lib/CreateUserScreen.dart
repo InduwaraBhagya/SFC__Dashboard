@@ -55,7 +55,8 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => const OnboardingScreen()),
+                    builder: (context) =>
+                        const OnboardingScreen()),
               );
               return;
             }
@@ -139,7 +140,9 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
           );
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+            MaterialPageRoute(
+                builder: (context) =>
+                    const OnboardingScreen()),
           );
         }
       } catch (e) {

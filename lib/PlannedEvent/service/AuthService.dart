@@ -775,11 +775,9 @@ class AuthService {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => UserRole.fromJson(json)).toList();
       } else if (response.statusCode == 403) {
-        throw Exception(
-            'Forbidden (403): You do not have permission to access this data.');
+        throw Exception('Forbidden (403): You do not have permission to access this data.');
       } else {
-        throw Exception(
-            'Failed to fetch user roles: ${response.statusCode} ${response.body}');
+        throw Exception('Failed to fetch user roles: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       debugPrint('Error fetching user roles: $e');
@@ -799,11 +797,9 @@ class AuthService {
         final List<dynamic> data = json.decode(response.body);
         return data.map((json) => WorkGroup.fromJson(json)).toList();
       } else if (response.statusCode == 403) {
-        throw Exception(
-            'Forbidden (403): You do not have permission to access this data.');
+        throw Exception('Forbidden (403): You do not have permission to access this data.');
       } else {
-        throw Exception(
-            'Failed to fetch workgroups: ${response.statusCode} ${response.body}');
+        throw Exception('Failed to fetch workgroups: ${response.statusCode} ${response.body}');
       }
     } catch (e) {
       debugPrint('Error fetching workgroups: $e');
@@ -811,23 +807,42 @@ class AuthService {
     }
   }
 
-  /// Backwards-compatible alias used by some screens
   Future<List<WorkGroup>> getSomsWorkGroups() async {
-    return await getWorkGroups();
+    try {
+      final headers = await getAuthenticatedHeaders();
+      final response = await http.get(
+        Uri.parse('$baseUrl/api/somsworkgroups'),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        final List<dynamic> data = json.decode(response.body);
+        return data.map<WorkGroup>((json) {
+          return WorkGroup(
+            id: json['id'] as int? ?? 0,
+            name: json['wG_Name']?.toString() ?? json['wg_name']?.toString() ?? json['WG_Name']?.toString() ?? 'Unknown',
+          );
+        }).toList();
+      } else {
+        throw Exception('Failed to fetch SOMS workgroups: ${response.statusCode} ${response.body}');
+      }
+    } catch (e) {
+      throw Exception('Error fetching SOMS workgroups: $e');
+    }
   }
 
   Future<List<WorkGroup>> getWorkGroupsByIds(List<int> ids) async {
     if (ids.isEmpty) return [];
     try {
       final headers = await getAuthenticatedHeaders();
-      // Join IDs into a comma-separated string if the backend supports it,
+      // Join IDs into a comma-separated string if the backend supports it, 
       // or fetch them one by one if not.
       // Looking at the backend, we have GetWorkGroupsByIdsAsync in the service.
       // Let's see if there is a controller endpoint for it.
-
+      
       // For now, let's fetch them individually as a fallback, or use the existing GetWorkGroups endpoint and filter.
       // But a better way is to use the dedicated endpoint if it exists.
-
+      
       final response = await http.post(
         Uri.parse('$baseUrl/api/workgroups/by-ids'),
         headers: headers,
@@ -851,7 +866,6 @@ class AuthService {
   /// 🔹 Logout
   Future<void> logout() async {
     await _storage.deleteAll();
-    return;
   }
 
   /// 🔹 Headers
@@ -867,7 +881,7 @@ class AuthService {
   }
 
   /// 🔹 Token refresh
-  Future<String?> refreshToken0() async {
+  Future<String?> _refreshToken() async {
     try {
       final refreshToken = await _storage.read(key: 'refresh_token');
       if (refreshToken == null) return null;
@@ -911,7 +925,7 @@ class AuthService {
       await _getUserInfo(token);
       return true;
     } catch (_) {
-      final refreshed = await refreshToken0();
+      final refreshed = await _refreshToken();
       return refreshed != null;
     }
   }
@@ -924,7 +938,7 @@ class AuthService {
       await _getUserInfo(token);
       return token;
     } catch (_) {
-      return await refreshToken0();
+      return await _refreshToken();
     }
   }
 }

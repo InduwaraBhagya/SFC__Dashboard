@@ -58,15 +58,14 @@ class _WorkgroupSelectionScreenState extends State<WorkgroupSelectionScreen> {
       } catch (e) {
         debugPrint('Error checking user: $e');
       }
-
+      
       if (existingUser != null && existingUser.id != null) {
         _userId = existingUser.id;
         await storage.write(key: 'userId', value: _userId.toString());
       } else {
-        // If user still doesn't exist here, they might have skipped Role Selection
+        // If user still doesn't exist here, they might have skipped Role Selection 
         // or something went wrong. We'll show an error.
-        throw Exception(
-            'User registration not found. Please go through the role selection.');
+        throw Exception('User registration not found. Please go through the role selection.');
       }
 
       // Fetch ALL workgroups so the user can select any to filter the dashboard
@@ -110,7 +109,8 @@ class _WorkgroupSelectionScreenState extends State<WorkgroupSelectionScreen> {
 
     if (_userId == null) {
       setState(() {
-        _errorMessage = 'User ID not found. Please try again or contact admin.';
+        _errorMessage =
+            'User ID not found. Please try again or contact admin.';
       });
       return;
     }
@@ -338,28 +338,21 @@ class _WorkgroupSelectionScreenState extends State<WorkgroupSelectionScreen> {
                                       controller: _searchController,
                                       decoration: InputDecoration(
                                         isDense: true,
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
+                                        contentPadding: const EdgeInsets.symmetric(
                                           horizontal: 10,
                                           vertical: 8,
                                         ),
                                         hintText: 'Search for a workgroup...',
-                                        hintStyle:
-                                            const TextStyle(fontSize: 12),
+                                        hintStyle: const TextStyle(fontSize: 12),
                                         border: OutlineInputBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
+                                          borderRadius: BorderRadius.circular(8),
                                         ),
                                       ),
                                     ),
                                   ),
                                   searchMatchFn: (item, searchValue) {
-                                    final String name =
-                                        (item.value as WorkGroup)
-                                            .name
-                                            .toLowerCase();
-                                    return name
-                                        .contains(searchValue.toLowerCase());
+                                    final String name = (item.value as WorkGroup).name.toLowerCase();
+                                    return name.contains(searchValue.toLowerCase());
                                   },
                                 ),
                                 onMenuStateChange: (isOpen) {

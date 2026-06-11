@@ -2,10 +2,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../model/TaskQueue.dart';
+import 'AuthService.dart';
 
 class TaskQueueService {
+  final AuthService _authService = AuthService();
   String get baseUrl {
     final url = dotenv.env['API_BASE_URL'];
     if (url == null || url.isEmpty) {
@@ -14,10 +15,9 @@ class TaskQueueService {
     return url;
   }
 
-  final String? accessToken;
-  TaskQueueService({
-    this.accessToken,
-  });
+  // TaskQueueService({
+  //   required this.accessToken,
+  // });
 
   Future<List<TaskQueueItem>> getPrioritizedTasks({
     int? workgroupId,
@@ -37,13 +37,14 @@ class TaskQueueService {
         print('Prioritized Tasks API Request URL: $uri');
       }
 
-      final token = accessToken ??
-          await const FlutterSecureStorage().read(key: 'access_token');
+      final headers = await _authService.getAuthenticatedHeaders();
       final response = await http.get(
         uri,
         headers: {
-          if (token != null) 'Authorization': 'Bearer $token',
+          ...headers,
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
+          'Bypass-Tunnel-Reminder': 'true',
         },
       );
 
@@ -95,13 +96,14 @@ class TaskQueueService {
         print('Next Task API Request URL: $uri');
       }
 
-      final token = accessToken ??
-          await const FlutterSecureStorage().read(key: 'access_token');
+      final headers = await _authService.getAuthenticatedHeaders();
       final response = await http.get(
         uri,
         headers: {
-          if (token != null) 'Authorization': 'Bearer $token',
+          ...headers,
           'Content-Type': 'application/json',
+          'ngrok-skip-browser-warning': 'true',
+          'Bypass-Tunnel-Reminder': 'true',
         },
       );
 
@@ -138,12 +140,11 @@ class TaskQueueService {
         print('Available Years API Request URL: $uri');
       }
 
-      final token = accessToken ??
-          await const FlutterSecureStorage().read(key: 'access_token');
+      final headers = await _authService.getAuthenticatedHeaders();
       final response = await http.get(
         uri,
         headers: {
-          if (token != null) 'Authorization': 'Bearer $token',
+          ...headers,
           'Content-Type': 'application/json',
         },
       );

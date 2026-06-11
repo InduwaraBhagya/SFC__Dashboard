@@ -2139,7 +2139,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                 Flexible(
                   flex: 3,
                   child: DropdownButtonFormField<String>(
-                    initialValue: selectedSearchBy,
+                    value: selectedSearchBy,
                     decoration: InputDecoration(
                       contentPadding: const EdgeInsets.symmetric(
                           horizontal: 10, vertical: 8),

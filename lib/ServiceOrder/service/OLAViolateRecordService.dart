@@ -16,7 +16,6 @@ class OLAViolateRecordService {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ??
           (throw Exception('API_BASE_URL not found in .env file'));
-
       final token = await _storage.read(key: 'access_token');
       final headers = {
         'Content-Type': 'application/json',
@@ -89,27 +88,53 @@ class OLAViolateRecordService {
       };
 
       final url = Uri.parse('$baseUrl/api/PETasks/$recordId');
+      print('API Request URL for details: $url');
       final response = await http.get(url, headers: headers);
 
       if (response.statusCode == 200) {
-        dynamic result = jsonDecode(response.body);
-        result = dereferenceJson(result);
+        Map<String, dynamic> result = jsonDecode(response.body);
+        print('API Response Body for details: ${response.body}');
 
+        // Dereference JSON to handle $id/$ref
+        result = dereferenceJson(result);
+        print('Dereferenced JSON: $result');
+
+        // Handle different possible JSON structures
         Map<String, dynamic> recordData;
         if (result['records']?['\$values'] != null &&
             result['records']['\$values'].isNotEmpty) {
           recordData = result['records']['\$values'][0];
         } else if (result['data'] != null) {
           recordData = result['data'];
+        } else if (result['\$values'] != null &&
+            result['\$values'].isNotEmpty) {
+          recordData = result['\$values'][0];
         } else {
           recordData = result;
         }
 
-        return OLAViolateRecord.fromJson(recordData);
+        print('Extracted record data: $recordData');
+        try {
+          final record = OLAViolateRecord.fromJson(recordData);
+          print('Parsed OLAViolateRecord: ${record.toJson()}');
+          print('peTask: ${record.peTask?.toJson()}');
+          print('plannedEvent: ${record.plannedEvent?.toJson()}');
+          print('additionalData: ${record.additionalData}');
+          return record;
+        } catch (e, stackTrace) {
+          print('Error parsing record details: $e');
+          print('Record data: $recordData');
+          print('StackTrace: $stackTrace');
+          return null;
+        }
+      } else {
+        print('API Error Response for details: ${response.body}');
+        throw Exception(
+            'Failed to load record details: ${response.statusCode}');
       }
-      return null;
-    } catch (e) {
+    } catch (e, stackTrace) {
       print('Error fetching record details: $e');
+      print('StackTrace: $stackTrace');
       return null;
     }
   }

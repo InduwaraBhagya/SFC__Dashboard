@@ -469,19 +469,22 @@ import '../model/PEIsseueModel.dart';
 import '../service/PEIssueService.dart';
 import '../service/NoticeService.dart';
 import '../service/UrgentRecordService.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'UrgentRecordScreen.dart';
 import '../model/Notice.dart';
 import '../model/OLAViolateRecord.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../service/AuthService.dart';
 
 class PEIssuesScreen extends StatefulWidget {
   final int userId;
+  final List<int> workGroupIds;
   final VoidCallback? onRefreshCounts;
 
   const PEIssuesScreen(
       {super.key,
       required this.userId,
-      required List<int> workGroupIds,
+      required this.workGroupIds,
       this.onRefreshCounts});
 
   @override
@@ -543,21 +546,7 @@ class _PEIssuesScreenState extends State<PEIssuesScreen> {
       final seenNotices = prefs.getStringList('seen_notices') ?? [];
       final seenUrgent = prefs.getStringList('seen_urgent') ?? [];
 
-      // 1. Fetch PE Issues
-      final issues = await _peService.getInboxIssues(widget.userId, 50);
-      final validIssueIds = issues
-          .map((issue) => issue.id)
-          .where((id) => id != null && id > 0)
-          .cast<int>()
-          .toList();
-
-      if (validIssueIds.isNotEmpty) {
-        final resolutions =
-            await _peService.getResolutionsByIssueIds(validIssueIds);
-        _resolutions = resolutions;
-      }
-
-      // 2. Fetch Notices
+      // 1. Fetch Notices
       List<Notice> notices = [];
       try {
         notices = await _noticeService.getActiveNotices();
@@ -565,12 +554,30 @@ class _PEIssuesScreenState extends State<PEIssuesScreen> {
         debugPrint('Error fetching notices: $e');
       }
 
-      // 3. Fetch Urgent Records
+      // 2. Fetch Urgent Records
       List<OLAViolateRecord> urgentRecords = [];
       try {
+        int? selectedWorkGroupId;
+        bool useRealData = false;
+
+        if (widget.workGroupIds.length == 1) {
+            selectedWorkGroupId = widget.workGroupIds.first;
+            try {
+                final wgs = await AuthService().getWorkGroupsByIds(widget.workGroupIds);
+                if (wgs.isNotEmpty) {
+                    final wgName = wgs.first.name;
+                    useRealData = (wgName != 'NET-PROJ_CABLE-ACC' && wgName != 'NET-PROJ-ACC-CABLE');
+                }
+            } catch (e) {
+                debugPrint('Error checking workgroup name: $e');
+            }
+        }
+
         final urgentResult = await _urgentService.fetchUrgentRecords(
           page: 1,
-          pageSize: 20,
+          pageSize: 2000,
+          workgroupId: selectedWorkGroupId,
+          fetchMultiWorkgroup: useRealData,
         );
         urgentRecords = urgentResult['records'] ?? [];
       } catch (e) {
@@ -579,17 +586,6 @@ class _PEIssuesScreenState extends State<PEIssuesScreen> {
 
       // Merge into InboxItems
       List<InboxItem> items = [];
-
-      // Issues
-      items.addAll(issues.map((i) => InboxItem(
-            id: 'issue_${i.id}',
-            type: InboxItemType.issue,
-            title: 'Issue #${i.id}',
-            description: i.issueText ?? 'No description',
-            date: i.createdAt,
-            isRead: i.isRead ?? false,
-            originalData: i,
-          )));
 
       // Notices
       items.addAll(notices.map((n) => InboxItem(

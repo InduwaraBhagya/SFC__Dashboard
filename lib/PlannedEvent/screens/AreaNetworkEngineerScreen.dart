@@ -1283,8 +1283,8 @@ class _AreaNetworkEngineerScreenState extends State<AreaNetworkEngineerScreen> {
 
     setState(() => _isCreating = true);
     final success = await _service.createMapping(
-      area: _areaCodeController.text,
-      engineerName: _engineerNameFormController.text,
+      _areaCodeController.text,
+      _engineerNameFormController.text,
     );
 
     if (success) {

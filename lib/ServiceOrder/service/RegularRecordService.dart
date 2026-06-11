@@ -24,6 +24,13 @@ class RegularRecordService {
         if (token != null) 'Authorization': 'Bearer $token',
       };
 
+      final queryParameters = {
+        'page': page.toString(),
+        'pageSize': pageSize.toString(),
+        if (workgroupName != null) 'workgroupId': workgroupName,
+        if (searchTerm != null) 'searchTerm': searchTerm,
+      };
+
       final wgName = workgroupName ??
           await _storage.read(key: 'soms_selected_workgroup_name');
       if (wgName == null) {
@@ -36,7 +43,8 @@ class RegularRecordService {
       }
 
       final uri = Uri.parse(
-          '$baseUrl/api/somsdashboard/records/${Uri.encodeComponent(wgName)}/inprogress');
+              '$baseUrl/api/somsdashboard/records/${Uri.encodeComponent(wgName)}/inprogress')
+          .replace(queryParameters: queryParameters);
       print('API Request URL: $uri');
 
       final response = await http.get(uri, headers: headers);

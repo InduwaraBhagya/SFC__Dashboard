@@ -80,11 +80,9 @@ class PERecordService {
               responseData['totalItems'] ??
               responseData['totalCount'] ??
               records.length,
-          'currentPage':
-              pagination['currentPage'] ?? responseData['currentPage'] ?? page,
+          'currentPage': pagination['currentPage'] ?? responseData['currentPage'] ?? page,
           'totalPages': pagination['totalPages'] ??
-              responseData['totalPages'] ??
-              (records.length / pageSize).ceil(),
+              responseData['totalPages'] ?? (records.length / pageSize).ceil(),
         };
       } else {
         throw Exception(

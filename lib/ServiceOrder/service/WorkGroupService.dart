@@ -22,8 +22,9 @@ class WorkGroupService {
         'Accept': 'application/json',
         if (token != null) 'Authorization': 'Bearer $token',
       };
-      
-      final response = await http.get(Uri.parse('$baseUrl/api/somsworkgroups'), headers: headers);
+
+      final response = await http.get(Uri.parse('$baseUrl/api/somsworkgroups'),
+          headers: headers);
 
       print('fetchWorkGroups - URL: $baseUrl/api/somsworkgroups');
       print('fetchWorkGroups - Response status: ${response.statusCode}');

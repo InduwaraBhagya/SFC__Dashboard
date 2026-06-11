@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'DashboardScreen.dart';
-import '../service/TaskQueueService.dart';
 import '../model/TaskQueue.dart';
+import '../service/TaskQueueService.dart';
 
 class TaskQueueScreen extends StatefulWidget {
   final String accessToken;
@@ -18,7 +18,7 @@ class TaskQueueScreen extends StatefulWidget {
 }
 
 class _TaskQueueScreenState extends State<TaskQueueScreen> {
-  late TaskQueueService _taskQueueService;
+  late final TaskQueueService _taskQueueService;
   List<TaskQueueItem> _tasks = [];
   bool _isLoading = true;
   int? _selectedYear;
@@ -32,7 +32,7 @@ class _TaskQueueScreenState extends State<TaskQueueScreen> {
   @override
   void initState() {
     super.initState();
-    // _taskQueueService = TaskQueueService(accessToken: widget.accessToken);
+    _taskQueueService = TaskQueueService();
     _loadUserId();
     _loadAvailableYears();
     _loadTasks();

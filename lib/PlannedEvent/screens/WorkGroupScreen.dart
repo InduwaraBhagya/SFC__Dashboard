@@ -1,3 +1,5 @@
+
+
 // import 'package:flutter/material.dart';
 // import 'package:google_fonts/google_fonts.dart';
 // import 'package:shimmer/shimmer.dart';
@@ -23,7 +25,7 @@
 //   final int _recordsPerPage = 10;
 //   late PageController _pageController;
 //   int _currentPage = 0;
-//   bool _isSearchBarExpanded = false;
+//   bool _isSearchBarExpanded = false; 
 //   bool _showCreateForm = false;
 //   final TextEditingController _createController = TextEditingController();
 //   bool _isSubmitting = false;
@@ -675,7 +677,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
   final int _recordsPerPage = 10;
   late PageController _pageController;
   int _currentPage = 0;
-  bool _isSearchBarExpanded = false;
+  bool _isSearchBarExpanded = false; 
   bool _showCreateForm = false;
   final TextEditingController _createController = TextEditingController();
   bool _isSubmitting = false;
@@ -805,8 +807,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                         Navigator.pop(context);
                         _refreshData();
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Updated successfully')));
+                            const SnackBar(content: Text('Updated successfully')));
                       } else {
                         setDialogState(() => isSaving = false);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -855,8 +856,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                         Navigator.pop(context);
                         _refreshData();
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Deleted successfully')));
+                            const SnackBar(content: Text('Deleted successfully')));
                       } else {
                         setDialogState(() => isDeleting = false);
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -1025,269 +1025,252 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
             child: _showCreateForm
                 ? const SizedBox.shrink()
                 : FutureBuilder<List<WorkGroupDetails>>(
-                    future: _workGroupsFuture,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return ListView.builder(
-                          itemCount: 5,
-                          itemBuilder: (context, index) => Shimmer.fromColors(
-                            baseColor: Colors.grey.shade300,
-                            highlightColor: Colors.grey.shade100,
-                            child: Card(
-                              margin: const EdgeInsets.symmetric(
-                                  vertical: 8, horizontal: 8),
-                              child: Container(
-                                height: 120,
-                                color: Colors.white,
-                              ),
+              future: _workGroupsFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return ListView.builder(
+                    itemCount: 5,
+                    itemBuilder: (context, index) => Shimmer.fromColors(
+                      baseColor: Colors.grey.shade300,
+                      highlightColor: Colors.grey.shade100,
+                      child: Card(
+                        margin: const EdgeInsets.symmetric(
+                            vertical: 8, horizontal: 8),
+                        child: Container(
+                          height: 120,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (_errorMessage != null) {
+                  return Center(
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              _errorMessage!,
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16, color: Colors.black87),
+                              textAlign: TextAlign.center,
                             ),
-                          ),
-                        );
-                      } else if (_errorMessage != null) {
-                        return Center(
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    _errorMessage!,
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16, color: Colors.black87),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 4, 24, 96),
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => DashboardHome(
-                                                userId: widget.userId)),
-                                      );
-                                    },
-                                    child: Text(
-                                      'Back to Dashboard',
-                                      style: GoogleFonts.poppins(),
-                                    ),
-                                  ),
-                                ],
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 4, 24, 96),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
                               ),
-                            ),
-                          ),
-                        );
-                      } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                        return Center(
-                          child: Card(
-                            elevation: 4,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12)),
-                            margin: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 4.0),
-                            child: Padding(
-                              padding: const EdgeInsets.all(16.0),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    'No work groups found',
-                                    style: GoogleFonts.poppins(
-                                        fontSize: 16, color: Colors.black87),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  const SizedBox(height: 16),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor:
-                                          const Color.fromARGB(255, 4, 24, 96),
-                                      foregroundColor: Colors.white,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pushReplacement(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => DashboardHome(
-                                                userId: widget.userId)),
-                                      );
-                                    },
-                                    child: Text(
-                                      'Back to Dashboard',
-                                      style: GoogleFonts.poppins(),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      }
-                      return Column(
-                        children: [
-                          Expanded(
-                            child: PageView.builder(
-                              controller: _pageController,
-                              onPageChanged: (int page) {
-                                setState(() {
-                                  _currentPage = page;
-                                });
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DashboardHome(userId: widget.userId)),
+                                );
                               },
-                              itemCount: totalPages,
-                              itemBuilder: (context, pageIndex) {
-                                final startIndex = pageIndex * _recordsPerPage;
-                                final endIndex = (startIndex + _recordsPerPage)
-                                    .clamp(0, _filteredWorkGroups.length);
-                                final pageRecords = _filteredWorkGroups.sublist(
-                                    startIndex, endIndex);
+                              child: Text(
+                                'Back to Dashboard',
+                                style: GoogleFonts.poppins(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return Center(
+                    child: Card(
+                      elevation: 4,
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12)),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 4.0),
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              'No work groups found',
+                              style: GoogleFonts.poppins(
+                                  fontSize: 16, color: Colors.black87),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor:
+                                    const Color.fromARGB(255, 4, 24, 96),
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8)),
+                              ),
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          DashboardHome(userId: widget.userId)),
+                                );
+                              },
+                              child: Text(
+                                'Back to Dashboard',
+                                style: GoogleFonts.poppins(),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  );
+                }
+                return Column(
+                  children: [
+                    Expanded(
+                      child: PageView.builder(
+                        controller: _pageController,
+                        onPageChanged: (int page) {
+                          setState(() {
+                            _currentPage = page;
+                          });
+                        },
+                        itemCount: totalPages,
+                        itemBuilder: (context, pageIndex) {
+                          final startIndex = pageIndex * _recordsPerPage;
+                          final endIndex = (startIndex + _recordsPerPage)
+                              .clamp(0, _filteredWorkGroups.length);
+                          final pageRecords =
+                              _filteredWorkGroups.sublist(startIndex, endIndex);
 
-                                return ListView.builder(
-                                  itemCount: pageRecords.length,
-                                  itemBuilder: (context, index) {
-                                    final workGroup = pageRecords[index];
-                                    return InkWell(
-                                      child: Card(
-                                        key: ValueKey(workGroup.id),
-                                        elevation: 4,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(12)),
-                                        margin: const EdgeInsets.symmetric(
-                                            vertical: 8, horizontal: 8),
-                                        child: Padding(
-                                          padding: const EdgeInsets.all(16),
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
+                          return ListView.builder(
+                            itemCount: pageRecords.length,
+                            itemBuilder: (context, index) {
+                              final workGroup = pageRecords[index];
+                              return InkWell(
+                                  child: Card(
+                                    key: ValueKey(workGroup.id),
+                                    elevation: 4,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(12)),
+                                    margin: const EdgeInsets.symmetric(
+                                        vertical: 8, horizontal: 8),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(16),
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Expanded(
-                                                    child: Text(
-                                                      '${workGroup.name}',
-                                                      style:
-                                                          GoogleFonts.poppins(
-                                                        fontSize: 16,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        color: Colors.black87,
-                                                      ),
-                                                    ),
+                                              Expanded(
+                                                child: Text(
+                                                  '${workGroup.name}',
+                                                  style: GoogleFonts.poppins(
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.black87,
                                                   ),
-                                                  // Actions
-                                                  Row(
-                                                    children: [
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                            Icons.edit,
-                                                            color: Colors.blue,
-                                                            size: 20),
-                                                        onPressed: () =>
-                                                            _showEditDialog(
-                                                                workGroup),
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        constraints:
-                                                            const BoxConstraints(),
-                                                      ),
-                                                      const SizedBox(width: 12),
-                                                      IconButton(
-                                                        icon: const Icon(
-                                                            Icons
-                                                                .delete_outline,
-                                                            color: Colors.red,
-                                                            size: 20),
-                                                        onPressed: () =>
-                                                            _confirmDelete(
-                                                                workGroup),
-                                                        padding:
-                                                            EdgeInsets.zero,
-                                                        constraints:
-                                                            const BoxConstraints(),
-                                                      ),
-                                                    ],
+                                                ),
+                                              ),
+                                              // Actions
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    icon: const Icon(Icons.edit,
+                                                        color: Colors.blue,
+                                                        size: 20),
+                                                    onPressed: () =>
+                                                        _showEditDialog(workGroup),
+                                                    padding: EdgeInsets.zero,
+                                                    constraints: const BoxConstraints(),
+                                                  ),
+                                                  const SizedBox(width: 12),
+                                                  IconButton(
+                                                    icon: const Icon(
+                                                        Icons.delete_outline,
+                                                        color: Colors.red,
+                                                        size: 20),
+                                                    onPressed: () =>
+                                                        _confirmDelete(workGroup),
+                                                    padding: EdgeInsets.zero,
+                                                    constraints: const BoxConstraints(),
                                                   ),
                                                 ],
                                               ),
-                                              const SizedBox(height: 8),
-                                              _buildFieldRow('ID',
-                                                  workGroup.id.toString()),
                                             ],
                                           ),
-                                        ),
+                                          const SizedBox(height: 8),
+                                          _buildFieldRow(
+                                              'ID', workGroup.id.toString()),
+                                        ],
                                       ),
+                                    ),
+                                  ),
+                              );
+                            },
+                          );
+                        },
+                      ),
+                    ),
+                    if (totalPages > 1)
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 8.0),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: List.generate(totalPages, (index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 4.0),
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: _currentPage == index
+                                        ? const Color.fromARGB(255, 4, 24, 96)
+                                        : Colors.grey.shade300,
+                                    foregroundColor: _currentPage == index
+                                        ? Colors.white
+                                        : Colors.black,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8)),
+                                    minimumSize: const Size(40, 40),
+                                  ),
+                                  onPressed: () {
+                                    _pageController.animateToPage(
+                                      index,
+                                      duration:
+                                          const Duration(milliseconds: 300),
+                                      curve: Curves.easeInOut,
                                     );
                                   },
-                                );
-                              },
-                            ),
-                          ),
-                          if (totalPages > 1)
-                            Container(
-                              padding:
-                                  const EdgeInsets.symmetric(vertical: 8.0),
-                              child: SingleChildScrollView(
-                                scrollDirection: Axis.horizontal,
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(totalPages, (index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 4.0),
-                                      child: ElevatedButton(
-                                        style: ElevatedButton.styleFrom(
-                                          backgroundColor: _currentPage == index
-                                              ? const Color.fromARGB(
-                                                  255, 4, 24, 96)
-                                              : Colors.grey.shade300,
-                                          foregroundColor: _currentPage == index
-                                              ? Colors.white
-                                              : Colors.black,
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          minimumSize: const Size(40, 40),
-                                        ),
-                                        onPressed: () {
-                                          _pageController.animateToPage(
-                                            index,
-                                            duration: const Duration(
-                                                milliseconds: 300),
-                                            curve: Curves.easeInOut,
-                                          );
-                                        },
-                                        child: Text(
-                                          '${index + 1}',
-                                          style: GoogleFonts.poppins(),
-                                        ),
-                                      ),
-                                    );
-                                  }),
+                                  child: Text(
+                                    '${index + 1}',
+                                    style: GoogleFonts.poppins(),
+                                  ),
                                 ),
-                              ),
-                            ),
-                        ],
-                      );
-                    },
-                  ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                  ],
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -1421,7 +1404,8 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                           : const Icon(Icons.add_circle, size: 20),
                       label: const Text('Create'),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: const Color(0xFF10408B), // Darker blue
+                        backgroundColor:
+                            const Color(0xFF10408B), // Darker blue
                         foregroundColor: Colors.white,
                         padding: const EdgeInsets.symmetric(
                             horizontal: 24, vertical: 14),

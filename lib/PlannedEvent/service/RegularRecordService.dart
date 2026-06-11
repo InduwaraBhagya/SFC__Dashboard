@@ -1,4 +1,5 @@
 import 'package:flutter/foundation.dart';
+import 'OLAViolateRecordService.dart';
 import 'AuthService.dart';
 import '../model/OLAViolateRecord.dart';
 
@@ -391,6 +392,9 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter/foundation.dart';
+import 'AuthService.dart';
+import '../model/OLAViolateRecord.dart';
 
 class RegularRecordService {
   final AuthService _authService = AuthService();
@@ -412,6 +416,7 @@ class RegularRecordService {
     required int pageSize,
     bool includeAll = false,
     bool ignoreWorkgroup = false,
+    bool fetchMultiWorkgroup = false,
   }) async {
     try {
       final userId = await _getUserId();
@@ -429,26 +434,45 @@ class RegularRecordService {
           'searchTerm': searchTerm,
       };
 
-      // Try specific in-progress endpoint
-      var uri =
-          Uri.parse('$baseUrl/api/PlannedEventsApi/inprogress/user/$userId')
+      Uri uri;
+      if (fetchMultiWorkgroup) {
+        uri = Uri.parse('$baseUrl/api/PlannedEventsApi/inprogress-records-multi-workgroup');
+      } else {
+        uri = Uri.parse('$baseUrl/api/PlannedEventsApi/inprogress/user/$userId')
               .replace(queryParameters: queryParameters);
+      }
 
       if (kDebugMode) {
         print('Regular Records API Request URL: $uri');
       }
 
-      var response = await http.get(
-        uri,
-        headers: await _authService.getAuthenticatedHeaders(),
-      );
+      http.Response response;
+      if (fetchMultiWorkgroup) {
+        List<int> selectedWorkgroupIds = workgroupName != null && int.tryParse(workgroupName) != null ? [int.parse(workgroupName)] : [];
+        final requestBody = jsonEncode({
+          'selectedWorkgroupIds': selectedWorkgroupIds,
+          'userWorkgroupIds': selectedWorkgroupIds, // Simplified for now
+          'hasDrawFiberAccess': true
+        });
+        
+        response = await http.post(
+          uri,
+          headers: await _authService.getAuthenticatedHeaders(),
+          body: requestBody,
+        );
+      } else {
+        response = await http.get(
+          uri,
+          headers: await _authService.getAuthenticatedHeaders(),
+        );
+      }
 
-      if (response.statusCode != 200 ||
+      if (!fetchMultiWorkgroup && (response.statusCode != 200 ||
           (jsonDecode(response.body) is Map &&
               (jsonDecode(response.body)['records'] == null ||
                   (jsonDecode(response.body)['records'] is List &&
                       (jsonDecode(response.body)['records'] as List)
-                          .isEmpty)))) {
+                          .isEmpty))))) {
         // FALLBACK 1: Try search-user-paginated if in-progress is empty or fails
         uri = Uri.parse('$baseUrl/api/PlannedEventsApi/search-user-paginated')
             .replace(queryParameters: queryParameters);
@@ -479,7 +503,8 @@ class RegularRecordService {
           totalCount = rawRecords.length;
         }
 
-        // If we still have nothing and we were filtering by workgroup, try WITHOUT workgroup
+        // Removed auto-fallback to ignore workgroup to ensure strict filtering as per user request
+        /*
         if (rawRecords.isEmpty && !ignoreWorkgroup && workgroupName != null) {
           return fetchRegularRecords(
             page: page,
@@ -489,14 +514,14 @@ class RegularRecordService {
             searchTerm: searchTerm,
           );
         }
+        */
 
         // --- Smart Distribution Fallback ---
-        if (!includeAll && (searchTerm == null || searchTerm.isEmpty)) {
+        if (!fetchMultiWorkgroup && !includeAll && (searchTerm == null || searchTerm.isEmpty)) {
           final allParsed = rawRecords
               .map((item) {
                 try {
-                  return OLAViolateRecord.fromJson(
-                      item as Map<String, dynamic>);
+                  return OLAViolateRecord.fromJson(item as Map<String, dynamic>);
                 } catch (e) {
                   return null;
                 }
@@ -539,8 +564,7 @@ class RegularRecordService {
           'records': records,
           'totalCount': totalCount > 0 ? totalCount : records.length,
           'totalPages':
-              ((totalCount > 0 ? totalCount : records.length) / pageSize)
-                  .ceil(),
+              ((totalCount > 0 ? totalCount : records.length) / pageSize).ceil(),
           'currentPage': page,
         };
       } else {

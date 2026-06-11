@@ -22,8 +22,7 @@ class _EditPermissionScreenState extends State<EditPermissionScreen> {
   void initState() {
     super.initState();
     _nameController = TextEditingController(text: widget.permission.name);
-    _descriptionController =
-        TextEditingController(text: widget.permission.description);
+    _descriptionController = TextEditingController(text: widget.permission.description);
   }
 
   @override

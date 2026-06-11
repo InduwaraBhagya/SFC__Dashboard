@@ -11,8 +11,7 @@ class RoleService {
   Future<List<UserRole>> getAllRoles() async {
     try {
       final url = Uri.parse('$_baseUrl/api/userroles');
-      final response =
-          await http.get(url, headers: {'Content-Type': 'application/json'});
+      final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
@@ -29,8 +28,7 @@ class RoleService {
   Future<UserRole> getRoleById(int id) async {
     try {
       final url = Uri.parse('$_baseUrl/api/userroles/$id');
-      final response =
-          await http.get(url, headers: {'Content-Type': 'application/json'});
+      final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
       if (response.statusCode == 200) {
         return UserRole.fromJson(jsonDecode(response.body));
@@ -55,8 +53,7 @@ class RoleService {
       if (response.statusCode == 201) {
         return UserRole.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception(
-            'Failed to create role: ${response.statusCode} - ${response.body}');
+        throw Exception('Failed to create role: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       if (kDebugMode) print('Error creating role: $e');
@@ -76,8 +73,7 @@ class RoleService {
       if (response.statusCode == 200) {
         return UserRole.fromJson(jsonDecode(response.body));
       } else {
-        throw Exception(
-            'Failed to update role: ${response.statusCode} - ${response.body}');
+        throw Exception('Failed to update role: ${response.statusCode} - ${response.body}');
       }
     } catch (e) {
       if (kDebugMode) print('Error updating role: $e');
@@ -88,8 +84,7 @@ class RoleService {
   Future<bool> deleteRole(int id) async {
     try {
       final url = Uri.parse('$_baseUrl/api/userroles/$id');
-      final response =
-          await http.delete(url, headers: {'Content-Type': 'application/json'});
+      final response = await http.delete(url, headers: {'Content-Type': 'application/json'});
 
       return response.statusCode == 204;
     } catch (e) {
@@ -101,15 +96,13 @@ class RoleService {
   Future<List<int>> getRolePermissionIds(int id) async {
     try {
       final url = Uri.parse('$_baseUrl/api/userroles/$id/permission-ids');
-      final response =
-          await http.get(url, headers: {'Content-Type': 'application/json'});
+      final response = await http.get(url, headers: {'Content-Type': 'application/json'});
 
       if (response.statusCode == 200) {
         final List<dynamic> data = jsonDecode(response.body);
         return data.cast<int>();
       } else {
-        throw Exception(
-            'Failed to load role permissions: ${response.statusCode}');
+        throw Exception('Failed to load role permissions: ${response.statusCode}');
       }
     } catch (e) {
       if (kDebugMode) print('Error fetching role permissions: $e');

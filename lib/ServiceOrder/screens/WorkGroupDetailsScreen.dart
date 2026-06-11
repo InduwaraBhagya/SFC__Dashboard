@@ -45,15 +45,15 @@ class _WorkGroupDetailsScreenState extends State<WorkGroupDetailsScreen> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: true,
-        iconTheme: IconThemeData(
-          color: Theme.of(context).cardColor, // change the color of the leading icon
+        iconTheme: const IconThemeData(
+          color: Colors.white, // change the color of the leading icon
         ),
         title: Text(
           widget.workGroupName,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 20,
             fontWeight: FontWeight.bold,
-            color: Theme.of(context).cardColor,
+            color: Colors.white,
           ),
         ),
         systemOverlayStyle: const SystemUiOverlayStyle(
@@ -190,10 +190,10 @@ class _WorkGroupDetailsScreenState extends State<WorkGroupDetailsScreen> {
                     const SizedBox(width: 8),
                     Text(
                       'Total Records: ${records.length}',
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
-                        color: Theme.of(context).cardColor,
+                        color: Colors.white,
                       ),
                     ),
                   ],
@@ -327,10 +327,10 @@ class _WorkGroupDetailsScreenState extends State<WorkGroupDetailsScreen> {
             flex: 2,
             child: Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 14,
-                color: Theme.of(context).textTheme.bodyMedium?.color,
+                color: Colors.black87,
               ),
             ),
           ),

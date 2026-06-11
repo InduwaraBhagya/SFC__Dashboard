@@ -245,12 +245,14 @@ class _ChatSheetState extends State<_ChatSheet> {
       case 'escalations':
       case 'taskqueue':
       case 'users':
+
       case 'view_pe':
       case 'urgent':
       case 'regular':
       case 'ola':
       case 'hold':
         final text = _infoText(value, _lang!);
+
         const backLabel = '⬅ Back to Menu';
         _addBotMessage(text, [_o(backLabel, 'back_main')]);
         break;
@@ -553,3 +555,5 @@ class _OptionChipState extends State<_OptionChip> {
     );
   }
 }
+
+

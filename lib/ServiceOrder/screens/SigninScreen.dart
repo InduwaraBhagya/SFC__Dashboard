@@ -7,10 +7,12 @@ import '../../OnboardingScreen.dart';
 class ServiceOrderSigninScreen extends StatefulWidget {
   final OnboardingDestination destination;
 
-  const ServiceOrderSigninScreen({super.key, this.destination = OnboardingDestination.serviceOrder});
+  const ServiceOrderSigninScreen(
+      {super.key, this.destination = OnboardingDestination.serviceOrder});
 
   @override
-  State<ServiceOrderSigninScreen> createState() => _ServiceOrderSigninScreenState();
+  State<ServiceOrderSigninScreen> createState() =>
+      _ServiceOrderSigninScreenState();
 }
 
 class _ServiceOrderSigninScreenState extends State<ServiceOrderSigninScreen> {
@@ -145,7 +147,9 @@ class _ServiceOrderSigninScreenState extends State<ServiceOrderSigninScreen> {
                           )
                         : Text(
                             'Login with Microsoft',
-                            style: TextStyle(color: Theme.of(context).cardColor, fontSize: 16),
+                            style: TextStyle(
+                                color: Theme.of(context).cardColor,
+                                fontSize: 16),
                           ),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color.fromARGB(255, 59, 96, 155),
@@ -163,5 +167,3 @@ class _ServiceOrderSigninScreenState extends State<ServiceOrderSigninScreen> {
     );
   }
 }
-
-

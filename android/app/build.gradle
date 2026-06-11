@@ -7,7 +7,7 @@ plugins {
 android {
     namespace = "com.example.sfc_dashboard"
     compileSdk = 36
-    ndkVersion = "28.2.13676358"
+    ndkVersion = "27.0.12077973"
 
     defaultConfig {
         applicationId = "com.example.sfc_dashboard"
