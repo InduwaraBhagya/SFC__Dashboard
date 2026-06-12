@@ -239,11 +239,6 @@ class _DashboardHomeState extends State<DashboardHome> {
           if (widget.onNavigate != null)
             widget.onNavigate!(3); 
         }),
-        _buildKPICard('Dormant', '${_metrics['dormant']} Tasks',
-            const Color(0xFFE5E7E9), Icons.delete_outline, Colors.black54, () {
-          if (widget.onNavigate != null)
-            widget.onNavigate!(5); 
-        }),
       ],
     );
   }

@@ -36,7 +36,6 @@ class AppSidebar extends StatelessWidget {
                 _buildMenuItem(2, Icons.warning_amber_rounded, 'Urgent Records', const Color(0xFFEC7063), context),
                 _buildMenuItem(3, Icons.pause_circle_outline, 'Hold Records', const Color(0xFF5DADE2), context),
                 _buildMenuItem(4, Icons.error_outline, 'OLA Violated', const Color(0xFFE91E63), context),
-                _buildMenuItem(5, Icons.hourglass_empty, 'Dormant', const Color(0xFF95A5A6), context),
 
                 _buildSectionHeader('PROJECT MANAGEMENT'),
                 _buildMenuItem(6, Icons.folder_open, 'Projects', const Color(0xFFEB984E), context),
@@ -141,7 +140,7 @@ class AppSidebar extends StatelessWidget {
       child: ListTile(
         onTap: () {
           onItemSelected(index);
-          Navigator.pop(context); 
+          Navigator.pop(context); // Close drawer
         },
         dense: true,
         visualDensity: const VisualDensity(vertical: -2),
