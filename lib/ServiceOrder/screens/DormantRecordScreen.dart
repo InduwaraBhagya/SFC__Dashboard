@@ -1,4 +1,3 @@
-// REDESIGNED DORMANT RECORD SCREEN - SFC DASHBOARD
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/OLAViolateRecord.dart';
@@ -67,7 +66,7 @@ class _DormantRecordScreenState extends State<DormantRecordScreen>
   }
 
   Future<void> _initializeAndFetch() async {
-    // Read current workgroup from storage to pre-filter
+    
     final currentWgName =
         await _storage.read(key: 'soms_selected_workgroup_name');
     if (currentWgName != null) {
@@ -296,7 +295,7 @@ class _DormantRecordScreenState extends State<DormantRecordScreen>
 
   Widget _buildGreyFilterBar() {
     return Container(
-      color: const Color(0xFF616161), // Grey for Dormant records
+      color: const Color(0xFF616161), 
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -342,7 +341,7 @@ class _DormantRecordScreenState extends State<DormantRecordScreen>
           const SizedBox(height: 6),
           Row(
             children: [
-              // Customer Search (Handled left side)
+              
               Expanded(
                 flex: 4,
                 child: Container(

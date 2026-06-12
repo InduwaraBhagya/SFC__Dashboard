@@ -23,7 +23,7 @@ class SearchResultsScreen extends StatefulWidget {
 }
 
 class _SearchResultsScreenState extends State<SearchResultsScreen> {
-  final int _recordsPerPage = 10; // Changed from 10 to 1000
+  final int _recordsPerPage = 10; 
   late PageController _pageController;
   int _currentPage = 0;
 
@@ -52,7 +52,7 @@ class _SearchResultsScreenState extends State<SearchResultsScreen> {
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(
           color: Theme.of(context)
-              .cardColor, // change the color of the leading icon
+              .cardColor, 
         ),
         title: Text(
           '${widget.searchCategory}: ${widget.searchValue}',

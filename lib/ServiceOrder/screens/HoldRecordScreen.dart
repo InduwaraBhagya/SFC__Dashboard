@@ -1,4 +1,4 @@
-// REDESIGNED HOLD RECORD SCREEN - SFC DASHBOARD
+﻿// REDESIGNED HOLD RECORD SCREEN - SFC DASHBOARD
 import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/OLAViolateRecord.dart';
@@ -67,7 +67,7 @@ class _HoldRecordScreenState extends State<HoldRecordScreen>
   }
 
   Future<void> _initializeAndFetch() async {
-    // Read current workgroup from storage to pre-filter
+    
     final currentWgName =
         await _storage.read(key: 'soms_selected_workgroup_name');
     if (currentWgName != null) {
@@ -293,7 +293,7 @@ class _HoldRecordScreenState extends State<HoldRecordScreen>
 
   Widget _buildGoldFilterBar() {
     return Container(
-      color: const Color(0xFFFBC02D), // Gold for Hold records
+      color: const Color(0xFFFBC02D), 
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -339,7 +339,7 @@ class _HoldRecordScreenState extends State<HoldRecordScreen>
           const SizedBox(height: 6),
           Row(
             children: [
-              // Customer Search (Handled left side)
+              
               Expanded(
                 flex: 4,
                 child: Container(

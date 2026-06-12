@@ -141,7 +141,7 @@ class AppSidebar extends StatelessWidget {
       child: ListTile(
         onTap: () {
           onItemSelected(index);
-          Navigator.pop(context); // Close drawer
+          Navigator.pop(context); 
         },
         dense: true,
         visualDensity: const VisualDensity(vertical: -2),
@@ -217,7 +217,7 @@ class AppSidebar extends StatelessWidget {
       color: Colors.transparent,
       child: ListTile(
         onTap: () {
-          Navigator.pop(context); // Close drawer
+          Navigator.pop(context); 
           Navigator.push(
             context,
             MaterialPageRoute(

@@ -70,7 +70,7 @@ class _SearchDataScreenState extends State<SearchDataScreen> {
     });
 
     try {
-      // Clean up the entity name if it has decoration
+     
       final entityToFetch = _selectedEntity!.replaceAll('-- ', '').replaceAll(' --', '').trim();
       
       final records = await _dataManagementService.fetchTableRecords(entityToFetch);
@@ -239,8 +239,7 @@ class _SearchDataScreenState extends State<SearchDataScreen> {
                           setState(() {
                             _selectedQuickPick = newValue;
                           });
-                          // When a quick pick is selected, we could scroll to it or filter
-                          // For now, let's just update the selection
+                        
                         },
                         items: _isLoadingQuickPick
                             ? [DropdownMenuItem(value: null, child: Text('Loading...', style: GoogleFonts.poppins(fontSize: 14)))]
@@ -315,8 +314,7 @@ class _SearchDataScreenState extends State<SearchDataScreen> {
               ),
             ),
             const SizedBox(height: 40),
-            
-            // Results area
+        
             if (_showResults) 
               _buildResultsCard()
             else
@@ -350,11 +348,11 @@ class _SearchDataScreenState extends State<SearchDataScreen> {
       ),
       child: Column(
         children: [
-          // Purple Header matching SS
+          
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: const BoxDecoration(
-              color: Color(0xFF7E57C2), // Purple header
+              color: Color(0xFF7E57C2), 
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(12),
                 topRight: Radius.circular(12),

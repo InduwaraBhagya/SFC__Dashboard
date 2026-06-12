@@ -57,7 +57,7 @@ class DataManagementService {
       }
     } catch (e) {
       print('Exception in fetchTableRecords: $e');
-      return []; // Return empty list on error
+      return []; 
     }
   }
 
@@ -84,7 +84,7 @@ class DataManagementService {
       }
     } catch (e) {
       print('Exception in fetchRecordDetails: $e');
-      return {}; // Return empty map on error
+      return {}; 
     }
   }
 

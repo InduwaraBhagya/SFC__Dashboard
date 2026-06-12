@@ -13,7 +13,6 @@ class PETaskService {
     if (response.statusCode == 200) {
       final Map<String, dynamic> data = jsonDecode(response.body);
 
-      // API returns data in "$values" array
       final List<dynamic> values = data['\$values'] ?? [];
 
       return values.map((json) => PETask.fromJson(json)).toList();

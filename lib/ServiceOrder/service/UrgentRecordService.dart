@@ -11,7 +11,7 @@ class UrgentRecordService {
     int? page,
     String? searchTerm,
     required int pageSize,
-    String? workgroupId, // Accepting name or ID
+    String? workgroupId, 
   }) async {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ??

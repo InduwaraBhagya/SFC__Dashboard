@@ -397,7 +397,6 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
       ),
     );
 
-    // Refresh unconditionally when returning from the add screen
     _fetchNotices();
   }
 }

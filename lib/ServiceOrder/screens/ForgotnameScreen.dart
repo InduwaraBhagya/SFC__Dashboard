@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class ForgotnameScreen extends StatefulWidget {
@@ -9,8 +9,8 @@ class ForgotnameScreen extends StatefulWidget {
 }
 
 class _ForgotnameScreenState extends State<ForgotnameScreen> {
-  String selectedCountryCode = '+94'; // Default country code
-  bool showPhoneField = false; // Flag to show/hide phone field
+  String selectedCountryCode = '+94'; 
+  bool showPhoneField = false; 
 
   @override
   Widget build(BuildContext context) {
@@ -75,7 +75,6 @@ class _ForgotnameScreenState extends State<ForgotnameScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                // Show email field only if phone is not visible
                 if (!showPhoneField)
                   const TextField(
                     decoration: InputDecoration(
@@ -87,7 +86,7 @@ class _ForgotnameScreenState extends State<ForgotnameScreen> {
                 if (showPhoneField) ...[
                   Row(
                     children: [
-                      // Country code dropdown
+                     
                       DropdownButton<String>(
                         value: selectedCountryCode,
                         onChanged: (newCode) {
@@ -103,7 +102,7 @@ class _ForgotnameScreenState extends State<ForgotnameScreen> {
                             .toList(),
                       ),
                       const SizedBox(width: 8),
-                      // Phone number field
+
                       const Expanded(
                         child: TextField(
                           keyboardType: TextInputType.phone,

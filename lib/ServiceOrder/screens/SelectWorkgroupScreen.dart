@@ -54,13 +54,11 @@ class _SelectWorkgroupScreenState extends State<SelectWorkgroupScreen> {
 
   Future<void> _onProceed() async {
     if (_selectedWorkGroup == null) return;
-    
-    // Save selected workgroup securely for the dashboard to read
+   
     const storage = FlutterSecureStorage();
     await storage.write(key: 'soms_selected_workgroup_id', value: _selectedWorkGroup!.id.toString());
     await storage.write(key: 'soms_selected_workgroup_name', value: _selectedWorkGroup!.name);
 
-    // Redirect to ServiceOrderMain after selection
     if (!mounted) return;
     Navigator.pushReplacement(
       context,

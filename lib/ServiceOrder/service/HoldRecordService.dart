@@ -80,12 +80,10 @@ class HoldRecordService {
     }
   }
 
-  /// Backwards-compatible alias used by some callers.
   Future<Map<String, dynamic>> getHoldRecords() async {
     return await fetchHoldRecords(pageSize: 10);
   }
 
-  /// Synchronous total count accessor used by some dashboards.
   int getTotalCount() => _lastRecords.length;
 
   dynamic dereferenceJson(dynamic data) {

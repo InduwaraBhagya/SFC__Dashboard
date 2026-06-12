@@ -95,7 +95,7 @@ class _PETaskListScreenState extends State<PETaskListScreen> {
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // Icon for visual appeal
+                             
                               Container(
                                 padding: const EdgeInsets.all(8),
                                 decoration: BoxDecoration(
@@ -109,7 +109,7 @@ class _PETaskListScreenState extends State<PETaskListScreen> {
                                 ),
                               ),
                               const SizedBox(width: 12),
-                              // Task details
+                              
                               Expanded(
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

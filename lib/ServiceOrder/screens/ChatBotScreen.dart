@@ -24,7 +24,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
   @override
   void initState() {
     super.initState();
-    // Welcome message
+    
     _addMessage(
         "Hello! I'm your SOMS AI Assistant. How can I help you today?", false);
   }
@@ -64,7 +64,6 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
 
     setState(() => _isTyping = true);
 
-    // Simulate AI thinking
     Future.delayed(const Duration(seconds: 1), () {
       if (mounted) {
         setState(() => _isTyping = false);
@@ -161,7 +160,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         response =
             "You are currently viewing data for the '$wg' workgroup. You can switch workgroups from the home screen filter.";
       } else if (query.contains("search") || query.contains("customer")) {
-        // Extract search term
+        
         String searchTerm = "";
         if (query.startsWith("search customer ")) {
           searchTerm = userText.substring("search customer ".length).trim();
@@ -203,7 +202,7 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
         response =
             "Hi there! I'm your real-time SOMS assistant. Ask me about your urgent tasks, team stats, or metrics!";
       } else {
-        // Fallback search term check
+       
         final filtered = await _performCustomerSearch(userText.trim());
         if (filtered.isNotEmpty) {
           records = filtered;
@@ -216,7 +215,6 @@ class _ChatBotScreenState extends State<ChatBotScreen> {
           "I'm having trouble connecting to the live server right now, but I can still help you with navigation! Try asking about how to search or where to find reports.";
     }
 
-    // Creative default responses if none of the keywords match
     if (response.isEmpty) {
       final defaultResponses = [
         "That's an interesting question! While I'm specialized in SOMS data like urgent tasks and metrics, I'd love to help you find that. Try asking about 'urgent records' or 'team stats'!",

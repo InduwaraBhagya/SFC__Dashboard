@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../model/WorkGroupModel.dart';
 import '../service/WorkGroupService.dart';
@@ -30,7 +30,7 @@ class _WorkGroupDetailsScreenState extends State<WorkGroupDetailsScreen> {
       setState(() {
         _errorMessage = 'Failed to load work group details: $e';
       });
-      return <WorkGroupDetails>[]; // Explicitly return empty list
+      return <WorkGroupDetails>[]; 
     });
   }
 
@@ -46,7 +46,7 @@ class _WorkGroupDetailsScreenState extends State<WorkGroupDetailsScreen> {
       appBar: AppBar(
         automaticallyImplyLeading: true,
         iconTheme: const IconThemeData(
-          color: Colors.white, // change the color of the leading icon
+          color: Colors.white, 
         ),
         title: Text(
           widget.workGroupName,
@@ -260,8 +260,7 @@ class _WorkGroupDetailsScreenState extends State<WorkGroupDetailsScreen> {
                                         'PE Area', detail.pE_AREA ?? 'N/A'),
                                     _buildFieldRow(
                                         'SO Number', detail.sO_NUMBER ?? 'N/A'),
-                                    // _buildFieldRow('Service Type', detail.serviceType ?? 'N/A'),
-                                    // Optionally, add a button for further details if needed
+                                    
                                   ],
                                 ),
                               );

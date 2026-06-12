@@ -44,11 +44,11 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
       if (userInfo != null) {
         final serviceId = userInfo['ServiceId'] ?? '';
         if (serviceId.isNotEmpty) {
-          // Check if user with serviceId already exists
+         
           final existingUser =
               await _authService.checkUserByServiceId(serviceId);
           if (existingUser != null && existingUser.id != null) {
-            // User exists, navigate to OnboardingScreen
+           
             await storage.write(
                 key: 'userId', value: existingUser.id.toString());
             if (mounted) {
@@ -62,7 +62,7 @@ class _CreateUserScreenState extends State<CreateUserScreen> {
             }
           }
         }
-        // If user doesn't exist, populate fields and fetch dropdown data
+      
         setState(() {
           _nameController.text = userInfo['Name'] ?? '';
           _serviceIdController.text = serviceId;

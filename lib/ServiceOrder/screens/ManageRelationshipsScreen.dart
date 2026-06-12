@@ -61,7 +61,7 @@ class _ManageRelationshipsScreenState extends State<ManageRelationshipsScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Header Section
+         
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -124,7 +124,7 @@ class _ManageRelationshipsScreenState extends State<ManageRelationshipsScreen> {
             ),
             const SizedBox(height: 32),
 
-            // Relationships Table/List
+           
             Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -140,7 +140,7 @@ class _ManageRelationshipsScreenState extends State<ManageRelationshipsScreen> {
               ),
               child: Column(
                 children: [
-                  // Table Header
+               
                   Container(
                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
                     decoration: BoxDecoration(
@@ -161,8 +161,7 @@ class _ManageRelationshipsScreenState extends State<ManageRelationshipsScreen> {
                       ],
                     ),
                   ),
-                  
-                  // Table Rows
+                 
                   _isLoading 
                       ? const Padding(
                           padding: EdgeInsets.all(40.0),

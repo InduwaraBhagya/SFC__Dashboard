@@ -25,12 +25,10 @@ class _DraggableChatBotState extends State<DraggableChatBot> {
         childWhenDragging: Container(),
         onDragEnd: (details) {
           setState(() {
-            // Calculate new position relative to bottom-right
-            // We use size.width and size.height to convert global coords to relative
+            
             double newDx = size.width - details.offset.dx - 60; 
             double newDy = size.height - details.offset.dy - 60;
 
-            // Clamp positions to stay on screen
             position = Offset(
               newDx.clamp(20.0, size.width - 80.0),
               newDy.clamp(20.0, size.height - 100.0),

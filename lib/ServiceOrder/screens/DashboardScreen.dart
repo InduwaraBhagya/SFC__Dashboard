@@ -1,4 +1,4 @@
-// import 'package:flutter/material.dart';
+﻿// import 'package:flutter/material.dart';
 // import 'package:flutter/services.dart';
 // import 'DashboardHome.dart';
 // import 'NotificationScreen.dart';
@@ -174,7 +174,6 @@ import 'WorkGroupScreen.dart';
 import 'PETaskListScreen.dart';
 import 'SelectWorkgroupScreen.dart';
 import '../components/Sidebar.dart';
-// adjust path if needed
 import 'RegularRecordScreen.dart';
 import 'UrgentRecordScreen.dart';
 import 'HoldRecordScreen.dart';
@@ -237,39 +236,39 @@ class _DashboardScreenState extends State<DashboardScreen> {
       RegularRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 4
+      ), 
       UrgentRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 5
+      ), 
       HoldRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 6
+      ), 
       OLAViolateRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 7
+      ), 
       DormantRecordScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 8
+      ), 
       ProjectsScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 9
+      ), 
       DataManagementScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 10
+      ), 
       WorkgroupReportScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 11
+      ), 
       OPMCReportScreen(
         user: widget.user ?? {},
         onBack: () => setState(() => myIndex = 0),
-      ), // index 12
+      ), 
     ];
   }
 
@@ -278,28 +277,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (sidebarIndex == 0) {
       pageIndex = 0;
     } else if (sidebarIndex == 1)
-      pageIndex = 4; // Regular
+      pageIndex = 4; 
     else if (sidebarIndex == 2)
-      pageIndex = 5; // Urgent
+      pageIndex = 5; 
     else if (sidebarIndex == 3)
-      pageIndex = 6; // Hold
+      pageIndex = 6; 
     else if (sidebarIndex == 4)
-      pageIndex = 7; // OLA
+      pageIndex = 7; 
     else if (sidebarIndex == 5)
-      pageIndex = 8; // Dormant
+      pageIndex = 8; 
     else if (sidebarIndex == 6)
-      pageIndex = 9; // Projects
+      pageIndex = 9; 
     else if (sidebarIndex == 7)
-      pageIndex = 10; // Data Management
+      pageIndex = 10; 
     else if (sidebarIndex == 8)
-      pageIndex = 11; // Workgroup Reports
+      pageIndex = 11; 
     else if (sidebarIndex == 9)
-      pageIndex = 12; // OPMC Reports
+      pageIndex = 12; 
 
     else if (sidebarIndex == 14)
-      pageIndex = 2; // Work Groups
+      pageIndex = 2; 
     else if (sidebarIndex == 15)
-      pageIndex = 3; // Task List
+      pageIndex = 3; 
     else
       pageIndex = 0;
 
@@ -365,7 +364,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 ),
                 iconTheme: const IconThemeData(color: Colors.white),
 
-                // Updated title with role
+           
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,

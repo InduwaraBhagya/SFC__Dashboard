@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/RegularRecord.dart';
 import '../service/RegularRecordService.dart';
@@ -25,7 +25,7 @@ class _RegularRecordScreenState extends State<RegularRecordScreen>
   late Future<Map<String, dynamic>> _futureRecords;
   String? _workgroupName;
   int _page = 1;
-  final int _pageSize = 1000; // Increased to fetch practically "all" records
+  final int _pageSize = 1000; 
   List<RegularRecord> _allRecords = [];
   int _totalPages = 1;
   int _totalCount = 0;
@@ -35,7 +35,6 @@ class _RegularRecordScreenState extends State<RegularRecordScreen>
   late Animation<double> _fadeAnimation;
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
 
-  // New state for search and filters
   final TextEditingController _searchController = TextEditingController();
   final TextEditingController _soSearchController = TextEditingController();
   String _selectedSearchType = 'SO ID';
@@ -364,7 +363,7 @@ class _RegularRecordScreenState extends State<RegularRecordScreen>
                   child: TextField(
                     controller: _searchController,
                     onChanged: (v) =>
-                        setState(() {}), // Trigger UI update on search
+                        setState(() {}), 
                     decoration: const InputDecoration(
                       hintText: 'Search by Customer...',
                       hintStyle: TextStyle(fontSize: 11, color: Colors.grey),
@@ -459,7 +458,7 @@ class _RegularRecordScreenState extends State<RegularRecordScreen>
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       child: SizedBox(
-        width: 1100, // Slightly wider for better breathing room
+        width: 1100, 
         child: Column(
           children: [
             _buildTableHeaderRow(),
@@ -511,7 +510,7 @@ class _RegularRecordScreenState extends State<RegularRecordScreen>
   List<RegularRecord> _getFilteredRecords() {
     List<RegularRecord> filtered = List.from(_allRecords);
 
-    // Filter by Customer search
+   
     if (_searchController.text.isNotEmpty) {
       final query = _searchController.text.toLowerCase();
       filtered = filtered
@@ -521,7 +520,7 @@ class _RegularRecordScreenState extends State<RegularRecordScreen>
           .toList();
     }
 
-    // Filter by SO ID search (from white header)
+    
     if (_soSearchController.text.isNotEmpty) {
       final query = _soSearchController.text.toLowerCase();
       filtered = filtered
@@ -529,11 +528,10 @@ class _RegularRecordScreenState extends State<RegularRecordScreen>
           .toList();
     }
 
-    // Filter by Status checkboxes
+  
     if (!_filterAll) {
       if (_filterInProgress) {
-        // Assume 'In Progress' is the default for this endpoint,
-        // but can filter by woStatus if available
+       
         filtered = filtered
             .where((r) => r.woStatus?.contains('In Progress') ?? true)
             .toList();

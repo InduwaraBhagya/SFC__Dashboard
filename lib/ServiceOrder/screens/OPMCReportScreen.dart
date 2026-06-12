@@ -12,7 +12,7 @@ class OPMCReportScreen extends StatelessWidget {
   });
 
   bool _isOPMCSupervisor() {
-    // Check for Role 8 (OPMC Supervisor)
+ 
     final userRoleId = user['UserRoleId'];
     final userRole = user['UserRole'];
     
@@ -37,12 +37,12 @@ class OPMCReportScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Access Denied Banner
+              
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFD9534F), // Red banner
+                  color: Color(0xFFD9534F), 
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8),
                     topRight: Radius.circular(8),
@@ -63,8 +63,7 @@ class OPMCReportScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              
-              // Main Card
+             
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(40),
@@ -84,7 +83,7 @@ class OPMCReportScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    // Shield Icon
+                  
                     Stack(
                       alignment: Alignment.center,
                       children: [
@@ -112,8 +111,7 @@ class OPMCReportScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 24),
-                    
-                    // Title
+                
                     Text(
                       'OPMC Workgroup Report',
                       style: GoogleFonts.poppins(
@@ -123,8 +121,7 @@ class OPMCReportScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
-                    // Message
+                  
                     Text(
                       'This report is only available to OPMC supervisors (Role 8).',
                       textAlign: TextAlign.center,
@@ -144,8 +141,7 @@ class OPMCReportScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 32),
-                    
-                    // Back to Home Button
+                  
                     SizedBox(
                       width: 160,
                       child: ElevatedButton(

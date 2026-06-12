@@ -45,12 +45,12 @@ class NoticeService {
         List<Notice> notices;
 
         if (data is List) {
-          // Handle list of notices (e.g., [{"id": 1, ...}, {"id": 2, ...}])
+        
           notices = data
               .map((json) => Notice.fromJson(json as Map<String, dynamic>))
               .toList();
         } else if (data is Map) {
-          // Handle single notice object
+         
           notices = [Notice.fromJson(data as Map<String, dynamic>)];
         } else {
           notices = [];

@@ -60,7 +60,7 @@ class _AddEditWorkGroupScreenState extends State<AddEditWorkGroupScreen> {
           backgroundColor: Colors.green,
         ),
       );
-      Navigator.pop(context, true); // Return true to refresh the list
+      Navigator.pop(context, true);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -95,11 +95,11 @@ class _AddEditWorkGroupScreenState extends State<AddEditWorkGroupScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    // Header Area
+                    
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: const BoxDecoration(
-                        color: Color(0xFF5C6BC0), // The blue header from screenshot
+                        color: Color(0xFF5C6BC0),
                         borderRadius: BorderRadius.only(
                           topLeft: Radius.circular(8),
                           topRight: Radius.circular(8),
@@ -125,7 +125,7 @@ class _AddEditWorkGroupScreenState extends State<AddEditWorkGroupScreen> {
                       ),
                     ),
                     
-                    // Form Area
+                    
                     Padding(
                       padding: const EdgeInsets.all(24.0),
                       child: Form(

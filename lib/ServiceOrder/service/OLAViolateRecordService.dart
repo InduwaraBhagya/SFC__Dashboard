@@ -95,11 +95,10 @@ class OLAViolateRecordService {
         Map<String, dynamic> result = jsonDecode(response.body);
         print('API Response Body for details: ${response.body}');
 
-        // Dereference JSON to handle $id/$ref
+        
         result = dereferenceJson(result);
         print('Dereferenced JSON: $result');
 
-        // Handle different possible JSON structures
         Map<String, dynamic> recordData;
         if (result['records']?['\$values'] != null &&
             result['records']['\$values'].isNotEmpty) {

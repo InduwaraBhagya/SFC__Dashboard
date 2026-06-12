@@ -13,7 +13,6 @@ class SomsDashboardService {
         throw Exception('API_BASE_URL is not configured in .env');
       }
 
-      // Read selected workgroup name from secure storage
       final workgroupName = await _storage.read(key: 'soms_selected_workgroup_name');
       
       if (workgroupName == null) {
@@ -24,8 +23,7 @@ class SomsDashboardService {
       }
 
       final String fullApiUrl = '$apiUrl/api/somsdashboard/metrics/${Uri.encodeComponent(workgroupName)}';
-      
-      // Read auth token
+     
       final token = await _storage.read(key: 'access_token');
       final headers = {
         'Content-Type': 'application/json',

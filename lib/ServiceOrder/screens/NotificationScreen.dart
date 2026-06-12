@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import '../service/NotificationService.dart';
 import 'package:flutter/foundation.dart';
@@ -29,7 +29,7 @@ class _NotificationScreenState extends State<NotificationScreen> with SingleTick
     _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
       CurvedAnimation(parent: _animationController, curve: Curves.easeIn),
     );
-    _fetchTasks(); // Fetch tasks on initialization
+    _fetchTasks();
   }
 
   Future<void> _fetchTasks() async {

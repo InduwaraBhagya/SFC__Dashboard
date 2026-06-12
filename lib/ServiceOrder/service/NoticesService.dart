@@ -71,7 +71,7 @@ class NoticesService {
       }
     } catch (e) {
       print('Error creating notice: $e');
-      rethrow; // Rethrow to see the error in the UI or console
+      rethrow; 
     }
   }
 

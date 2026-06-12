@@ -33,7 +33,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String _cleanEmail(dynamic raw) {
     if (raw == null) return '-';
     String s = raw.toString();
-    // Clean Azure AD style emails like "local#EXT#@domain" -> "local@domain"
     s = s.replaceAll('#EXT#', '');
     return s.trim();
   }
@@ -167,7 +166,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               borderRadius: BorderRadius.circular(20),
             ),
             child: Text(
-              'Administrator', // Or fetch actual role
+              'Administrator', 
               style: GoogleFonts.poppins(
                 fontSize: 12,
                 color: Colors.white,

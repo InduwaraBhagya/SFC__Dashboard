@@ -12,12 +12,10 @@ class WorkgroupReportScreen extends StatelessWidget {
   });
 
   bool _isSupervisor() {
-    // Check for Role 2 (Supervisor)
-    // Based on the screenshot and project context, Role 2 is the required level.
+   
     final userRoleId = user['UserRoleId'];
     final userRole = user['UserRole'];
-    
-    // Check both ID and Name to be safe
+   
     return userRoleId == 2 || userRole == 'Supervisor';
   }
 
@@ -39,12 +37,12 @@ class WorkgroupReportScreen extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              // Access Denied Banner
+            
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 20),
                 decoration: const BoxDecoration(
-                  color: Color(0xFFD9534F), // Red banner
+                  color: Color(0xFFD9534F), 
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(8),
                     topRight: Radius.circular(8),
@@ -65,8 +63,7 @@ class WorkgroupReportScreen extends StatelessWidget {
                   ],
                 ),
               ),
-              
-              // Main Card
+             
               Container(
                 width: double.infinity,
                 padding: const EdgeInsets.all(40),
@@ -86,7 +83,7 @@ class WorkgroupReportScreen extends StatelessWidget {
                 ),
                 child: Column(
                   children: [
-                    // Shield Icon
+                    
                     Stack(
                       alignment: Alignment.center,
                       children: [
@@ -115,7 +112,6 @@ class WorkgroupReportScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 24),
                     
-                    // Title
                     Text(
                       'Workgroup Progress Report',
                       style: GoogleFonts.poppins(
@@ -125,8 +121,7 @@ class WorkgroupReportScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 16),
-                    
-                    // Message
+                  
                     Text(
                       'This report is only available to workgroup supervisors (Role 2).',
                       textAlign: TextAlign.center,
@@ -147,7 +142,6 @@ class WorkgroupReportScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 32),
                     
-                    // Back to Home Button
                     SizedBox(
                       width: 160,
                       child: ElevatedButton(

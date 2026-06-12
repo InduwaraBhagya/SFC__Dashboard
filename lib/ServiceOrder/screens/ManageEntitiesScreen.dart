@@ -68,12 +68,12 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false, // We use a custom back button
-        toolbarHeight: 0, // Hide default app bar
+        automaticallyImplyLeading: false, 
+        toolbarHeight: 0, 
       ),
       body: Column(
         children: [
-          // Simulated App Bar Area
+          
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
             child: Column(
@@ -109,7 +109,7 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                           decoration: BoxDecoration(
-                            color: const Color(0xFFE0F7FA), // Light cyan/blue
+                            color: const Color(0xFFE0F7FA), 
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Text(
@@ -134,7 +134,7 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                // Buttons
+             
                 Wrap(
                   spacing: 12,
                   runSpacing: 12,
@@ -169,7 +169,7 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
             ),
           ),
           
-          // Search Bar Area
+         
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
             child: Column(
@@ -204,7 +204,6 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
             ),
           ),
 
-          // Grid Area
           Expanded(
             child: _isLoading 
               ? const Center(child: CircularProgressIndicator(color: Color(0xFF03A9F4)))
@@ -270,7 +269,7 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Dynamic gradient bar at top
+        
           Container(
             height: 4,
             decoration: const BoxDecoration(
@@ -290,7 +289,7 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header of Card
+             
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -332,8 +331,7 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
                   ],
                 ),
                 const SizedBox(height: 16),
-                
-                // Tags
+              
                 Row(
                   children: [
                     _buildCardTag(
@@ -351,8 +349,7 @@ class _ManageEntitiesScreenState extends State<ManageEntitiesScreen> {
                 ),
                 
                 const SizedBox(height: 16),
-                
-                // Bottom Buttons
+               
                 Row(
                   children: [
                     Expanded(

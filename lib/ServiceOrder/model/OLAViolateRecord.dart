@@ -29,8 +29,8 @@ class OLAViolateRecord {
   final int? taskSeq;
   final String? woId;
   final String? woStatus;
-  final String? taskName; // Added from HoldRecordScreen
-  final String? peStatus; // Added from UrgentRecordScreen
+  final String? taskName; 
+  final String? peStatus; 
   final String? woStartDate;
   final PlannedEvent? plannedEvent;
   final PETask? peTask;
@@ -262,7 +262,7 @@ class PETask {
   final String? taskCreatedDate;
   final String? taskCompleteDate;
   final String? actualTaskCreatedDate;
-  final String? aCtualTaskCompleteDate; // Matching case from OLAViolateRecordDetailsScreen
+  final String? aCtualTaskCompleteDate; 
   final bool? isUrgent;
   final bool? urgentRequested;
   final String? priority;

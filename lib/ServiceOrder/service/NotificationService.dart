@@ -7,27 +7,26 @@ class NotificationService {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ?? (throw Exception('API_BASE_URL not found in .env file'));
       final url = Uri.parse('$baseUrl/PETasks/urgentrequests');
-      print('API Request URL: $url'); // Debug URL
+      print('API Request URL: $url'); 
       final response = await http.get(url);
 
-      print('API Status Code: ${response.statusCode}'); // Debug status
-      print('Raw API Response: ${response.body}'); // Debug raw response
+      print('API Status Code: ${response.statusCode}'); 
+      print('Raw API Response: ${response.body}'); 
 
       if (response.statusCode == 200) {
         final dynamic result = jsonDecode(response.body);
-        print('Parsed JSON: $result'); // Debug parsed JSON
+        print('Parsed JSON: $result');
 
-        // Extract the list from the "$values" key
         final List<dynamic> rawRecords = result['\$values'] ?? [];
-        print('Raw records count: ${rawRecords.length}'); // Debug raw records
+        print('Raw records count: ${rawRecords.length}'); 
 
         final List<Map<String, dynamic>> records = rawRecords.map((r) {
           try {
             return {
-              'Id': r['id']?.toString() ?? 'N/A', // Handle missing or null id
-              'PENumber': r['peNumber']?.toString() ?? 'N/A', // Handle missing peNumber
-              'TaskSeq': r['taskSeq']?.toString() ?? 'N/A', // Handle missing taskSeq
-              'Task': r['task']?.toString() ?? 'N/A', // Handle missing task
+              'Id': r['id']?.toString() ?? 'N/A', 
+              'PENumber': r['peNumber']?.toString() ?? 'N/A', 
+              'TaskSeq': r['taskSeq']?.toString() ?? 'N/A', 
+              'Task': r['task']?.toString() ?? 'N/A', 
             };
           } catch (e, stackTrace) {
             print('Error parsing record: $e');
@@ -37,10 +36,10 @@ class NotificationService {
           }
         }).where((r) => r != null).cast<Map<String, dynamic>>().toList();
 
-        print('Parsed records count: ${records.length}'); // Debug parsed records
+        print('Parsed records count: ${records.length}'); 
         return records;
       } else {
-        print('API Error Response: ${response.body}'); // Log error response
+        print('API Error Response: ${response.body}'); 
         throw Exception('Failed to load urgent requests: ${response.statusCode}');
       }
     } catch (e, stackTrace) {
@@ -54,14 +53,14 @@ class NotificationService {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ?? (throw Exception('API_BASE_URL not found in .env file'));
       final url = Uri.parse('$baseUrl/PETasks/$id/markurgent');
-      print('API Request URL for mark urgent: $url'); // Debug URL
+      print('API Request URL for mark urgent: $url'); 
       final response = await http.post(url);
 
-      print('Mark Urgent Status Code: ${response.statusCode}'); // Debug status
+      print('Mark Urgent Status Code: ${response.statusCode}'); 
       if (response.statusCode == 200) {
         return true;
       } else {
-        print('API Error Response for mark urgent: ${response.body}'); // Log error response
+        print('API Error Response for mark urgent: ${response.body}'); 
         throw Exception('Failed to mark task as urgent: ${response.statusCode}');
       }
     } catch (e, stackTrace) {
@@ -75,14 +74,14 @@ class NotificationService {
     try {
       final baseUrl = dotenv.env['API_BASE_URL'] ?? (throw Exception('API_BASE_URL not found in .env file'));
       final url = Uri.parse('$baseUrl/PETasks/$id/rejecturgent');
-      print('API Request URL for reject urgent: $url'); // Debug URL
+      print('API Request URL for reject urgent: $url'); 
       final response = await http.post(url);
 
-      print('Reject Urgent Status Code: ${response.statusCode}'); // Debug status
+      print('Reject Urgent Status Code: ${response.statusCode}'); 
       if (response.statusCode == 200) {
         return true;
       } else {
-        print('API Error Response for reject urgent: ${response.body}'); // Log error response
+        print('API Error Response for reject urgent: ${response.body}'); 
         throw Exception('Failed to reject task as urgent: ${response.statusCode}');
       }
     } catch (e, stackTrace) {

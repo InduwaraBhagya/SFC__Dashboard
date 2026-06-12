@@ -28,8 +28,7 @@ class WorkGroupService {
 
       print('fetchWorkGroups - URL: $baseUrl/api/somsworkgroups');
       print('fetchWorkGroups - Response status: ${response.statusCode}');
-      // print('fetchWorkGroups - Response body: ${response.body}'); // Commented out to prevent massive logs
-
+      
       if (response.statusCode == 200) {
         final dynamic data = json.decode(response.body);
         List<dynamic> workGroups;

@@ -74,7 +74,7 @@ class _PETaskScreenState extends State<PETaskScreen>
       appBar: AppBar(
         automaticallyImplyLeading: true,
         iconTheme: IconThemeData(
-          color: Theme.of(context).cardColor, // Change back button color to white
+          color: Theme.of(context).cardColor, 
         ),
         title: Text(
           widget.peNumber,
@@ -121,7 +121,7 @@ class _PETaskScreenState extends State<PETaskScreen>
 
           return CustomScrollView(
             slivers: [
-              // Header with total tasks count
+              
               SliverToBoxAdapter(
                 child: FadeTransition(
                   opacity: _fadeAnimation,
@@ -165,7 +165,7 @@ class _PETaskScreenState extends State<PETaskScreen>
                 ),
               ),
 
-              // Task list
+            
               SliverList(
                 delegate: SliverChildBuilderDelegate(
                   (context, index) {

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../service/SomsDashboardService.dart';
 import '../service/NotificationService.dart';
-// If these screens don't exist yet, we will just use placeholders for onTap
 import 'SelectWorkgroupScreen.dart';
 import 'NoticeBoardScreen.dart';
 import 'NotificationScreen.dart';
@@ -211,7 +210,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         _buildKPICard('Urgent\nRequests', '${_metrics['urgent']} Tasks',
             const Color(0xFFFFA07A), Icons.warning_rounded, Colors.red, () {
           if (widget.onNavigate != null)
-            widget.onNavigate!(2); // Sidebar index for Urgent
+            widget.onNavigate!(2); 
         }),
         _buildKPICard(
             'In Progress',
@@ -220,7 +219,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             Icons.check_circle_outline,
             Colors.teal, () {
           if (widget.onNavigate != null)
-            widget.onNavigate!(1); // Sidebar index for Regular
+            widget.onNavigate!(1); 
         }),
         _buildKPICard(
             'OLA Violated',
@@ -229,7 +228,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             Icons.access_time_filled,
             Colors.redAccent, () {
           if (widget.onNavigate != null)
-            widget.onNavigate!(4); // Sidebar index for OLA
+            widget.onNavigate!(4); 
         }),
         _buildKPICard(
             'Hold\nRecords',
@@ -238,12 +237,12 @@ class _DashboardHomeState extends State<DashboardHome> {
             Icons.pause_circle_filled,
             Colors.orange, () {
           if (widget.onNavigate != null)
-            widget.onNavigate!(3); // Sidebar index for Hold
+            widget.onNavigate!(3); 
         }),
         _buildKPICard('Dormant', '${_metrics['dormant']} Tasks',
             const Color(0xFFE5E7E9), Icons.delete_outline, Colors.black54, () {
           if (widget.onNavigate != null)
-            widget.onNavigate!(5); // Sidebar index for Dormant
+            widget.onNavigate!(5); 
         }),
       ],
     );
@@ -251,7 +250,7 @@ class _DashboardHomeState extends State<DashboardHome> {
 
   Widget _buildKPICard(String title, String subtitle, Color bgColor,
       IconData iconData, Color iconColor, VoidCallback onTap) {
-    // Determine card width to loosely fit 2 per row on average mobile screens
+
     final width = (MediaQuery.of(context).size.width / 2) - 18;
     return GestureDetector(
       onTap: onTap,
@@ -339,7 +338,7 @@ class _DashboardHomeState extends State<DashboardHome> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Header Row
+              
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -392,7 +391,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                 ),
                 const SizedBox(height: 16),
 
-                // Content Body
                 if (latestTask != null)
                   Container(
                     padding: const EdgeInsets.all(16),
@@ -483,7 +481,6 @@ class _DashboardHomeState extends State<DashboardHome> {
 
                 const SizedBox(height: 16),
 
-                // Footer / Button
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [

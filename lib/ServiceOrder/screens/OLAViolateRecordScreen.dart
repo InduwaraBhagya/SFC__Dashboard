@@ -67,7 +67,7 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen>
   }
 
   Future<void> _initializeAndFetch() async {
-    // Read current workgroup from storage to pre-filter
+  
     final currentWgName =
         await _storage.read(key: 'soms_selected_workgroup_name');
     if (currentWgName != null) {
@@ -294,7 +294,7 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen>
 
   Widget _buildPurpleFilterBar() {
     return Container(
-      color: const Color(0xFF673AB7), // Purple for OLA records
+      color: const Color(0xFF673AB7), 
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -340,7 +340,7 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen>
           const SizedBox(height: 6),
           Row(
             children: [
-              // Customer Search (Handled left side)
+            
               Expanded(
                 flex: 4,
                 child: Container(
@@ -368,8 +368,7 @@ class _OLAViolateRecordScreenState extends State<OLAViolateRecordScreen>
                 setState(() {
                   _searchController.clear();
                   _soSearchController.clear();
-                  // We keep the workgroup from storage if needed, or clear it if it's supposed to be "All"
-                  // But the user said remove dropdown, so we probably just filter by the dashboard one.
+                  
                   _filterAll = true;
                   _filterInProgress = false;
                   _filterCompleted = false;

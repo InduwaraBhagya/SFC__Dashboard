@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../model/WorkGroupModel.dart';
 import '../service/WorkGroupService.dart';
 import 'AddEditWorkGroupScreen.dart';
-// Adjust this import based on your actual DashboardHome location
 
 class WorkGroupScreen extends StatefulWidget {
   const WorkGroupScreen({super.key});
@@ -21,7 +20,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
   final int _recordsPerPage = 10;
   late PageController _pageController;
   int _currentPage = 0;
-  final bool _isSearchBarExpanded = false; // Track search bar expansion state
+  final bool _isSearchBarExpanded = false; 
 
   @override
   void initState() {
@@ -141,7 +140,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Header
+          
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -200,7 +199,6 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Search Bar
               TextField(
                 onChanged: _filterWorkGroups,
                 style: GoogleFonts.poppins(fontSize: 14),
@@ -226,7 +224,6 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Table Header
               Container(
                 padding:
                     const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -262,7 +259,6 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                 ),
               ),
 
-              // Table Body (List)
               Expanded(
                 child: FutureBuilder<List<WorkGroupDetails>>(
                   future: _workGroupsFuture,
@@ -342,7 +338,6 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                                           ),
                                         ),
 
-                                        // Delete Button
                                         Container(
                                           margin: const EdgeInsets.symmetric(
                                               horizontal: 2),
@@ -376,7 +371,7 @@ class _WorkGroupScreenState extends State<WorkGroupScreen> {
                             },
                           ),
                         ),
-                        // Pagination
+                        
                         if (totalPages > 1)
                           Container(
                             padding: const EdgeInsets.symmetric(vertical: 8.0),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'dart:async';
 import '../model/OLAViolateRecord.dart';
 import '../service/UrgentRecordService.dart';
@@ -71,7 +71,6 @@ class _UrgentRecordScreenState extends State<UrgentRecordScreen>
   Future<void> _initializeAndFetch() async {
     await _fetchWorkGroups();
 
-    // Read current workgroup from storage to pre-filter
     final currentWgName =
         await _storage.read(key: 'soms_selected_workgroup_name');
     if (currentWgName != null && _workGroups.isNotEmpty) {
@@ -79,7 +78,7 @@ class _UrgentRecordScreenState extends State<UrgentRecordScreen>
         _selectedWorkGroup =
             _workGroups.firstWhere((wg) => wg.name == currentWgName);
       } catch (e) {
-        // Fallback if not found
+        
       }
     }
 
@@ -357,7 +356,7 @@ class _UrgentRecordScreenState extends State<UrgentRecordScreen>
           const SizedBox(height: 6),
           Row(
             children: [
-              // Workgroup Dropdown
+             
               Expanded(
                 flex: 2,
                 child: Container(
@@ -391,7 +390,7 @@ class _UrgentRecordScreenState extends State<UrgentRecordScreen>
                 ),
               ),
               const SizedBox(width: 6),
-              // Customer Search
+          
               Expanded(
                 flex: 3,
                 child: Container(
