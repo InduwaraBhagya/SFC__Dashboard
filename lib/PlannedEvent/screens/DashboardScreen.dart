@@ -618,7 +618,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   final FlutterSecureStorage _storage = const FlutterSecureStorage();
   int myIndex = 0;
 
-  // User data
   String? name;
   String? photoBase64;
   String? userRoleName;
@@ -627,19 +626,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<int>? workGroupIds;
   List<String>? workGroupNames;
 
-  // Workgroup filter data
+ 
   List<WorkGroup> _allWorkGroups = [];
   int? _currentSelectedWorkGroupId;
   String? _currentSelectedWorkGroupName;
 
-  // Notification counts
   int _totalAlertsCount = 0;
   Timer? _notificationTimer;
   final PEService _peIssueService = PEService();
   final UrgentRecordService _urgentRecordService = UrgentRecordService();
   final NoticeService _noticeService = NoticeService();
 
-  // Loading/Error states
+  
   bool isLoading = true;
   String? errorMessage;
   final TextEditingController _searchController = TextEditingController();
@@ -668,7 +666,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
   void initState() {
     super.initState();
 
-    // Initialize pages with no workgroup data until profile is loaded
     _pages = _buildPages([]);
 
     fetchUserProfile();
@@ -683,7 +680,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   void _startNotificationTimer() {
-    _fetchNotificationCounts(); // Initial fetch
+    _fetchNotificationCounts(); 
     _notificationTimer = Timer.periodic(const Duration(seconds: 30), (timer) {
       _fetchNotificationCounts();
     });
@@ -702,7 +699,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       final seenNotices = prefs.getStringList('seen_notices') ?? [];
       final seenUrgent = prefs.getStringList('seen_urgent') ?? [];
 
-      // 1. Fetch urgent records count
       try {
         bool useRealData = false;
         if (_currentSelectedWorkGroupId != null && _currentSelectedWorkGroupName != null) {
@@ -721,7 +717,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         debugPrint('Error fetching urgent records for badge: $e');
       }
 
-      // 2. Fetch active notices count
+     
       try {
         final notices = await _noticeService.getActiveNotices();
         counts +=
@@ -777,7 +773,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   .cast<String>()
               : <String>[];
 
-      // Fetch all workgroups for dropdown
       List<WorkGroup> allWorkGroups = [];
       try {
         allWorkGroups = await _authService.getWorkGroups();
@@ -785,7 +780,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         debugPrint('Error fetching all workgroups: $e');
       }
 
-      // Fallback: If workGroupNames is empty but IDs exist, fetch names manually
       if (workGroupNames.isEmpty &&
           backendUser.workGroupIds != null &&
           backendUser.workGroupIds!.isNotEmpty) {
@@ -799,7 +793,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         }
       }
 
-      // Set initial selected workgroup
       int? initialSelectedWorkGroupId = widget.selectedWorkGroupId;
       String? initialSelectedWorkGroupName;
       if (initialSelectedWorkGroupId != null) {
@@ -845,7 +838,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     setState(() {
       _currentSelectedWorkGroupId = workGroupId;
 
-      // Find the workgroup name
+    
       if (workGroupId != null) {
         try {
           final workgroup =
@@ -858,14 +851,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _currentSelectedWorkGroupName = null;
       }
 
-      // Update pages with the filtered workgroup
       final filteredWorkgroup =
           workGroupId != null ? [workGroupId] : workGroupIds;
 
       _pages = _buildPages(filteredWorkgroup);
     });
-    
-    // Refresh the badge counts based on the new workgroup
+   
     _fetchNotificationCounts();
   }
 
@@ -935,112 +926,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ],
           ),
           actions: [
-            // Workgroup Filter Dropdown
-            if (workGroupIds != null && workGroupIds!.isNotEmpty)
-              DropdownButtonHideUnderline(
-                child: DropdownButton2<int>(
-                  value: _currentSelectedWorkGroupId,
-                  items: [
-                    DropdownMenuItem<int>(
-                      value: null,
-                      child: Row(
-                        children: [
-                          const Icon(Icons.close, size: 16, color: Colors.grey),
-                          const SizedBox(width: 8),
-                          const Text('All Workgroups'),
-                        ],
-                      ),
-                    ),
-                    ..._allWorkGroups
-                        .where((wg) =>
-                            (workGroupIds?.contains(wg.id) ?? false) ||
-                            wg.id == _currentSelectedWorkGroupId)
-                        .map((workgroup) => DropdownMenuItem<int>(
-                              value: workgroup.id,
-                              child: Row(
-                                children: [
-                                  const Icon(Icons.group_work, size: 16),
-                                  const SizedBox(width: 8),
-                                  Text(workgroup.name),
-                                ],
-                              ),
-                            ))
-                        .toList(),
-                  ],
-                  onChanged: _onWorkGroupSelected,
-                  buttonStyleData: const ButtonStyleData(
-                    padding: EdgeInsets.symmetric(horizontal: 8),
-                    height: 40,
-                    width: 40,
-                  ),
-                  menuItemStyleData: const MenuItemStyleData(
-                    height: 40,
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                  ),
-                  dropdownStyleData: DropdownStyleData(
-                    maxHeight: 250,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  dropdownSearchData: DropdownSearchData(
-                    searchController: _searchController,
-                    searchInnerWidgetHeight: 50,
-                    searchInnerWidget: Container(
-                      height: 50,
-                      padding: const EdgeInsets.only(
-                        top: 8,
-                        bottom: 4,
-                        right: 8,
-                        left: 8,
-                      ),
-                      child: TextFormField(
-                        expands: true,
-                        maxLines: null,
-                        controller: _searchController,
-                        decoration: InputDecoration(
-                          isDense: true,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 10,
-                            vertical: 8,
-                          ),
-                          hintText: 'Search for a workgroup...',
-                          hintStyle: const TextStyle(fontSize: 12),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                      ),
-                    ),
-                    searchMatchFn: (item, searchValue) {
-                      if (item.value == null) {
-                        return 'all workgroups'.contains(searchValue.toLowerCase());
-                      }
-                      final workgroup = _allWorkGroups.firstWhere((wg) => wg.id == item.value);
-                      return workgroup.name.toLowerCase().contains(searchValue.toLowerCase());
-                    },
-                  ),
-                  onMenuStateChange: (isOpen) {
-                    if (!isOpen) {
-                      _searchController.clear();
-                    }
-                  },
-                  customButton: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: Tooltip(
-                      message: _currentSelectedWorkGroupId != null
-                          ? 'Filtering: $_currentSelectedWorkGroupName'
-                          : 'Select Workgroup Filter',
-                      child: Icon(
-                        Icons.filter_list,
-                        color: _currentSelectedWorkGroupId != null
-                            ? Colors.yellow
-                            : Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
             IconButton(
               icon: const Icon(Icons.menu, color: Colors.white),
               onPressed: _openEndDrawer,
@@ -1133,7 +1018,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
-              // PE Management Section
+             
               ExpansionTile(
                 leading: const Icon(
                   Icons.event_note,
@@ -1190,7 +1075,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ],
               ),
-              // Reports Item
+             
               ListTile(
                 leading: const Icon(
                   Icons.assessment_outlined,
@@ -1213,7 +1098,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
-              // Escalations Item
+            
               ListTile(
                 leading: const Icon(
                   Icons.warning_amber_outlined,
@@ -1238,7 +1123,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
-              // System Users Item
+             
               ListTile(
                 leading: const Icon(
                   Icons.manage_accounts_outlined,
@@ -1263,7 +1148,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
-              // Manage Permission Item
+          
               ListTile(
                 leading: const Icon(
                   Icons.security_outlined,
@@ -1286,7 +1171,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   );
                 },
               ),
-              // Manage Role Item
+            
               ListTile(
                 leading: const Icon(
                   Icons.admin_panel_settings_outlined,

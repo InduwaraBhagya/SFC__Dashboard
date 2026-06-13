@@ -1668,7 +1668,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   @override
   void didUpdateWidget(covariant DashboardHome oldWidget) {
     super.didUpdateWidget(oldWidget);
-    // Check if selected workgroups changed
+    
     bool workgroupsChanged = false;
     if (oldWidget.selectedWorkGroupIds.length !=
         widget.selectedWorkGroupIds.length) {
@@ -1687,7 +1687,7 @@ class _DashboardHomeState extends State<DashboardHome> {
       _checkWorkgroupAndRefresh();
     }
 
-    // Check if user info updated (e.g. from null to value after DashboardScreen finishes loading)
+    
     if (oldWidget.userName != widget.userName ||
         oldWidget.userRole != widget.userRole) {
       setState(() {
@@ -1705,7 +1705,7 @@ class _DashboardHomeState extends State<DashboardHome> {
   }
 
   Future<void> _fetchUserInfo() async {
-    // If name and role are passed via parameters, use them
+   
     if (widget.userName != null || widget.userRole != null) {
       setState(() {
         _currentUserName = widget.userName;
@@ -1720,7 +1720,7 @@ class _DashboardHomeState extends State<DashboardHome> {
       if (user != null && mounted) {
         final role = roles.firstWhere((r) => r.id == user.userRoleId,
             orElse: () =>
-                roles.isNotEmpty ? roles.first : roles.first); // fallback
+                roles.isNotEmpty ? roles.first : roles.first); 
         setState(() {
           _currentUserName = user.name;
           _currentUserRole = role.name;
@@ -1741,12 +1741,11 @@ class _DashboardHomeState extends State<DashboardHome> {
   }
 
   int? get _selectedWorkGroupId {
-    // If only one workgroup is selected, return its ID
+  
     if (widget.selectedWorkGroupIds.length == 1) {
       return widget.selectedWorkGroupIds.first;
     }
-    // If multiple or zero workgroups are selected (e.g. "All"), return null
-    // to let the backend fetch for all user's workgroups.
+   
     return null;
   }
 
@@ -1788,7 +1787,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         page: 1,
         pageSize: 2000,
         workgroupName: _selectedWorkGroupId?.toString(),
-        //fetchMultiWorkgroup: _useRealData,
+       
       );
       setState(() {
         _regularRecordCount = result['totalCount'] ?? 0;
@@ -1927,7 +1926,6 @@ class _DashboardHomeState extends State<DashboardHome> {
               'API returned unsuccessful response: ${responseData['message']}');
         }
 
-        // Try 'values' first, fallback to '$values' for compatibility
         final List<dynamic> records = responseData['data']?['values'] ??
             responseData['data']?['\$values'] ??
             [];
@@ -1999,9 +1997,9 @@ class _DashboardHomeState extends State<DashboardHome> {
       body: SafeArea(
         child: Column(
           children: [
-            // Fixed Search Section
+          
             _buildSearchSection(),
-            // Scrollable Content
+           
             Expanded(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
@@ -2011,7 +2009,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                   children: [
                     _buildGridSection(),
                     const SizedBox(height: 20),
-                    // Responsive row for Inbox, Team, and Notices
+                
                     LayoutBuilder(builder: (context, constraints) {
                       bool isWide = constraints.maxWidth > 800;
                       if (isWide) {
@@ -2523,7 +2521,7 @@ class _DashboardHomeState extends State<DashboardHome> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: const BoxDecoration(
-              color: Color(0xFFF9C16D), // Yellowish/Orange from screenshot
+              color: Color(0xFFF9C16D), 
               borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(16), topRight: Radius.circular(16)),
             ),
@@ -3065,7 +3063,6 @@ class _DashboardHomeState extends State<DashboardHome> {
                             return;
                           }
 
-                          // Combine Title and Message into Description
                           String description =
                               '${titleController.text.trim()}\n\n${messageController.text.trim()}';
 
@@ -3083,7 +3080,7 @@ class _DashboardHomeState extends State<DashboardHome> {
                             debugPrint(
                                 'Notice created successfully, refreshing...');
                             if (mounted) Navigator.pop(context);
-                            _fetchNotices(); // Refresh list
+                            _fetchNotices(); 
                             if (mounted) {
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
@@ -3199,7 +3196,7 @@ class _DashboardHomeState extends State<DashboardHome> {
     );
 
     if (success) {
-      _fetchNotices(); // Refresh list
+      _fetchNotices(); 
     } else {
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -3212,7 +3209,6 @@ class _DashboardHomeState extends State<DashboardHome> {
   Future<void> _deleteNotice(Notice notice) async {
     if (notice.id == null) return;
 
-    // Show confirmation dialog
     final confirm = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
@@ -3240,7 +3236,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         userName,
       );
       if (success) {
-        _fetchNotices(); // Refresh list
+        _fetchNotices(); 
       } else {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(

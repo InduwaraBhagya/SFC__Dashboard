@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
-// ─── Data models ────────────────────────────────────────────────────────────
-
 enum _Sender { bot, user }
 
 class _ChatMessage {
   final _Sender sender;
   final String text;
-  final List<_ChatOption>? options; // quick-reply buttons
+  final List<_ChatOption>? options; 
   final DateTime time;
 
   _ChatMessage({
@@ -24,11 +22,9 @@ class _ChatOption {
   const _ChatOption(this.label, this.value);
 }
 
-// ─── Flow data ───────────────────────────────────────────────────────────────
 
 enum _Lang { en }
 
-// All bot messages keyed by language then step
 const _botTexts = {
   _Lang.en: {
     'main_menu': 'How can I help you today? Please choose an option:',
@@ -101,7 +97,6 @@ String _infoText(String key, _Lang l) {
   return info[key]?[l] ?? '';
 }
 
-// ─── Widget ──────────────────────────────────────────────────────────────────
 
 class FloatingChatbot extends StatefulWidget {
   const FloatingChatbot({super.key});
@@ -187,7 +182,6 @@ class _FloatingChatbotState extends State<FloatingChatbot>
   }
 }
 
-// ─── Chat Sheet ──────────────────────────────────────────────────────────────
 
 class _ChatSheet extends StatefulWidget {
   const _ChatSheet();
@@ -213,17 +207,15 @@ class _ChatSheetState extends State<_ChatSheet> {
   }
 
   void _onOptionTapped(_ChatOption option) {
-    // Disable options on last message
+    
     final last = _messages.last;
     if (last.options == null) return;
 
-    // Add user message
     setState(() {
       _messages.add(_ChatMessage(sender: _Sender.user, text: option.label));
     });
     _scrollToBottom();
 
-    // Handle the action
     Future.delayed(const Duration(milliseconds: 400), () {
       if (!mounted) return;
       _handleAction(option.value);
@@ -311,7 +303,7 @@ class _ChatSheetState extends State<_ChatSheet> {
               },
             ),
           ),
-          // Bottom date label
+         
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
             child: Text(
@@ -408,7 +400,7 @@ class _ChatSheetState extends State<_ChatSheet> {
           Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              // Bot avatar
+             
               Container(
                 width: 30,
                 height: 30,
@@ -481,7 +473,7 @@ class _ChatSheetState extends State<_ChatSheet> {
                   fontSize: 13.5, color: Colors.white, height: 1.4),
             ),
           ),
-        // Options (only on last bot message)
+       
         if (isBot && msg.options != null && showOptions)
           Padding(
             padding: const EdgeInsets.only(left: 38, top: 6, bottom: 10),
@@ -503,7 +495,6 @@ class _ChatSheetState extends State<_ChatSheet> {
   }
 }
 
-// ─── Option chip ─────────────────────────────────────────────────────────────
 
 class _OptionChip extends StatefulWidget {
   final String label;

@@ -336,7 +336,7 @@ class _SigninScreenState extends State<SigninScreen> {
                 ),
                 const SizedBox(height: 40),
                 const Text(
-                  'Sign in',
+                  'Planned Event Sign in',
                   style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),

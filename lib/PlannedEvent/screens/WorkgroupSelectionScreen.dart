@@ -236,6 +236,20 @@ class _WorkgroupSelectionScreenState extends State<WorkgroupSelectionScreen> {
                               ),
                             )
                           else ...[
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Padding(
+                                padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
+                                child: Text(
+                                  'Work Group',
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
                             // Dropdown Card
                             Container(
                               decoration: BoxDecoration(
@@ -251,11 +265,8 @@ class _WorkgroupSelectionScreenState extends State<WorkgroupSelectionScreen> {
                               ),
                               child: DropdownButtonFormField2<WorkGroup>(
                                 decoration: InputDecoration(
-                                  labelText: 'Work Group',
-                                  labelStyle: const TextStyle(
-                                    color: Color.fromARGB(226, 16, 37, 89),
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  filled: true,
+                                  fillColor: Colors.white,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(12),
                                     borderSide: const BorderSide(

@@ -204,6 +204,20 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                                 textAlign: TextAlign.center,
                               ),
                             ),
+                          const Align(
+                            alignment: Alignment.centerLeft,
+                            child: Padding(
+                              padding: EdgeInsets.only(left: 4.0, bottom: 8.0),
+                              child: Text(
+                                'Select Role',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
                           Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
@@ -211,7 +225,8 @@ class _RoleSelectionScreenState extends State<RoleSelectionScreen> {
                             ),
                             child: DropdownButtonFormField2<UserRole>(
                               decoration: InputDecoration(
-                                labelText: 'Select Role',
+                                filled: true,
+                                fillColor: Colors.white,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                 ),

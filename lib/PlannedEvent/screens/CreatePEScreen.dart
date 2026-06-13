@@ -524,7 +524,7 @@ class _CreatePEScreenState extends State<CreatePEScreen> {
     }
   }
 
-  // Controllers
+  
   final _peNumberCtrl = TextEditingController();
   final _peTitleCtrl = TextEditingController();
   final _peActivityCtrl = TextEditingController();
@@ -605,7 +605,7 @@ class _CreatePEScreenState extends State<CreatePEScreen> {
     if (!mounted) return;
 
     if (result['success'] == true) {
-      // Show success dialog then go to PE List
+   
       await showDialog(
         context: context,
         barrierDismissible: false,
@@ -642,7 +642,7 @@ class _CreatePEScreenState extends State<CreatePEScreen> {
                 width: double.infinity,
                 child: ElevatedButton.icon(
                   onPressed: () {
-                    Navigator.of(context).pop(); // close dialog
+                    Navigator.of(context).pop();
                     Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
@@ -665,8 +665,8 @@ class _CreatePEScreenState extends State<CreatePEScreen> {
               const SizedBox(height: 8),
               TextButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // close dialog
-                  // Reset form for another entry
+                  Navigator.of(context).pop(); 
+             
                   _formKey.currentState?.reset();
                   _peNumberCtrl.clear();
                   _peTitleCtrl.clear();

@@ -98,7 +98,7 @@ class _CreateRoleScreenState extends State<CreateRoleScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Header
+                 
                     Container(
                       width: double.infinity,
                       decoration: BoxDecoration(
@@ -124,7 +124,6 @@ class _CreateRoleScreenState extends State<CreateRoleScreen> {
                     ),
                     const SizedBox(height: 24),
 
-                    // Role Name
                     const Text('Role Name',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -148,7 +147,6 @@ class _CreateRoleScreenState extends State<CreateRoleScreen> {
                     ),
                     const SizedBox(height: 20),
 
-                    // Role Level
                     const Text('Role Level',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -194,7 +192,7 @@ class _CreateRoleScreenState extends State<CreateRoleScreen> {
                     ),
                     const SizedBox(height: 30),
 
-                    // Permissions Section
+                
                     const Text('Permissions',
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -307,7 +305,6 @@ class _CreateRoleScreenState extends State<CreateRoleScreen> {
                     ),
                     const SizedBox(height: 32),
 
-                    // Buttons
                     Wrap(
                       spacing: 16,
                       runSpacing: 16,

@@ -1192,7 +1192,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:shimmer/shimmer.dart';
 import '../model/AreaNetworkEngineer.dart';
 import '../service/AreaNetworkEngineerService.dart';
-import 'DashboardHome.dart'; // Adjust this import based on your actual DashboardHome location
+import 'DashboardHome.dart'; 
 
 class AreaNetworkEngineerScreen extends StatefulWidget {
   final int userId;
@@ -1338,7 +1338,7 @@ class _AreaNetworkEngineerScreenState extends State<AreaNetworkEngineerScreen> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Left Side: Search (if not adding mapping)
+               
                 if (!_isAddingMapping)
                   _isSearchBarExpanded
                       ? SizedBox(
@@ -1373,13 +1373,12 @@ class _AreaNetworkEngineerScreenState extends State<AreaNetworkEngineerScreen> {
                               setState(() => _isSearchBarExpanded = true),
                         )
                 else
-                  const SizedBox(), // Spacer if adding mapping
+                  const SizedBox(), 
 
-                // Right Side: Total Records and Add Button
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    // Total Records
+                  
                     Container(
                       padding: const EdgeInsets.symmetric(
                           horizontal: 12, vertical: 8),
@@ -1739,12 +1738,12 @@ class _AreaNetworkEngineerScreenState extends State<AreaNetworkEngineerScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Form Header
+              
               Container(
                 padding:
                     const EdgeInsets.symmetric(vertical: 14, horizontal: 16),
                 decoration: const BoxDecoration(
-                  color: Color(0xFF2E7D32), // Green from image
+                  color: Color(0xFF2E7D32), 
                   borderRadius: BorderRadius.only(
                     topLeft: Radius.circular(10),
                     topRight: Radius.circular(10),
