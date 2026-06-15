@@ -107,7 +107,8 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
       if (mounted) {
         setState(() => _isSubmitting = false);
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Network error: $e'), backgroundColor: Colors.red),
+          SnackBar(
+              content: Text('Network error: $e'), backgroundColor: Colors.red),
         );
       }
       return;
@@ -115,10 +116,10 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
 
     if (mounted) {
       setState(() => _isSubmitting = false);
-      
+
       bool isSuccess = false;
       String errorMsg = 'Failed to save notice';
-      
+
       if (success is bool) {
         isSuccess = success;
       } else if (success is Map) {
@@ -132,10 +133,10 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
           } else if (success['title'] != null) {
             errorMsg = success['title'];
             if (success['errors'] != null) {
-              errorMsg += ': ' + success['errors'].toString();
+              errorMsg += ': ${success['errors']}';
             }
           } else {
-            errorMsg = 'Failed to save notice: ' + success.toString();
+            errorMsg = 'Failed to save notice: $success';
           }
         }
       }
@@ -155,13 +156,12 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
     final isEdit = widget.notice != null;
 
     return Scaffold(
-      
       appBar: AppBar(
         title: Text(
           isEdit ? 'Update Notice' : 'Create New Notice',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.bold, color: Colors.white),
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.bold, color: Colors.white),
         ),
-        
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
@@ -169,7 +169,8 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
         padding: const EdgeInsets.all(16),
         child: Card(
           elevation: 4,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
             padding: const EdgeInsets.all(24),
             child: Form(
@@ -181,12 +182,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                   const SizedBox(height: 8),
                   _buildTextField(_titleController, 'Enter notice title', 1),
                   const SizedBox(height: 20),
-                  
                   _buildLabel('Notice Message *'),
                   const SizedBox(height: 8),
-                  _buildTextField(_messageController, 'Enter notice message', 5),
+                  _buildTextField(
+                      _messageController, 'Enter notice message', 5),
                   const SizedBox(height: 20),
-                  
                   Row(
                     children: [
                       Expanded(
@@ -195,7 +195,8 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                           children: [
                             _buildLabel('Start Date *'),
                             const SizedBox(height: 8),
-                            _buildDatePickerField(_startDate, () => _selectDate(context, true)),
+                            _buildDatePickerField(
+                                _startDate, () => _selectDate(context, true)),
                           ],
                         ),
                       ),
@@ -206,50 +207,58 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                           children: [
                             _buildLabel('End Date (Optional)'),
                             const SizedBox(height: 8),
-                            _buildDatePickerField(_expireDate, () => _selectDate(context, false), isOptional: true),
+                            _buildDatePickerField(
+                                _expireDate, () => _selectDate(context, false),
+                                isOptional: true),
                           ],
                         ),
                       ),
                     ],
                   ),
                   const SizedBox(height: 20),
-                  
                   Row(
                     children: [
                       Expanded(
                         child: CheckboxListTile(
-                          title: const Text('Pin this notice', style: TextStyle(fontSize: 13)),
-                          subtitle: const Text('Pinned notices appear at the top', style: TextStyle(fontSize: 11)),
+                          title: const Text('Pin this notice',
+                              style: TextStyle(fontSize: 13)),
+                          subtitle: const Text(
+                              'Pinned notices appear at the top',
+                              style: TextStyle(fontSize: 11)),
                           value: _isPinned,
-                          onChanged: (val) => setState(() => _isPinned = val ?? false),
+                          onChanged: (val) =>
+                              setState(() => _isPinned = val ?? false),
                           controlAffinity: ListTileControlAffinity.leading,
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
                       Expanded(
                         child: CheckboxListTile(
-                          title: const Text('Active', style: TextStyle(fontSize: 13)),
-                          subtitle: const Text('Active notices are visible to users', style: TextStyle(fontSize: 11)),
+                          title: const Text('Active',
+                              style: TextStyle(fontSize: 13)),
+                          subtitle: const Text(
+                              'Active notices are visible to users',
+                              style: TextStyle(fontSize: 11)),
                           value: _isActive,
-                          onChanged: (val) => setState(() => _isActive = val ?? true),
+                          onChanged: (val) =>
+                              setState(() => _isActive = val ?? true),
                           controlAffinity: ListTileControlAffinity.leading,
                           contentPadding: EdgeInsets.zero,
                         ),
                       ),
                     ],
                   ),
-                  
                   const SizedBox(height: 32),
                   const Divider(),
                   const SizedBox(height: 16),
-                  
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       OutlinedButton(
                         onPressed: () => Navigator.pop(context),
                         style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 24, vertical: 12),
                         ),
                         child: const Text('Back to List'),
                       ),
@@ -258,11 +267,18 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.blue,
                           foregroundColor: Colors.white,
-                          padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 12),
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 32, vertical: 12),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(6)),
                         ),
                         child: _isSubmitting
-                            ? SizedBox(height: 20, width: 20, child: CircularProgressIndicator(color: Theme.of(context).cardColor, strokeWidth: 2))
+                            ? SizedBox(
+                                height: 20,
+                                width: 20,
+                                child: CircularProgressIndicator(
+                                    color: Theme.of(context).cardColor,
+                                    strokeWidth: 2))
                             : Text(isEdit ? 'Update Notice' : 'Create Notice'),
                       ),
                     ],
@@ -287,22 +303,26 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
     );
   }
 
-  Widget _buildTextField(TextEditingController controller, String hint, int maxLines) {
+  Widget _buildTextField(
+      TextEditingController controller, String hint, int maxLines) {
     return TextFormField(
       controller: controller,
       maxLines: maxLines,
       decoration: InputDecoration(
         hintText: hint,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
         border: OutlineInputBorder(borderRadius: BorderRadius.circular(6)),
         filled: true,
         fillColor: Colors.white,
       ),
-      validator: (value) => value == null || value.isEmpty ? 'Field required' : null,
+      validator: (value) =>
+          value == null || value.isEmpty ? 'Field required' : null,
     );
   }
 
-  Widget _buildDatePickerField(DateTime? date, VoidCallback onTap, {bool isOptional = false}) {
+  Widget _buildDatePickerField(DateTime? date, VoidCallback onTap,
+      {bool isOptional = false}) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -316,8 +336,11 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              date != null ? intl.DateFormat('MM/dd/yyyy').format(date) : (isOptional ? 'mm/dd/yyyy' : ''),
-              style: TextStyle(color: date != null ? Colors.black : Colors.grey),
+              date != null
+                  ? intl.DateFormat('MM/dd/yyyy').format(date)
+                  : (isOptional ? 'mm/dd/yyyy' : ''),
+              style:
+                  TextStyle(color: date != null ? Colors.black : Colors.grey),
             ),
             const Icon(Icons.calendar_today, size: 18, color: Colors.grey),
           ],
@@ -326,4 +349,3 @@ class _AddNoticeScreenState extends State<AddNoticeScreen> {
     );
   }
 }
-

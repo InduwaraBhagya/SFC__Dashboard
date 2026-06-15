@@ -41,7 +41,6 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         title: Text(
           'Notice Board',
@@ -54,7 +53,6 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
           icon: const Icon(Icons.arrow_back, color: Color(0xFF1A237E)),
           onPressed: widget.onBack,
         ),
-        
         elevation: 0,
         actions: [
           Padding(
@@ -65,7 +63,8 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.blue,
                   foregroundColor: Colors.white,
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(6),
                   ),
@@ -207,9 +206,11 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
   Widget _buildNoticeCard(Map<String, dynamic> notice) {
     String dateRange = '';
     if (notice['startDate'] != null) {
-      dateRange = DateFormat('MMM dd').format(DateTime.parse(notice['startDate']));
+      dateRange =
+          DateFormat('MMM dd').format(DateTime.parse(notice['startDate']));
       if (notice['expireDate'] != null) {
-        dateRange += ' - ' + DateFormat('MMM dd').format(DateTime.parse(notice['expireDate']));
+        dateRange +=
+            ' - ${DateFormat('MMM dd').format(DateTime.parse(notice['expireDate']))}';
       }
     }
 
@@ -253,7 +254,8 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                       itemBuilder: (context) => [
                         const PopupMenuItem(
                           value: 'view',
-                          child: Text('View Details', style: TextStyle(fontSize: 13)),
+                          child: Text('View Details',
+                              style: TextStyle(fontSize: 13)),
                         ),
                         const PopupMenuItem(
                           value: 'edit',
@@ -262,7 +264,9 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                         PopupMenuItem(
                           value: 'pin',
                           child: Text(
-                            notice['isPinned'] == true ? 'Unpin Notice' : 'Pin Notice',
+                            notice['isPinned'] == true
+                                ? 'Unpin Notice'
+                                : 'Pin Notice',
                             style: const TextStyle(fontSize: 13),
                           ),
                         ),
@@ -322,7 +326,8 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
                     bottomRight: Radius.circular(4),
                   ),
                 ),
-                child: const Icon(Icons.push_pin, size: 10, color: Colors.white),
+                child:
+                    const Icon(Icons.push_pin, size: 10, color: Colors.white),
               ),
             ),
         ],
@@ -342,9 +347,10 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
         userName,
       );
       bool isSuccess = false;
-      if (success is bool) isSuccess = success;
-      else if (success is Map) isSuccess = success['success'] == true;
-      
+      if (success is bool) {
+        isSuccess = success;
+      } else if (success is Map) isSuccess = success['success'] == true;
+
       if (isSuccess) _fetchNotices();
     } else if (action == 'delete') {
       final confirm = await showDialog<bool>(
@@ -353,7 +359,9 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
           title: const Text('Delete Notice'),
           content: const Text('Are you sure you want to delete this notice?'),
           actions: [
-            TextButton(onPressed: () => Navigator.pop(context, false), child: const Text('Cancel')),
+            TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Cancel')),
             TextButton(
               onPressed: () => Navigator.pop(context, true),
               style: TextButton.styleFrom(foregroundColor: Colors.red),
@@ -364,11 +372,13 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
       );
 
       if (confirm == true) {
-        final success = await _noticesService.deleteNotice(notice['id'], userId, userName);
+        final success =
+            await _noticesService.deleteNotice(notice['id'], userId, userName);
         bool isSuccess = false;
-        if (success is bool) isSuccess = success;
-        else if (success is Map) isSuccess = success['success'] == true;
-        
+        if (success is bool) {
+          isSuccess = success;
+        } else if (success is Map) isSuccess = success['success'] == true;
+
         if (isSuccess) _fetchNotices();
       }
     } else if (action == 'edit') {
@@ -391,4 +401,3 @@ class _NoticeBoardScreenState extends State<NoticeBoardScreen> {
     _fetchNotices();
   }
 }
-

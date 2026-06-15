@@ -9,7 +9,8 @@ class DataManagementScreen extends StatefulWidget {
   final Map<String, dynamic> user;
   final VoidCallback onBack;
 
-  const DataManagementScreen({super.key, required this.user, required this.onBack});
+  const DataManagementScreen(
+      {super.key, required this.user, required this.onBack});
 
   @override
   State<DataManagementScreen> createState() => _DataManagementScreenState();
@@ -51,7 +52,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
 
   Future<void> _findMappedEntity() async {
     if (_selectedEntity == null || _selectedRecord == null) return;
-    
+
     setState(() {
       _isSearching = true;
       _recordDetails = null;
@@ -59,11 +60,12 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
 
     try {
       final entityName = _selectedEntity!.split(' (').first.trim();
-      final String recordId = _selectedRecord is Map 
-          ? _selectedRecord['id'].toString() 
+      final String recordId = _selectedRecord is Map
+          ? _selectedRecord['id'].toString()
           : _selectedRecord.toString().split(':').last.trim();
-      
-      final details = await _dataManagementService.fetchRecordDetails(entityName, recordId);
+
+      final details =
+          await _dataManagementService.fetchRecordDetails(entityName, recordId);
       setState(() {
         _recordDetails = details;
       });
@@ -81,7 +83,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
   Future<void> _loadRecordsForEntity(String entityString) async {
     // Extract actual entity name (e.g., "Divisions (Source)" -> "Divisions")
     final entityName = entityString.split(' (').first.trim();
-    
+
     setState(() {
       _isLoadingRecords = true;
       _availableRecords = [];
@@ -89,7 +91,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
     });
 
     try {
-      final records = await _dataManagementService.fetchTableRecords(entityName);
+      final records =
+          await _dataManagementService.fetchTableRecords(entityName);
       setState(() {
         _availableRecords = records;
         if (records.isNotEmpty) {
@@ -118,14 +121,14 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
       _recordDetails = null;
       return;
     }
-    
+
     final regex = RegExp(r'\((.*?)\s*\?\s*(.*?)\)');
     final match = regex.firstMatch(relationship);
-    
+
     if (match != null && match.groupCount >= 2) {
       _sourceEntity = match.group(1)?.trim();
       _targetEntity = match.group(2)?.trim();
-      
+
       if (_sourceEntity == '?') _sourceEntity = 'Unknown';
       if (_targetEntity == '?') _targetEntity = 'Unknown';
     } else {
@@ -217,7 +220,10 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
       ),
       child: Text(
         text,
-        style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontSize: 11, fontWeight: FontWeight.w600),
+        style: GoogleFonts.poppins(
+            color: Theme.of(context).cardColor,
+            fontSize: 11,
+            fontWeight: FontWeight.w600),
       ),
     );
   }
@@ -225,12 +231,12 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       appBar: AppBar(
         elevation: 0,
         backgroundColor: Colors.transparent,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Color(0xFF1A237E), size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: Color(0xFF1A237E), size: 20),
           onPressed: widget.onBack,
         ),
         title: Text(
@@ -250,7 +256,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
             // Header Section
             Row(
               children: [
-                Icon(Icons.storage_rounded, size: 36, color: Colors.grey.shade800),
+                Icon(Icons.storage_rounded,
+                    size: 36, color: Colors.grey.shade800),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Column(
@@ -277,7 +284,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
               ],
             ),
             const SizedBox(height: 24),
-            
+
             // Buttons Section
             Wrap(
               spacing: 12,
@@ -288,16 +295,23 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ManageEntitiesScreen(user: widget.user),
+                        builder: (context) =>
+                            ManageEntitiesScreen(user: widget.user),
                       ),
                     );
                   },
-                  icon: Icon(Icons.table_chart, color: Theme.of(context).cardColor, size: 18),
-                  label: Text('Manage Entities', style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.w600)),
+                  icon: Icon(Icons.table_chart,
+                      color: Theme.of(context).cardColor, size: 18),
+                  label: Text('Manage Entities',
+                      style: GoogleFonts.poppins(
+                          color: Theme.of(context).cardColor,
+                          fontWeight: FontWeight.w600)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color.fromARGB(255, 7, 69, 156),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 ElevatedButton.icon(
@@ -305,16 +319,23 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => SearchDataScreen(user: widget.user),
+                        builder: (context) =>
+                            SearchDataScreen(user: widget.user),
                       ),
                     );
                   },
-                  icon: Icon(Icons.search, color: Theme.of(context).cardColor, size: 18),
-                  label: Text('Search Data', style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.w600)),
+                  icon: Icon(Icons.search,
+                      color: Theme.of(context).cardColor, size: 18),
+                  label: Text('Search Data',
+                      style: GoogleFonts.poppins(
+                          color: Theme.of(context).cardColor,
+                          fontWeight: FontWeight.w600)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF07459C),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
                 ElevatedButton.icon(
@@ -322,16 +343,23 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => ManageRelationshipsScreen(user: widget.user),
+                        builder: (context) =>
+                            ManageRelationshipsScreen(user: widget.user),
                       ),
                     );
                   },
-                  icon: Icon(Icons.account_tree_outlined, color: Theme.of(context).cardColor, size: 18),
-                  label: Text('Manage Relationships', style: GoogleFonts.poppins(color: Theme.of(context).cardColor, fontWeight: FontWeight.w600)),
+                  icon: Icon(Icons.account_tree_outlined,
+                      color: Theme.of(context).cardColor, size: 18),
+                  label: Text('Manage Relationships',
+                      style: GoogleFonts.poppins(
+                          color: Theme.of(context).cardColor,
+                          fontWeight: FontWeight.w600)),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF07459C),
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
                   ),
                 ),
               ],
@@ -357,7 +385,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                 children: [
                   // Card Header
                   Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 12),
                     decoration: const BoxDecoration(
                       color: Color(0xFF2196F3),
                       borderRadius: BorderRadius.only(
@@ -367,7 +396,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                     ),
                     child: Row(
                       children: [
-                        Icon(Icons.person_search, color: Theme.of(context).cardColor, size: 20),
+                        Icon(Icons.person_search,
+                            color: Theme.of(context).cardColor, size: 20),
                         const SizedBox(width: 8),
                         Text(
                           'Find Mapped Entity',
@@ -380,7 +410,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                       ],
                     ),
                   ),
-                  
+
                   // Card Body
                   Padding(
                     padding: const EdgeInsets.all(20),
@@ -389,7 +419,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                       children: [
                         Row(
                           children: [
-                            const Icon(Icons.search, color: Color(0xFF2196F3), size: 16),
+                            const Icon(Icons.search,
+                                color: Color(0xFF2196F3), size: 16),
                             const SizedBox(width: 8),
                             Text(
                               'Search Parameters',
@@ -422,22 +453,28 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                               isExpanded: true,
                               hint: Text(
                                 '-- Select a Relationship --',
-                                style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                                style: GoogleFonts.poppins(
+                                    color: Colors.grey.shade600),
                               ),
                               value: _selectedRelationship,
-                              icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                              icon: const Icon(Icons.keyboard_arrow_down,
+                                  color: Colors.grey),
                               onChanged: (String? newValue) {
                                 setState(() {
                                   _selectedRelationship = newValue;
                                   _updateEntitiesFromRelationship(newValue);
                                 });
                               },
-                              items: _relationships.map<DropdownMenuItem<String>>((String value) {
+                              items: _relationships
+                                  .map<DropdownMenuItem<String>>(
+                                      (String value) {
                                 return DropdownMenuItem<String>(
                                   value: value,
                                   child: Text(
                                     value,
-                                    style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey.shade800),
+                                    style: GoogleFonts.poppins(
+                                        fontSize: 14,
+                                        color: Colors.grey.shade800),
                                     overflow: TextOverflow.ellipsis,
                                   ),
                                 );
@@ -445,7 +482,9 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                             ),
                           ),
                         ),
-                        if (_selectedRelationship != null && _sourceEntity != null && _targetEntity != null) ...[
+                        if (_selectedRelationship != null &&
+                            _sourceEntity != null &&
+                            _targetEntity != null) ...[
                           const SizedBox(height: 16),
                           Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -464,9 +503,11 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                     ),
                                     const SizedBox(height: 8),
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 16),
                                       decoration: BoxDecoration(
-                                        border: Border.all(color: Colors.grey.shade300),
+                                        border: Border.all(
+                                            color: Colors.grey.shade300),
                                         borderRadius: BorderRadius.circular(8),
                                       ),
                                       child: DropdownButtonHideUnderline(
@@ -474,10 +515,13 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                           isExpanded: true,
                                           hint: Text(
                                             '-- Select Entity --',
-                                            style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                                            style: GoogleFonts.poppins(
+                                                color: Colors.grey.shade600),
                                           ),
                                           value: _selectedEntity,
-                                          icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
+                                          icon: const Icon(
+                                              Icons.keyboard_arrow_down,
+                                              color: Colors.grey),
                                           onChanged: (String? newValue) {
                                             setState(() {
                                               _selectedEntity = newValue;
@@ -486,25 +530,70 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                               _loadRecordsForEntity(newValue);
                                             }
                                           },
-                                          items: _isLoadingEntities 
-                                            ? [DropdownMenuItem(value: '', child: Text('Loading...', style: GoogleFonts.poppins(fontSize: 14)))]
-                                            : [
-                                                DropdownMenuItem<String>(
-                                                  value: '$_sourceEntity (Source)',
-                                                  child: Text('$_sourceEntity (Source)', style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey.shade800), overflow: TextOverflow.ellipsis, maxLines: 1),
-                                                ),
-                                                DropdownMenuItem<String>(
-                                                  value: '$_targetEntity (Target)',
-                                                  child: Text('$_targetEntity (Target)', style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey.shade800), overflow: TextOverflow.ellipsis, maxLines: 1),
-                                                ),
-                                                // Also allow picking any other table from the DB
-                                                ..._dbEntities.where((name) => name != _sourceEntity && name != _targetEntity).map((name) {
-                                                  return DropdownMenuItem<String>(
-                                                    value: '$name (Other)',
-                                                    child: Text('$name', style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey.shade800), overflow: TextOverflow.ellipsis, maxLines: 1),
-                                                  );
-                                                }),
-                                              ],
+                                          items: _isLoadingEntities
+                                              ? [
+                                                  DropdownMenuItem(
+                                                      value: '',
+                                                      child: Text('Loading...',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize:
+                                                                      14)))
+                                                ]
+                                              : [
+                                                  DropdownMenuItem<String>(
+                                                    value:
+                                                        '$_sourceEntity (Source)',
+                                                    child: Text(
+                                                        '$_sourceEntity (Source)',
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade800),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1),
+                                                  ),
+                                                  DropdownMenuItem<String>(
+                                                    value:
+                                                        '$_targetEntity (Target)',
+                                                    child: Text(
+                                                        '$_targetEntity (Target)',
+                                                        style:
+                                                            GoogleFonts.poppins(
+                                                                fontSize: 14,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade800),
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                        maxLines: 1),
+                                                  ),
+                                                  // Also allow picking any other table from the DB
+                                                  ..._dbEntities
+                                                      .where((name) =>
+                                                          name !=
+                                                              _sourceEntity &&
+                                                          name != _targetEntity)
+                                                      .map((name) {
+                                                    return DropdownMenuItem<
+                                                        String>(
+                                                      value: '$name (Other)',
+                                                      child: Text(name,
+                                                          style:
+                                                              GoogleFonts.poppins(
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade800),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          maxLines: 1),
+                                                    );
+                                                  }),
+                                                ],
                                         ),
                                       ),
                                     ),
@@ -515,7 +604,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                 const SizedBox(width: 16),
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         'Of: (Select Record)',
@@ -527,47 +617,74 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                       ),
                                       const SizedBox(height: 8),
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 16),
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.grey.shade300),
-                                          borderRadius: BorderRadius.circular(8),
+                                          border: Border.all(
+                                              color: Colors.grey.shade300),
+                                          borderRadius:
+                                              BorderRadius.circular(8),
                                         ),
-                                        child: _isLoadingRecords 
-                                          ? const Padding(
-                                              padding: EdgeInsets.symmetric(vertical: 12),
-                                              child: SizedBox(
-                                                height: 20, 
-                                                width: 20, 
-                                                child: CircularProgressIndicator(strokeWidth: 2)
-                                              ),
-                                            )
-                                          : DropdownButtonHideUnderline(
-                                              child: DropdownButton<dynamic>(
-                                                isExpanded: true,
-                                                hint: Text(
-                                                  _availableRecords.isEmpty ? 'No Records' : '-- Select --',
-                                                  style: GoogleFonts.poppins(color: Colors.grey.shade600),
+                                        child: _isLoadingRecords
+                                            ? const Padding(
+                                                padding: EdgeInsets.symmetric(
+                                                    vertical: 12),
+                                                child: SizedBox(
+                                                    height: 20,
+                                                    width: 20,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                            strokeWidth: 2)),
+                                              )
+                                            : DropdownButtonHideUnderline(
+                                                child: DropdownButton<dynamic>(
+                                                  isExpanded: true,
+                                                  hint: Text(
+                                                    _availableRecords.isEmpty
+                                                        ? 'No Records'
+                                                        : '-- Select --',
+                                                    style: GoogleFonts.poppins(
+                                                        color: Colors
+                                                            .grey.shade600),
+                                                  ),
+                                                  value: _selectedRecord,
+                                                  icon: const Icon(
+                                                      Icons.keyboard_arrow_down,
+                                                      color: Colors.grey),
+                                                  onChanged:
+                                                      _availableRecords.isEmpty
+                                                          ? null
+                                                          : (dynamic newValue) {
+                                                              setState(() {
+                                                                _selectedRecord =
+                                                                    newValue;
+                                                              });
+                                                            },
+                                                  items: _availableRecords
+                                                      .map((e) {
+                                                    return DropdownMenuItem<
+                                                        dynamic>(
+                                                      value: e,
+                                                      child: Text(
+                                                          (e is Map
+                                                                  ? e['displayName']
+                                                                      ?.toString()
+                                                                  : e
+                                                                      .toString()) ??
+                                                              'Unknown',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontSize: 14,
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade800),
+                                                          overflow: TextOverflow
+                                                              .ellipsis),
+                                                    );
+                                                  }).toList(),
                                                 ),
-                                                value: _selectedRecord,
-                                                icon: const Icon(Icons.keyboard_arrow_down, color: Colors.grey),
-                                                onChanged: _availableRecords.isEmpty ? null : (dynamic newValue) {
-                                                  setState(() {
-                                                    _selectedRecord = newValue;
-                                                  });
-                                                },
-                                                items: _availableRecords.map((e) {
-                                                  return DropdownMenuItem<dynamic>(
-                                                    value: e,
-                                                    child: Text(
-                                                      (e is Map ? e['displayName']?.toString() : e.toString()) ?? 'Unknown', 
-                                                      style: GoogleFonts.poppins(fontSize: 14, color: Colors.grey.shade800), 
-                                                      overflow: TextOverflow.ellipsis
-                                                    ),
-                                                  );
-                                                }).toList(),
                                               ),
-                                            ),
-                                  ),
+                                      ),
                                     ],
                                   ),
                                 ),
@@ -575,9 +692,10 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                             ],
                           ),
                         ],
-                        
+
                         // Selected Primary Key Box & Submit Button
-                        if (_selectedEntity != null && _selectedRecord != null) ...[
+                        if (_selectedEntity != null &&
+                            _selectedRecord != null) ...[
                           const SizedBox(height: 16),
                           Container(
                             width: double.infinity,
@@ -599,13 +717,18 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                 ),
                                 const SizedBox(height: 8),
                                 Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 6),
                                   decoration: BoxDecoration(
                                     color: const Color(0xFF1565C0), // Dark blue
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: Text(
-                                    (_selectedRecord is Map ? _selectedRecord['id'] : _selectedRecord)?.toString() ?? 'N/A',
+                                    (_selectedRecord is Map
+                                                ? _selectedRecord['id']
+                                                : _selectedRecord)
+                                            ?.toString() ??
+                                        'N/A',
                                     style: GoogleFonts.poppins(
                                       color: Theme.of(context).cardColor,
                                       fontSize: 12,
@@ -620,12 +743,22 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                           SizedBox(
                             width: double.infinity,
                             child: ElevatedButton.icon(
-                              onPressed: _isSearching ? null : _findMappedEntity,
-                              icon: _isSearching 
-                                  ? SizedBox(width: 20, height: 20, child: CircularProgressIndicator(color: Theme.of(context).cardColor, strokeWidth: 2))
-                                  : Icon(Icons.search, color: Theme.of(context).cardColor, size: 20),
+                              onPressed:
+                                  _isSearching ? null : _findMappedEntity,
+                              icon: _isSearching
+                                  ? SizedBox(
+                                      width: 20,
+                                      height: 20,
+                                      child: CircularProgressIndicator(
+                                          color: Theme.of(context).cardColor,
+                                          strokeWidth: 2))
+                                  : Icon(Icons.search,
+                                      color: Theme.of(context).cardColor,
+                                      size: 20),
                               label: Text(
-                                _isSearching ? 'Searching...' : 'Find Mapped Entity',
+                                _isSearching
+                                    ? 'Searching...'
+                                    : 'Find Mapped Entity',
                                 style: GoogleFonts.poppins(
                                   color: Theme.of(context).cardColor,
                                   fontWeight: FontWeight.bold,
@@ -633,8 +766,10 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                 ),
                               ),
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color.fromARGB(255, 7, 69, 156),
-                                padding: const EdgeInsets.symmetric(vertical: 16),
+                                backgroundColor:
+                                    const Color.fromARGB(255, 7, 69, 156),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 16),
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 ),
@@ -644,12 +779,13 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                           ),
                         ],
                         const SizedBox(height: 24),
-                        
+
                         // Result UI
                         if (_recordDetails != null) ...[
                           Row(
                             children: [
-                              const Icon(Icons.check_circle_outline, color: Color(0xFF4CAF50), size: 20),
+                              const Icon(Icons.check_circle_outline,
+                                  color: Color(0xFF4CAF50), size: 20),
                               const SizedBox(width: 8),
                               Text(
                                 'Result',
@@ -667,7 +803,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                             decoration: BoxDecoration(
                               color: Theme.of(context).cardColor,
                               borderRadius: BorderRadius.circular(8),
-                              border: Border.all(color: const Color(0xFF81C784)),
+                              border:
+                                  Border.all(color: const Color(0xFF81C784)),
                             ),
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
@@ -675,7 +812,8 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                 // Header
                                 Container(
                                   width: double.infinity,
-                                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 16, vertical: 10),
                                   decoration: const BoxDecoration(
                                     color: Color(0xFF2E7D32),
                                     borderRadius: BorderRadius.only(
@@ -703,31 +841,65 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                             child: Container(
                                               padding: const EdgeInsets.all(12),
                                               decoration: BoxDecoration(
-                                                color: Theme.of(context).cardColor,
-                                                borderRadius: BorderRadius.circular(6),
-                                                border: Border.all(color: Colors.grey.shade300),
+                                                color:
+                                                    Theme.of(context).cardColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                border: Border.all(
+                                                    color:
+                                                        Colors.grey.shade300),
                                               ),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      Icon(Icons.arrow_right_alt, color: Colors.grey.shade400, size: 16),
+                                                      Icon(
+                                                          Icons.arrow_right_alt,
+                                                          color: Colors
+                                                              .grey.shade400,
+                                                          size: 16),
                                                       const SizedBox(width: 4),
-                                                      Text('From Entity', style: GoogleFonts.poppins(color: Colors.grey.shade600, fontSize: 12)),
+                                                      Text('From Entity',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade600,
+                                                                  fontSize:
+                                                                      12)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 6),
                                                   Text(
-                                                    _selectedEntity!.split(' (').first.trim().toUpperCase(),
-                                                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey.shade800),
+                                                    _selectedEntity!
+                                                        .split(' (')
+                                                        .first
+                                                        .trim()
+                                                        .toUpperCase(),
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors
+                                                            .grey.shade800),
                                                   ),
                                                   const SizedBox(height: 8),
                                                   Row(
                                                     children: [
-                                                      _buildTag('Sid: ${_recordDetails!['Sid'] ?? 'N/A'}', Colors.grey.shade600),
+                                                      _buildTag(
+                                                          'Sid: ${_recordDetails!['Sid'] ?? 'N/A'}',
+                                                          Colors.grey.shade600),
                                                       const SizedBox(width: 6),
-                                                      _buildTag((_selectedRecord is Map ? _selectedRecord['displayName'] : _selectedRecord).toString(), Colors.grey.shade600),
+                                                      _buildTag(
+                                                          (_selectedRecord
+                                                                      is Map
+                                                                  ? _selectedRecord[
+                                                                      'displayName']
+                                                                  : _selectedRecord)
+                                                              .toString(),
+                                                          Colors.grey.shade600),
                                                     ],
                                                   ),
                                                 ],
@@ -740,30 +912,59 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                               padding: const EdgeInsets.all(12),
                                               decoration: BoxDecoration(
                                                 color: const Color(0xFFF1F8E9),
-                                                borderRadius: BorderRadius.circular(6),
-                                                border: Border.all(color: const Color(0xFF81C784)),
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                                border: Border.all(
+                                                    color: const Color(
+                                                        0xFF81C784)),
                                               ),
                                               child: Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
                                                   Row(
                                                     children: [
-                                                      const Icon(Icons.check_circle_outline, color: Color(0xFF4CAF50), size: 16),
+                                                      const Icon(
+                                                          Icons
+                                                              .check_circle_outline,
+                                                          color:
+                                                              Color(0xFF4CAF50),
+                                                          size: 16),
                                                       const SizedBox(width: 4),
-                                                      Text('Mapped Entity', style: GoogleFonts.poppins(color: const Color(0xFF4CAF50), fontSize: 12)),
+                                                      Text('Mapped Entity',
+                                                          style: GoogleFonts.poppins(
+                                                              color: const Color(
+                                                                  0xFF4CAF50),
+                                                              fontSize: 12)),
                                                     ],
                                                   ),
                                                   const SizedBox(height: 6),
                                                   Text(
-                                                    _selectedEntity!.contains('Source') ? _targetEntity!.toUpperCase() : _sourceEntity!.toUpperCase(),
-                                                    style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 14, color: Colors.grey.shade900),
+                                                    _selectedEntity!
+                                                            .contains('Source')
+                                                        ? _targetEntity!
+                                                            .toUpperCase()
+                                                        : _sourceEntity!
+                                                            .toUpperCase(),
+                                                    style: GoogleFonts.poppins(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        color: Colors
+                                                            .grey.shade900),
                                                   ),
                                                   const SizedBox(height: 8),
                                                   Row(
                                                     children: [
-                                                      _buildTag('Sid: ${_recordDetails!['Sid'] ?? 'N/A'}', const Color(0xFF2E7D32)),
+                                                      _buildTag(
+                                                          'Sid: ${_recordDetails!['Sid'] ?? 'N/A'}',
+                                                          const Color(
+                                                              0xFF2E7D32)),
                                                       const SizedBox(width: 6),
-                                                      _buildTag('Id: ${_recordDetails!['id'] ?? 'N/A'}', const Color(0xFF2E7D32)),
+                                                      _buildTag(
+                                                          'Id: ${_recordDetails!['id'] ?? 'N/A'}',
+                                                          const Color(
+                                                              0xFF2E7D32)),
                                                     ],
                                                   ),
                                                 ],
@@ -773,59 +974,120 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                                         ],
                                       ),
                                       const SizedBox(height: 16),
-                                      
+
                                       // Details Table
                                       Container(
                                         width: double.infinity,
                                         decoration: BoxDecoration(
-                                          border: Border.all(color: Colors.grey.shade300),
-                                          borderRadius: BorderRadius.circular(6),
+                                          border: Border.all(
+                                              color: Colors.grey.shade300),
+                                          borderRadius:
+                                              BorderRadius.circular(6),
                                         ),
                                         child: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
                                           children: [
                                             Padding(
                                               padding: const EdgeInsets.all(12),
                                               child: Row(
                                                 children: [
-                                                  Icon(Icons.info_outline, color: Colors.grey.shade600, size: 16),
+                                                  Icon(Icons.info_outline,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                      size: 16),
                                                   const SizedBox(width: 6),
                                                   Text(
                                                     'Complete Record Details',
-                                                    style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey.shade700, fontWeight: FontWeight.w500),
+                                                    style: GoogleFonts.poppins(
+                                                        fontSize: 13,
+                                                        color: Colors
+                                                            .grey.shade700,
+                                                        fontWeight:
+                                                            FontWeight.w500),
                                                   ),
                                                 ],
                                               ),
                                             ),
                                             const Divider(height: 1),
                                             Padding(
-                                              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 10),
                                               child: Row(
                                                 children: [
-                                                  Expanded(flex: 2, child: Text('Field', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade800))),
-                                                  Expanded(flex: 3, child: Text('Value', style: GoogleFonts.poppins(fontWeight: FontWeight.bold, fontSize: 13, color: Colors.grey.shade800))),
+                                                  Expanded(
+                                                      flex: 2,
+                                                      child: Text('Field',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 13,
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade800))),
+                                                  Expanded(
+                                                      flex: 3,
+                                                      child: Text('Value',
+                                                          style: GoogleFonts
+                                                              .poppins(
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  fontSize: 13,
+                                                                  color: Colors
+                                                                      .grey
+                                                                      .shade800))),
                                                 ],
                                               ),
                                             ),
-                                            ..._recordDetails!.entries.map((entry) {
-                                              bool isEven = _recordDetails!.keys.toList().indexOf(entry.key) % 2 == 0;
+                                            ..._recordDetails!.entries
+                                                .map((entry) {
+                                              bool isEven = _recordDetails!.keys
+                                                          .toList()
+                                                          .indexOf(entry.key) %
+                                                      2 ==
+                                                  0;
                                               return Container(
-                                                color: isEven ? Colors.grey.shade50 : Colors.white,
-                                                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                                                color: isEven
+                                                    ? Colors.grey.shade50
+                                                    : Colors.white,
+                                                padding:
+                                                    const EdgeInsets.symmetric(
+                                                        horizontal: 16,
+                                                        vertical: 10),
                                                 child: Row(
                                                   children: [
                                                     Expanded(
-                                                      flex: 2, 
-                                                      child: Text(entry.key, style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 13, color: Colors.grey.shade800))
-                                                    ),
+                                                        flex: 2,
+                                                        child: Text(entry.key,
+                                                            style: GoogleFonts.poppins(
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                                fontSize: 13,
+                                                                color: Colors
+                                                                    .grey
+                                                                    .shade800))),
                                                     Expanded(
-                                                      flex: 3, 
-                                                      child: Text(entry.value.toString(), style: GoogleFonts.poppins(fontSize: 13, color: Colors.grey.shade700))
-                                                    ),
+                                                        flex: 3,
+                                                        child: Text(
+                                                            entry.value
+                                                                .toString(),
+                                                            style: GoogleFonts
+                                                                .poppins(
+                                                                    fontSize:
+                                                                        13,
+                                                                    color: Colors
+                                                                        .grey
+                                                                        .shade700))),
                                                   ],
                                                 ),
                                               );
-                                            }).toList(),
+                                            }),
                                           ],
                                         ),
                                       ),
@@ -836,7 +1098,7 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
                             ),
                           ),
                         ],
-                        
+
                         const Divider(),
                       ],
                     ),
@@ -850,4 +1112,3 @@ class _DataManagementScreenState extends State<DataManagementScreen> {
     );
   }
 }
-

@@ -591,7 +591,6 @@ import 'SystemUsersScreen.dart';
 import 'PermissionsScreen.dart';
 import 'RolesScreen.dart';
 import 'FloatingChatbot.dart';
-import '../../OnboardingScreen.dart';
 import 'dart:async';
 import '../service/PEIssueService.dart';
 import '../service/UrgentRecordService.dart';
@@ -705,8 +704,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
       // 1. Fetch urgent records count
       try {
         bool useRealData = false;
-        if (_currentSelectedWorkGroupId != null && _currentSelectedWorkGroupName != null) {
-            useRealData = (_currentSelectedWorkGroupName != 'NET-PROJ_CABLE-ACC' && _currentSelectedWorkGroupName != 'NET-PROJ-ACC-CABLE');
+        if (_currentSelectedWorkGroupId != null &&
+            _currentSelectedWorkGroupName != null) {
+          useRealData =
+              (_currentSelectedWorkGroupName != 'NET-PROJ_CABLE-ACC' &&
+                  _currentSelectedWorkGroupName != 'NET-PROJ-ACC-CABLE');
         }
 
         final urgentResult = await _urgentRecordService.fetchUrgentRecords(
@@ -864,7 +866,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       _pages = _buildPages(filteredWorkgroup);
     });
-    
+
     // Refresh the badge counts based on the new workgroup
     _fetchNotificationCounts();
   }
@@ -876,7 +878,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => WorkgroupSelectionScreen(),
+            builder: (context) => const WorkgroupSelectionScreen(),
           ),
         );
         return false;
@@ -901,7 +903,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WorkgroupSelectionScreen(),
+                  builder: (context) => const WorkgroupSelectionScreen(),
                 ),
               );
             },
@@ -941,13 +943,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: DropdownButton2<int>(
                   value: _currentSelectedWorkGroupId,
                   items: [
-                    DropdownMenuItem<int>(
+                    const DropdownMenuItem<int>(
                       value: null,
                       child: Row(
                         children: [
-                          const Icon(Icons.close, size: 16, color: Colors.grey),
-                          const SizedBox(width: 8),
-                          const Text('All Workgroups'),
+                          Icon(Icons.close, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Text('All Workgroups'),
                         ],
                       ),
                     ),
@@ -964,8 +966,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   Text(workgroup.name),
                                 ],
                               ),
-                            ))
-                        .toList(),
+                            )),
                   ],
                   onChanged: _onWorkGroupSelected,
                   buttonStyleData: const ButtonStyleData(
@@ -1014,10 +1015,14 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     searchMatchFn: (item, searchValue) {
                       if (item.value == null) {
-                        return 'all workgroups'.contains(searchValue.toLowerCase());
+                        return 'all workgroups'
+                            .contains(searchValue.toLowerCase());
                       }
-                      final workgroup = _allWorkGroups.firstWhere((wg) => wg.id == item.value);
-                      return workgroup.name.toLowerCase().contains(searchValue.toLowerCase());
+                      final workgroup = _allWorkGroups
+                          .firstWhere((wg) => wg.id == item.value);
+                      return workgroup.name
+                          .toLowerCase()
+                          .contains(searchValue.toLowerCase());
                     },
                   ),
                   onMenuStateChange: (isOpen) {
@@ -1147,7 +1152,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   ),
                 ),
                 children: [
-
                   ListTile(
                     contentPadding:
                         const EdgeInsets.only(left: 56.0, right: 16.0),

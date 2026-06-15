@@ -5,7 +5,6 @@ import '../service/NotificationService.dart';
 // If these screens don't exist yet, we will just use placeholders for onTap
 import 'SelectWorkgroupScreen.dart';
 import 'NoticeBoardScreen.dart';
-import 'NotificationScreen.dart';
 import '../service/UrgentRecordService.dart';
 import '../model/OLAViolateRecord.dart';
 import '../service/NoticesService.dart';
@@ -210,8 +209,9 @@ class _DashboardHomeState extends State<DashboardHome> {
       children: [
         _buildKPICard('Urgent\nRequests', '${_metrics['urgent']} Tasks',
             const Color(0xFFFFA07A), Icons.warning_rounded, Colors.red, () {
-          if (widget.onNavigate != null)
+          if (widget.onNavigate != null) {
             widget.onNavigate!(2); // Sidebar index for Urgent
+          }
         }),
         _buildKPICard(
             'In Progress',
@@ -219,8 +219,9 @@ class _DashboardHomeState extends State<DashboardHome> {
             const Color(0xFF98FB98),
             Icons.check_circle_outline,
             Colors.teal, () {
-          if (widget.onNavigate != null)
+          if (widget.onNavigate != null) {
             widget.onNavigate!(1); // Sidebar index for Regular
+          }
         }),
         _buildKPICard(
             'OLA Violated',
@@ -228,8 +229,9 @@ class _DashboardHomeState extends State<DashboardHome> {
             const Color(0xFFA9CCE3),
             Icons.access_time_filled,
             Colors.redAccent, () {
-          if (widget.onNavigate != null)
+          if (widget.onNavigate != null) {
             widget.onNavigate!(4); // Sidebar index for OLA
+          }
         }),
         _buildKPICard(
             'Hold\nRecords',
@@ -237,13 +239,15 @@ class _DashboardHomeState extends State<DashboardHome> {
             const Color(0xFFF5DEB3),
             Icons.pause_circle_filled,
             Colors.orange, () {
-          if (widget.onNavigate != null)
+          if (widget.onNavigate != null) {
             widget.onNavigate!(3); // Sidebar index for Hold
+          }
         }),
         _buildKPICard('Dormant', '${_metrics['dormant']} Tasks',
             const Color(0xFFE5E7E9), Icons.delete_outline, Colors.black54, () {
-          if (widget.onNavigate != null)
+          if (widget.onNavigate != null) {
             widget.onNavigate!(5); // Sidebar index for Dormant
+          }
         }),
       ],
     );
@@ -565,18 +569,17 @@ class _DashboardHomeState extends State<DashboardHome> {
           ),
           Expanded(
             child: _notices.isEmpty
-                ? Center(
+                ? const Center(
                     child: Column(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        const Icon(Icons.assignment,
-                            color: Colors.grey, size: 30),
-                        const SizedBox(height: 8),
-                        const Text('No Active Notices',
+                        Icon(Icons.assignment, color: Colors.grey, size: 30),
+                        SizedBox(height: 8),
+                        Text('No Active Notices',
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontWeight: FontWeight.bold)),
-                        const Text('Check back later for updates',
+                        Text('Check back later for updates',
                             style: TextStyle(color: Colors.grey, fontSize: 11)),
                       ],
                     ),

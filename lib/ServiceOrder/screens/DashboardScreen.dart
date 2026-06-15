@@ -167,7 +167,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import '../../OnboardingScreen.dart';
 import '../../PlannedEvent/service/AuthService.dart' as auth;
 import 'DashboardHome.dart';
 import 'NotificationScreen.dart';
@@ -175,7 +174,7 @@ import 'WorkGroupScreen.dart';
 import 'PETaskListScreen.dart';
 import 'SelectWorkgroupScreen.dart';
 import '../components/Sidebar.dart';
-import '../../CreateUserScreen.dart'; // adjust path if needed
+// adjust path if needed
 import 'RegularRecordScreen.dart';
 import 'UrgentRecordScreen.dart';
 import 'HoldRecordScreen.dart';
@@ -276,9 +275,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   void _handleNavigation(int sidebarIndex) {
     int pageIndex = 0;
-    if (sidebarIndex == 0)
+    if (sidebarIndex == 0) {
       pageIndex = 0;
-    else if (sidebarIndex == 1)
+    } else if (sidebarIndex == 1)
       pageIndex = 4; // Regular
     else if (sidebarIndex == 2)
       pageIndex = 5; // Urgent

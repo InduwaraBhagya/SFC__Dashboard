@@ -469,7 +469,6 @@ import '../model/PEIsseueModel.dart';
 import '../service/PEIssueService.dart';
 import '../service/NoticeService.dart';
 import '../service/UrgentRecordService.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'UrgentRecordScreen.dart';
 import '../model/Notice.dart';
 import '../model/OLAViolateRecord.dart';
@@ -517,7 +516,7 @@ class _PEIssuesScreenState extends State<PEIssuesScreen> {
   final PEService _peService = PEService();
   late Future<List<InboxItem>> _inboxFuture;
   List<InboxItem> _allInboxItems = [];
-  Map<int, PEIssueResolution?> _resolutions = {};
+  final Map<int, PEIssueResolution?> _resolutions = {};
   String? _errorMessage;
   final int _recordsPerPage = 10;
   late PageController _pageController;
@@ -561,16 +560,18 @@ class _PEIssuesScreenState extends State<PEIssuesScreen> {
         bool useRealData = false;
 
         if (widget.workGroupIds.length == 1) {
-            selectedWorkGroupId = widget.workGroupIds.first;
-            try {
-                final wgs = await AuthService().getWorkGroupsByIds(widget.workGroupIds);
-                if (wgs.isNotEmpty) {
-                    final wgName = wgs.first.name;
-                    useRealData = (wgName != 'NET-PROJ_CABLE-ACC' && wgName != 'NET-PROJ-ACC-CABLE');
-                }
-            } catch (e) {
-                debugPrint('Error checking workgroup name: $e');
+          selectedWorkGroupId = widget.workGroupIds.first;
+          try {
+            final wgs =
+                await AuthService().getWorkGroupsByIds(widget.workGroupIds);
+            if (wgs.isNotEmpty) {
+              final wgName = wgs.first.name;
+              useRealData = (wgName != 'NET-PROJ_CABLE-ACC' &&
+                  wgName != 'NET-PROJ-ACC-CABLE');
             }
+          } catch (e) {
+            debugPrint('Error checking workgroup name: $e');
+          }
         }
 
         final urgentResult = await _urgentService.fetchUrgentRecords(

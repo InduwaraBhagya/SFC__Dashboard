@@ -3,7 +3,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'dart:convert';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../PlannedEvent/service/AuthService.dart';
-import '../../PlannedEvent/model/SystemUser.dart';
 
 class EditProfileScreen extends StatefulWidget {
   final Map<String, dynamic> user;
@@ -38,7 +37,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     setState(() => _isLoading = true);
 
     try {
-      final storage = const FlutterSecureStorage();
+      const storage = FlutterSecureStorage();
       final userInfoStr = await storage.read(key: 'user_info');
       if (userInfoStr != null) {
         final userInfo = json.decode(userInfoStr);

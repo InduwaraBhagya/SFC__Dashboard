@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'EditProfileScreen.dart';
 import '../../PlannedEvent/service/AuthService.dart';
@@ -64,10 +63,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         backgroundColor: const Color(0xFF07459C),
         title: Text(
           'Profile',
-          style: GoogleFonts.poppins(fontWeight: FontWeight.w600, color: Colors.white),
+          style: GoogleFonts.poppins(
+              fontWeight: FontWeight.w600, color: Colors.white),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+          icon: const Icon(Icons.arrow_back_ios_new,
+              color: Colors.white, size: 20),
           onPressed: () => Navigator.pop(context),
         ),
       ),
@@ -114,7 +115,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: CircleAvatar(
                   radius: 60,
                   backgroundColor: Colors.white24,
-                  child: _userData!['PhotoBase64'] != null && _userData!['PhotoBase64'].isNotEmpty
+                  child: _userData!['PhotoBase64'] != null &&
+                          _userData!['PhotoBase64'].isNotEmpty
                       ? ClipOval(
                           child: Image.memory(
                             base64Decode(_userData!['PhotoBase64']),
@@ -135,7 +137,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     color: Colors.white,
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.camera_alt, size: 20, color: Color(0xFF07459C)),
+                  child: const Icon(Icons.camera_alt,
+                      size: 20, color: Color(0xFF07459C)),
                 ),
               ),
             ],
@@ -194,13 +197,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       child: Column(
         children: [
-          _buildInfoRow(Icons.badge_outlined, 'Service ID', _displayValue(_userData!['ServiceId'])),
+          _buildInfoRow(Icons.badge_outlined, 'Service ID',
+              _displayValue(_userData!['ServiceId'])),
           const Divider(height: 32),
-          _buildInfoRow(Icons.email_outlined, 'Email Address', _cleanEmail(_userData!['Email'])),
+          _buildInfoRow(Icons.email_outlined, 'Email Address',
+              _cleanEmail(_userData!['Email'])),
           const Divider(height: 32),
-          _buildInfoRow(Icons.phone_android_outlined, 'Account Type', 'Microsoft AD'),
+          _buildInfoRow(
+              Icons.phone_android_outlined, 'Account Type', 'Microsoft AD'),
           const Divider(height: 32),
-          _buildInfoRow(Icons.security_outlined, 'Permissions', 'Full Admin Access'),
+          _buildInfoRow(
+              Icons.security_outlined, 'Permissions', 'Full Admin Access'),
         ],
       ),
     );
@@ -259,7 +266,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
               onPressed: () async {
                 await Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => EditProfileScreen(user: _userData!)),
+                  MaterialPageRoute(
+                      builder: (context) =>
+                          EditProfileScreen(user: _userData!)),
                 );
                 _loadUserData(); // Refresh data when coming back
               },
@@ -275,7 +284,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: Text(
                 'Edit Profile',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16),
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600, fontSize: 16),
               ),
             ),
           ),
@@ -287,7 +297,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 await _authService.logout();
                 if (mounted) {
                   Navigator.of(context).pushAndRemoveUntil(
-                    MaterialPageRoute(builder: (context) => const OnboardingScreen()),
+                    MaterialPageRoute(
+                        builder: (context) => const OnboardingScreen()),
                     (route) => false,
                   );
                 }
@@ -303,7 +314,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               child: Text(
                 'Log Out',
-                style: GoogleFonts.poppins(fontWeight: FontWeight.w600, fontSize: 16),
+                style: GoogleFonts.poppins(
+                    fontWeight: FontWeight.w600, fontSize: 16),
               ),
             ),
           ),

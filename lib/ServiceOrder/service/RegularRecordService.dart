@@ -106,9 +106,13 @@ class RegularRecordService {
         refs[item['\$id']] = item;
       }
       if (item is Map) {
-        for (var value in item.values) collectRefs(value);
+        for (var value in item.values) {
+          collectRefs(value);
+        }
       } else if (item is List) {
-        for (var subItem in item) collectRefs(subItem);
+        for (var subItem in item) {
+          collectRefs(subItem);
+        }
       }
     }
 

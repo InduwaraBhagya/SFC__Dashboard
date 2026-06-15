@@ -1,14 +1,11 @@
 // REDESIGNED HOLD RECORD SCREEN - SFC DASHBOARD
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:async';
 import '../model/OLAViolateRecord.dart';
 import '../service/HoldRecordService.dart';
 import 'OLAViolateRecordDetailsScreen.dart';
-import 'package:flutter/foundation.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import '../../PlannedEvent/service/AuthService.dart' as auth;
 import '../../PlannedEvent/model/WorkGroup.dart';
 
 class HoldRecordScreen extends StatefulWidget {
@@ -569,7 +566,7 @@ class _HoldRecordScreenState extends State<HoldRecordScreen>
             ],
           ),
         ),
-        ...records.map((r) => _buildDataRow(r)).toList(),
+        ...records.map((r) => _buildDataRow(r)),
       ],
     );
   }
