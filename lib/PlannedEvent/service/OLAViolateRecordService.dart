@@ -111,7 +111,7 @@ class OLAViolateRecordService {
         throw Exception(
             'Failed to load OLA violation records: ${response.statusCode}');
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       if (kDebugMode) {
         if (e is io.SocketException) {
           print('Network error fetching OLA violation records: ${e.message}');

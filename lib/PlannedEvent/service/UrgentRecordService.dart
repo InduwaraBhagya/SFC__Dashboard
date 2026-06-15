@@ -109,7 +109,7 @@ class UrgentRecordService {
         throw Exception(
             'Failed to load urgent records: ${response.statusCode}');
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       if (kDebugMode) {
         if (e is io.SocketException) {
           print('Network error fetching urgent records: ${e.message}');

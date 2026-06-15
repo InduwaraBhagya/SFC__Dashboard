@@ -108,7 +108,7 @@ class HoldRecordService {
         }
         throw Exception('Failed to load hold records: ${response.statusCode}');
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       if (kDebugMode) {
         if (e is io.SocketException) {
           print('Network error fetching hold records: ${e.message}');

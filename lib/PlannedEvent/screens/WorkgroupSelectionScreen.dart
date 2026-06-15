@@ -144,7 +144,7 @@ class _WorkgroupSelectionScreenState extends State<WorkgroupSelectionScreen> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => RoleSelectionScreen(),
+                builder: (context) => const RoleSelectionScreen(),
               ),
             );
           },
@@ -155,7 +155,7 @@ class _WorkgroupSelectionScreenState extends State<WorkgroupSelectionScreen> {
           Navigator.pushReplacement(
             context,
             MaterialPageRoute(
-              builder: (context) => RoleSelectionScreen(),
+              builder: (context) => const RoleSelectionScreen(),
             ),
           );
           return false;

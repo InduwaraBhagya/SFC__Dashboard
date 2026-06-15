@@ -879,7 +879,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => WorkgroupSelectionScreen(),
+            builder: (context) => const WorkgroupSelectionScreen(),
           ),
         );
         return false;
@@ -904,7 +904,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => WorkgroupSelectionScreen(),
+                  builder: (context) => const WorkgroupSelectionScreen(),
                 ),
               );
             },
@@ -944,13 +944,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Builder(builder: (context) {
                   // Build a deduplicated list of workgroup items and support a nullable selected value
                   final List<DropdownMenuItem<int?>> items = [
-                    DropdownMenuItem<int?>(
+                    const DropdownMenuItem<int?>(
                       value: null,
                       child: Row(
                         children: [
-                          const Icon(Icons.close, size: 16, color: Colors.grey),
-                          const SizedBox(width: 8),
-                          const Text('All Workgroups'),
+                          Icon(Icons.close, size: 16, color: Colors.grey),
+                          SizedBox(width: 8),
+                          Text('All Workgroups'),
                         ],
                       ),
                     ),
