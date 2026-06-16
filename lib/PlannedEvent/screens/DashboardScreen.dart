@@ -702,7 +702,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       try {
         bool useRealData = false;
         if (_currentSelectedWorkGroupId != null && _currentSelectedWorkGroupName != null) {
-            useRealData = (_currentSelectedWorkGroupName != 'NET-PROJ_CABLE-ACC' && _currentSelectedWorkGroupName != 'NET-PROJ-ACC-CABLE');
+            useRealData = true;
         }
 
         final urgentResult = await _urgentRecordService.fetchUrgentRecords(

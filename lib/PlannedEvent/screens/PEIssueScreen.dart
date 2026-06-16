@@ -566,7 +566,7 @@ class _PEIssuesScreenState extends State<PEIssuesScreen> {
                 final wgs = await AuthService().getWorkGroupsByIds(widget.workGroupIds);
                 if (wgs.isNotEmpty) {
                     final wgName = wgs.first.name;
-                    useRealData = (wgName != 'NET-PROJ_CABLE-ACC' && wgName != 'NET-PROJ-ACC-CABLE');
+                    useRealData = true;
                 }
             } catch (e) {
                 debugPrint('Error checking workgroup name: $e');

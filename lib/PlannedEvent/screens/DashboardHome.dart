@@ -1650,8 +1650,7 @@ class _DashboardHomeState extends State<DashboardHome> {
         if (wgs.isNotEmpty) {
           _selectedWorkgroupName = wgs.first.name;
           setState(() {
-            _useRealData = (_selectedWorkgroupName != 'NET-PROJ_CABLE-ACC' &&
-                _selectedWorkgroupName != 'NET-PROJ-ACC-CABLE');
+            _useRealData = true;
           });
         }
       } catch (e) {
