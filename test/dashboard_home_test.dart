@@ -15,8 +15,7 @@ void main() {
   });
 
   group('Table 5.2-2 : test case 02 - Live Metrics Counter Test (TC_DASH_01)', () {
-    
-    // --- STEP 01: OPEN DASHBOARD ---
+ 
     testWidgets('Step 01 - Open dashboard & Loading state spinner (TC_DASH_01)', (WidgetTester tester) async {
       await tester.pumpWidget(
         const MaterialApp(
@@ -24,8 +23,6 @@ void main() {
         ),
       );
 
-      // The widget will trigger data fetching. We simply verify the Scaffold 
-      // layout loaded without crashing on instantiation.
       expect(find.byType(Scaffold), findsOneWidget);
     });
 

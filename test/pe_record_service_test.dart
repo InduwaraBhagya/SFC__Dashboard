@@ -8,7 +8,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 void main() {
   setUpAll(() async {
-    // Load mock environment variables for testing
+
     dotenv.testLoad(fileInput: '''
 API_BASE_URL=https://test.api.com
 ACCESS_TOKEN=test_mock_token
@@ -17,7 +17,7 @@ ACCESS_TOKEN=test_mock_token
 
   group('PERecordService Tests', () {
     test('fetchPERecords returns records successfully', () async {
-      // Arrange
+   
       final mockClient = MockClient((request) async {
         expect(request.url.toString(),
             'https://test.api.com/api/PERecordsApi/filter?page=1&pageSize=20');
@@ -44,10 +44,8 @@ ACCESS_TOKEN=test_mock_token
 
       final service = PERecordService(client: mockClient);
 
-      // Act
       final result = await service.fetchPERecords(page: 1, pageSize: 20);
 
-      // Assert
       expect(result['records'], isA<List<PERecord>>());
       expect(result['totalCount'], 1);
       expect(result['currentPage'], 1);
@@ -59,7 +57,7 @@ ACCESS_TOKEN=test_mock_token
     });
 
     test('createPERecord returns success response', () async {
-      // Arrange
+     
       final mockClient = MockClient((request) async {
         expect(request.url.toString(),
             'https://test.api.com/api/PlannedEventsApi');
@@ -72,16 +70,15 @@ ACCESS_TOKEN=test_mock_token
 
       final service = PERecordService(client: mockClient);
 
-      // Act
       final result = await service.createPERecord({'peTitle': 'New Test PE'});
 
-      // Assert
+  
       expect(result['success'], true);
       expect(result['data']['message'], 'PE created successfully');
     });
 
     test('fetchPERecordByNumber returns a single record', () async {
-      // Arrange
+    
       const peNumber = 'PE-1002';
       final mockClient = MockClient((request) async {
         expect(request.url.toString(),
@@ -102,27 +99,24 @@ ACCESS_TOKEN=test_mock_token
 
       final service = PERecordService(client: mockClient);
 
-      // Act
+     
       final record = await service.fetchPERecordByNumber(peNumber);
 
-      // Assert
       expect(record, isNotNull);
       expect(record!.peNumber, 'PE-1002');
       expect(record.peTitle, 'Specific PE');
     });
 
     test('fetchPERecords handles API errors gracefully', () async {
-      // Arrange
+   
       final mockClient = MockClient((request) async {
         return http.Response('Internal Server Error', 500);
       });
 
       final service = PERecordService(client: mockClient);
 
-      // Act
       final result = await service.fetchPERecords();
 
-      // Assert
       expect(result['records'], isEmpty);
       expect(result['totalCount'], 0);
     });

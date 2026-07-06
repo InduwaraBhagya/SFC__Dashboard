@@ -11,7 +11,7 @@ android {
 
     defaultConfig {
         applicationId = "com.example.sfc_dashboard"
-        minSdkVersion flutter.minSdkVersion
+        minSdkVersion 29
         targetSdkVersion 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
@@ -24,13 +24,21 @@ android {
         ]
     }
 
+    signingConfigs {
+        release {
+            storeFile file("upload-keystore.jks")
+            storePassword "android"
+            keyAlias "upload"
+            keyPassword "android"
+        }
+    }
+
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Use debug key for now – replace with your release signing config later
-            signingConfig = signingConfigs.debug
+            signingConfig = signingConfigs.release
         }
     }
 

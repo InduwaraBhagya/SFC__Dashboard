@@ -1,0 +1,15 @@
+{
+    "android_api": [
+        "android_crypto_cbc",
+        "android_insecure_random",
+        "android_create_temp_file",
+        "android_read_write_external_storage",
+        "android_external_storage"
+    ],
+    "android_manifest": [
+        "android_exported_activity",
+        "android_exported_receiver",
+        "android_exported_activity_not_protected",
+        "android_exported_receiver_not_protected"
+    ]
+}
